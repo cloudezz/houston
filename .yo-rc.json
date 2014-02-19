@@ -1,0 +1,8 @@
+{
+  "generator-jhipster": {
+    "baseName": "houston",
+    "packageName": "com.cloudezz.houston",
+    "packageFolder": "com/cloudezz/houston",
+    "hibernateCache": "no"
+  }
+}
