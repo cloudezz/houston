@@ -5,9 +5,8 @@ server:
 spring:
     profiles: dev
     datasource:
-        dataSourceClassName: org.hsqldb.jdbc.JDBCDataSource
+    	driverClass: org.hsqldb.jdbc.JDBCDriver
         url: jdbc:hsqldb:mem:houston
-        databaseName: 
         serverName: 
         username: 
         password:
