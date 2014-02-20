@@ -32,8 +32,8 @@ houstonApp.controller('LoginController', ['$scope', '$location', 'Authentication
                 success: function () {
                     $location.path('');
                 }
-            })
-        }
+            });
+        };
     }]);
 
 houstonApp.controller('LogoutController', ['$location', 'AuthenticationSharedService',
@@ -44,6 +44,7 @@ houstonApp.controller('LogoutController', ['$location', 'AuthenticationSharedSer
             }
         });
     }]);
+
 
 houstonApp.controller('SettingsController', ['$scope', 'Account',
     function ($scope, Account) {
@@ -150,6 +151,20 @@ houstonApp.controller('LogsController', ['$scope', 'resolvedLogs', 'LogsService'
         }
     }]);
 
+
+/**
+ * Signup controller that will send the request to rest services
+ */
+houstonApp.controller('SignUpController', ['$location', 'SignUpService',
+   function ($location, SignUpService) {
+		$scope.signUp = function (email) {
+			SignUpService.signUp({email:email}, function(data){
+				
+			});
+		}
+	}]);
+	
+
 houstonApp.controller('AuditsController', ['$scope', '$translate', '$filter', 'AuditsService',
     function ($scope, $translate, $filter, AuditsService) {
         $scope.onChangeDate = function() {
@@ -162,7 +177,10 @@ houstonApp.controller('AuditsController', ['$scope', '$translate', '$filter', 'A
         $scope.today = function() {
             // Today + 1 day - needed if the current day must be included
             var today = new Date();
-            var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1); // create new increased date
+            var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1); // create
+																								// new
+																								// increased
+																								// date
 
             $scope.toDate = $filter('date')(tomorrow, "yyyy-MM-dd");
         };

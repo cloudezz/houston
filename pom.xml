@@ -284,6 +284,17 @@
 			<version>1.1.5.BUILD-20140206.214115-11</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.bbytes</groupId>
+			<artifactId>avis-client</artifactId>
+			<version>0.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
 		<!-- Database dependencies -->
 		<dependency>
 			<groupId>mysql</groupId>
