@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "T_AUTHORITY")
-public class Authority implements Serializable {
+public class Authority extends BaseEntity {
 
     @NotNull
     @Size(min = 0, max = 50)
@@ -57,5 +57,10 @@ public class Authority implements Serializable {
         return "Authority{" +
                 "name='" + name + '\'' +
                 "}";
+    }
+
+    @Override
+    public String getId() {
+      return name;
     }
 }

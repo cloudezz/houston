@@ -18,12 +18,12 @@ import java.util.Map;
 @Entity
 @Table(name = "T_PERSISTENT_AUDIT_EVENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class PersistentAuditEvent  {
+public class PersistentAuditEvent  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
-    private long id;
+    private String id;
 
     @NotNull
     @Column(name = "principal")
@@ -43,11 +43,11 @@ public class PersistentAuditEvent  {
     @CollectionTable(name="T_PERSISTENT_AUDIT_EVENT_DATA", joinColumns=@JoinColumn(name="event_id"))
     private Map<String, String> data = new HashMap<>();
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

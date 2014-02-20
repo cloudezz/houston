@@ -8,6 +8,7 @@ import com.cloudezz.houston.security.SecurityUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Service class for managing users.
@@ -34,6 +36,22 @@ public class UserService {
     @Inject
     private PersistentTokenRepository persistentTokenRepository;
 
+    /**
+     * Registers a new user
+     * 
+     * @param email
+     * @return
+     */
+    public User registerUser(String email) {
+        User currentUser = new User();
+        currentUser.setEmail(email);
+        currentUser.setAccountId(UUID.randomUUID().toString());
+        
+        log.debug("Created new  User: {}", currentUser);
+        return currentUser;
+    }
+
+    
     public void updateUserInformation(String firstName, String lastName, String email) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         currentUser.setFirstName(firstName);

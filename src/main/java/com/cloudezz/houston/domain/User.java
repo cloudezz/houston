@@ -14,11 +14,10 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "T_USER")
-public class User implements Serializable {
+public class User extends BaseEntity {
 
     @NotNull
     @Size(min = 0, max = 50)
-    @Id
     private String login;
 
     @JsonIgnore
@@ -33,8 +32,13 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
+    @Size(min = 0, max = 50)
+    @Column(name = "account_id")
+    private String accountId;
+    
     @Email
     @Size(min = 0, max = 100)
+    @Id
     private String email;
 
     @JsonIgnore
@@ -116,7 +120,7 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (!login.equals(user.login)) {
+        if (!email.equals(user.email)) {
             return false;
         }
 
@@ -137,5 +141,18 @@ public class User implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 "}";
+    }
+
+    @Override
+    public String getId() {
+      return email;
+    }
+
+    public String getAccountId() {
+      return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+      this.accountId = accountId;
     }
 }

@@ -45,7 +45,11 @@ public class Application {
   }
 
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(Application.class);
+    SpringApplication app =
+        new SpringApplication(Application.class, "classpath:META-INF/app-context.xml");
+
+    // SpringApplication app = new SpringApplication(Application.class);
+
     app.setShowBanner(false);
 
     SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);

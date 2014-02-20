@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "T_PERSISTENT_TOKEN")
-public class PersistentToken implements Serializable {
+public class PersistentToken extends BaseEntity {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("d MMMM yyyy");
 
@@ -138,5 +138,10 @@ public class PersistentToken implements Serializable {
                 ", ipAddress='" + ipAddress + '\'' +
                 ", userAgent='" + userAgent + '\'' +
                 "}";
+    }
+
+    @Override
+    public String getId() {
+      return series;
     }
 }
