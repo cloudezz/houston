@@ -16,6 +16,8 @@
 *.pydevproject
 .metadata
 .gradle
+.project
+.classpath
 bin/
 tmp/
 *.tmp
