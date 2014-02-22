@@ -1,121 +1,133 @@
 package com.cloudezz.houston.domain;
 
 /**
- * The host machine of docker where the docker instances will be started. 
+ * The host machine of docker where the docker instances will be started.
+ * 
  * @author Thanneer
- *
+ * 
  */
 public class DockerHostMachine {
 
-	// public ip address of the host machine 
-	private String ipAddress;
+  // public ip address of the host machine
+  private String ipAddress;
 
-	// port on which docker api is listening
-	private String dockerPort;
-	
-	// IAAS provider name like ec2 or digital ocean 
-	private String cloudProviderName;
-	
-	// docker rest api auth details
-	private String username;
-	
-	// docker rest api auth details
-	private String password;
-	
-	// docker rest api on http or https
-	private boolean https=false;
+  // port on which docker api is listening
+  private String dockerPort;
 
-	/**
-	 * public ip address of the host machine 
-	 * @return the ipAddress
-	 */
-	public String getIpAddress() {
-		return ipAddress;
-	}
+  // IAAS provider name like ec2 or digital ocean
+  private String cloudProviderName;
 
-	/**
-	 * @param ipAddress the ipAddress to set
-	 */
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
+  // docker rest api auth details
+  private String username;
 
-	/**
-	 * port on which docker api is listening
-	 * @return the dockerPort
-	 */
-	public String getDockerPort() {
-		return dockerPort;
-	}
+  // docker rest api auth details
+  private String password;
 
-	/**
-	 * IAAS Provider name like ec2 or digital ocean 
-	 * @param dockerPort the dockerPort to set
-	 */
-	public void setDockerPort(String dockerPort) {
-		this.dockerPort = dockerPort;
-	}
+  // docker rest api on http or https
+  private boolean https = false;
 
-	/**
-	 * @return the cloudProviderName
-	 */
-	public String getCloudProviderName() {
-		return cloudProviderName;
-	}
+  /**
+   * public ip address of the host machine
+   * 
+   * @return the ipAddress
+   */
+  public String getIpAddress() {
+    return ipAddress;
+  }
 
-	/**
-	 * @param cloudProviderName the cloudProviderName to set
-	 */
-	public void setCloudProviderName(String cloudProviderName) {
-		this.cloudProviderName = cloudProviderName;
-	}
+  /**
+   * @param ipAddress the ipAddress to set
+   */
+  public void setIpAddress(String ipAddress) {
+    this.ipAddress = ipAddress;
+  }
 
-	/**
-	 * Docker rest api auth details
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
+  /**
+   * port on which docker api is listening
+   * 
+   * @return the dockerPort
+   */
+  public String getDockerPort() {
+    return dockerPort;
+  }
 
-	/**
-	 * 
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+  /**
+   * IAAS Provider name like ec2 or digital ocean
+   * 
+   * @param dockerPort the dockerPort to set
+   */
+  public void setDockerPort(String dockerPort) {
+    this.dockerPort = dockerPort;
+  }
 
-	/**
-	 * Docker rest api auth details
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
+  /**
+   * @return the cloudProviderName
+   */
+  public String getCloudProviderName() {
+    return cloudProviderName;
+  }
 
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  /**
+   * @param cloudProviderName the cloudProviderName to set
+   */
+  public void setCloudProviderName(String cloudProviderName) {
+    this.cloudProviderName = cloudProviderName;
+  }
 
-	/**
-	 * @return the https
-	 */
-	public boolean isHttps() {
-		return https;
-	}
+  /**
+   * Docker rest api auth details
+   * 
+   * @return the username
+   */
+  public String getUsername() {
+    return username;
+  }
 
-	/**
-	 * @param https the https to set
-	 */
-	public void setHttps(boolean https) {
-		this.https = https;
-	}
+  /**
+   * 
+   * @param username the username to set
+   */
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-	
+  /**
+   * Docker rest api auth details
+   * 
+   * @return the password
+   */
+  public String getPassword() {
+    return password;
+  }
 
-	
+  /**
+   * @param password the password to set
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  /**
+   * @return the https
+   */
+  public boolean isHttps() {
+    return https;
+  }
+
+  /**
+   * @param https the https to set
+   */
+  public void setHttps(boolean https) {
+    this.https = https;
+  }
+
+
+  public String getDockerDaemonURL() {
+    String protocol = "http";
+    if (https) {
+      protocol = "https";
+    }
+    return protocol+"://"+ipAddress+":"+dockerPort;
+  }
+
 }

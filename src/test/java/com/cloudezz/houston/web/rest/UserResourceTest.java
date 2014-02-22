@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.cloudezz.houston.Application;
+import com.cloudezz.houston.BaseApplicationContextLoader;
+import com.cloudezz.houston.BaseXMLApplicationContextLoader;
 import com.cloudezz.houston.repository.UserRepository;
 
 /**
@@ -28,12 +30,7 @@ import com.cloudezz.houston.repository.UserRepository;
  * 
  * @see UserResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("dev")
-public class UserResourceTest extends BaseResourceTest{
+public class UserResourceTest extends BaseApplicationContextLoader {
 
   @Inject
   private UserRepository userRepository;

@@ -1,6 +1,7 @@
 package com.cloudezz.houston.web.rest;
 
 import com.cloudezz.houston.Application;
+import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.domain.Authority;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.UserRepository;
@@ -38,12 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("dev")
-public class AccountResourceTest {
+public class AccountResourceTest extends BaseApplicationContextLoader{
 
     @Inject
     private UserRepository userRepository;

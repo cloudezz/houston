@@ -1,6 +1,7 @@
 package com.cloudezz.houston.service;
 
 import com.cloudezz.houston.Application;
+import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
@@ -23,12 +24,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("dev")
-public class UserServiceTest {
+public class UserServiceTest extends BaseApplicationContextLoader{
 
     @Inject
     private PersistentTokenRepository persistentTokenRepository;

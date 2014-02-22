@@ -9,5 +9,22 @@ package com.cloudezz.houston.domain;
  * 
  */
 public class ServiceImageConfig extends BaseCloudezzImageConfig {
+  
+  private String linkName;
+
+  /**
+   * The  name is used to link the service image as child image with parent image . Parent image ----linkname---> child image.
+   * @return the linkName
+   */
+  public String getLinkName() {
+    return linkName;
+  }
+
+  /**
+   * @param linkName the linkName to set
+   */
+  public void setLinkName(String linkName) {
+    this.linkName = linkName;
+  }
 	
 }

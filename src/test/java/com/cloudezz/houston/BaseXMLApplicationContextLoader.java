@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cloudezz.houston.web.rest;
+package com.cloudezz.houston;
 
 import org.springframework.boot.test.SpringApplicationConfiguration;
 
@@ -10,7 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
  *
  */
 @SpringApplicationConfiguration(locations = "classpath:META-INF/app-context.xml")
-public class BaseResourceTest {
+public class BaseXMLApplicationContextLoader {
 
 
 }

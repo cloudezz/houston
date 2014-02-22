@@ -1,47 +1,30 @@
 package com.cloudezz.houston.web.rest;
 
-import java.security.SecureRandom;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.bbytes.avis.AvisClient;
-import com.cloudezz.houston.Application;
-import com.cloudezz.houston.repository.PersistentTokenRepository;
-import com.cloudezz.houston.repository.UserRepository;
-import com.cloudezz.houston.service.UserService;
+import javax.inject.Inject;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.inject.Inject;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.bbytes.avis.AvisClient;
+import com.cloudezz.houston.BaseApplicationContextLoader;
+import com.cloudezz.houston.repository.PersistentTokenRepository;
+import com.cloudezz.houston.service.UserService;
 
 /**
  * Test class for the UserResource REST controller.
  *
  * @see UserResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("dev")
-//@ContextConfiguration(classes = Application.class, loader=SpringApplicationContextLoader.class)
-public class SignUpResourceTest {
+public class SignUpResourceTest extends BaseApplicationContextLoader{
 
     @Inject
     private UserService userService;

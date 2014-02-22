@@ -10,6 +10,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ContainerInspectResponse {
 
     @JsonProperty("ID") public String id;
+    public String getId() {
+      return id;
+    }
+
+    public void setId(String id) {
+      this.id = id;
+    }
+
     @JsonProperty("Name") public String name;
     @JsonProperty("Created") public String created;
     @JsonProperty("Path") public String path;
