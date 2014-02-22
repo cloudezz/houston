@@ -334,11 +334,11 @@ public class DockerClient {
         ContainerInspectResponse.class, containerId);
   }
 
-  public void removeContainer(String container) throws DockerClientException {
-    this.removeContainer(container, false);
+  public boolean removeContainer(String container) throws DockerClientException {
+    return this.removeContainer(container, false);
   }
 
-  public void removeContainer(String containerId, boolean removeVolumes)
+  public boolean removeContainer(String containerId, boolean removeVolumes)
       throws DockerClientException {
     Preconditions.checkState(!StringUtils.isEmpty(containerId), "Container ID can't be empty");
 
@@ -348,6 +348,8 @@ public class DockerClient {
     } catch (HttpClientErrorException e) {
       throw new DockerClientException(e);
     }
+
+    return true;
   }
 
   public void removeContainers(List<String> containers, boolean removeVolumes)
@@ -433,13 +435,21 @@ public class DockerClient {
     return Arrays.asList(response);
   }
 
-  public void stopContainer(String containerId) throws DockerClientException {
-    this.stopContainer(containerId, 10);
+  public boolean stopContainer(String containerId) throws DockerClientException {
+    return this.stopContainer(containerId, 10);
   }
 
-  public void stopContainer(String containerId, int timeout) throws DockerClientException {
-    restTemplate.postForLocation(dockerDeamonUrl + "/containers/{containerId}/stop?t={timeout}",
-        null, containerId, timeout);
+  public boolean stopContainer(String containerId, int timeout) throws DockerClientException {
+    ResponseEntity<?> response =
+        restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/stop?t={timeout}",
+            null, null, containerId, timeout);
+    HttpStatus status = response.getStatusCode();
+    if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 
   public void kill(String containerId) throws DockerClientException {

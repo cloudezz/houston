@@ -13,47 +13,45 @@ import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
-import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.domain.ApplicationImageConfig;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageConfig;
 
 
-public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
+public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DockerClient dockerClient;
 
-  private ServiceImageConfig serviceImageConfig= new ServiceImageConfig();
+  @Autowired
+  private Deployer deployer;
 
-  private ApplicationImageConfig applicationImageConfig= new ApplicationImageConfig();
+  private ServiceImageConfig serviceImageConfig = new ServiceImageConfig();
+
+  private ApplicationImageConfig applicationImageConfig = new ApplicationImageConfig();
 
   @Before
   public void setup() throws CloudezzDeployException {
-
     DockerHostMachine dockerHostMachine = new DockerHostMachine();
     dockerHostMachine.setIpAddress("localhost");
     dockerHostMachine.setDockerPort("4243");
     dockerHostMachine.setCloudProviderName("my local machine");
-    
+
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
     applicationImageConfig.setDaemon(false);
-    applicationImageConfig.setDockerImageName("cloudezz/base");
+    applicationImageConfig.setDockerImageName("cloudezz/tomcat7");
     applicationImageConfig.setHostName("testmachine");
     applicationImageConfig.setMemory(512L);
     applicationImageConfig.setMemorySwap(1024L);
     applicationImageConfig.setPorts(new String[] {"8990"});
     applicationImageConfig.setTty(true);
-    Map<String, String> environmentMapping = new HashMap<String, String>();
-    environmentMapping.put("MYSQL_ROOT_PASSWORD", "test123");
-    applicationImageConfig.setEnvironmentMapping(environmentMapping);
     applicationImageConfig.addServiceImages(serviceImageConfig);
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
 
-   
+
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
@@ -64,25 +62,33 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(new String[] {"80", "8009"});
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
+
   }
 
   @Test
-  public void attachAndDeployImage() throws Exception {
-    boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
+  public void deployImage() throws Exception {
+
+    boolean success = deployer.restart(applicationImageConfig);
+    Assert.assertTrue(success);
+    
+    success = deployer.start(applicationImageConfig);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
-        dockerClient.inspectContainer(serviceImageConfig.getContainerId());
+        dockerClient.inspectContainer(applicationImageConfig.getContainerId());
+    Assert.assertTrue(containerInspectResponse.state.running);
 
-    HostConfig hostConfig = applicationImageConfig.getHostConfig();
-    hostConfig.setLinks(new String[] {containerInspectResponse.name+":dep_base"});
-    DeployerUtil.startContainer(dockerClient, applicationImageConfig, hostConfig);
+    success = deployer.stop(applicationImageConfig);
+    Assert.assertTrue(success);
 
     containerInspectResponse =
-        dockerClient.inspectContainer(serviceImageConfig.getContainerId());
+        dockerClient.inspectContainer(applicationImageConfig.getContainerId());
+    Assert.assertTrue(!containerInspectResponse.state.running);
 
   }
 
-  @After
+
+
+   @After
   public void cleanup() throws CloudezzDeployException {
     DeployerUtil.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);

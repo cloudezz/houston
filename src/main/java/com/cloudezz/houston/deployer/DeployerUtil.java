@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
+import com.cloudezz.houston.deployer.docker.client.DockerClientException;
 import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.model.Container;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
@@ -17,7 +18,7 @@ import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.deployer.docker.model.Image;
 import com.cloudezz.houston.domain.ApplicationImageConfig;
-import com.cloudezz.houston.domain.BaseCloudezzImageConfig;
+import com.cloudezz.houston.domain.BaseImageConfig;
 import com.cloudezz.houston.domain.ServiceImageConfig;
 import com.google.common.base.Preconditions;
 
@@ -47,14 +48,14 @@ public class DeployerUtil {
   }
 
   /**
-   * Convert {@link BaseCloudezzImageConfig} the pojo to {@link ContainerConfig} understood by
-   * docker remote api
+   * Convert {@link BaseImageConfig} the pojo to {@link ContainerConfig} understood by docker remote
+   * api
    * 
    * @param dockerInstance
    * @return
    */
   public static ContainerConfig getDockerConfigFromCloudezzConfig(
-      BaseCloudezzImageConfig cloudezzImageConfig) {
+      BaseImageConfig cloudezzImageConfig) {
 
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -125,7 +126,7 @@ public class DeployerUtil {
    * @throws CloudezzDeployException
    */
   private static boolean createAndSetContainerOnImageConfig(DockerClient dockerClient,
-      BaseCloudezzImageConfig cloudezzImageConfig) throws CloudezzDeployException {
+      BaseImageConfig cloudezzImageConfig) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -140,6 +141,19 @@ public class DeployerUtil {
 
   }
 
+  public static boolean stopContainer(DockerClient dockerClient, BaseImageConfig cloudezzImageConfig)
+      throws CloudezzDeployException {
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
+
+    // if no container then no need to stop jus return done
+    if (cloudezzImageConfig.getContainerId() == null)
+      return true;
+
+    return dockerClient.stopContainer(cloudezzImageConfig.getContainerId());
+
+  }
+
   /**
    * Start the container once the container is created or if already created then jus start it .
    * 
@@ -149,13 +163,12 @@ public class DeployerUtil {
    * @throws CloudezzDeployException
    */
   public static boolean startContainer(DockerClient dockerClient,
-      BaseCloudezzImageConfig cloudezzImageConfig) throws CloudezzDeployException {
+      BaseImageConfig cloudezzImageConfig) throws CloudezzDeployException {
     return startContainer(dockerClient, cloudezzImageConfig, null);
   }
 
   public static boolean startContainer(DockerClient dockerClient,
-      BaseCloudezzImageConfig cloudezzImageConfig, HostConfig hostConfig)
-      throws CloudezzDeployException {
+      BaseImageConfig cloudezzImageConfig, HostConfig hostConfig) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -165,52 +178,22 @@ public class DeployerUtil {
       containerId = cloudezzImageConfig.getContainerId();
     }
 
+    ContainerInspectResponse containerInspectResponse = dockerClient.inspectContainer(containerId);
+    
+    if (containerInspectResponse.state != null && containerInspectResponse.state.running) {
+      return true;
+    }
+    
     if (hostConfig != null) {
       return dockerClient.startContainer(containerId, hostConfig);
     } else {
       // we need to give this as the port binding works by passing only hostConfig : might be a bug
       // in the docker rest api
-      hostConfig = getDefaultHostConfig(cloudezzImageConfig);
+      hostConfig = cloudezzImageConfig.getHostConfig();
       return dockerClient.startContainer(containerId, hostConfig);
     }
   }
 
-  /**
-   * Get the host config like port mapping and volume mapping
-   * 
-   * @param cloudezzImageConfig
-   * @return
-   */
-  public static HostConfig getDefaultHostConfig(BaseCloudezzImageConfig cloudezzImageConfig) {
-
-    HostConfig hostConfig = new HostConfig();
-    hostConfig.setPublishAllPorts(true);
-
-    // port mappings
-    Map<String, HostPortBinding[]> portBindings = hostConfig.getPortBindings();
-    String portMappings[] = cloudezzImageConfig.getPorts();
-    if (portMappings != null) {
-      for (int i = 0; i < portMappings.length; i++) {
-        HostPortBinding[] portBindingForContainerPort = new HostPortBinding[1];
-        portBindingForContainerPort[0] = new HostPortBinding();
-        portBindings.put(portMappings[i] + "/tcp", portBindingForContainerPort);
-      }
-      // note : lil doubtful abt this settings as we are setting port for host so commented ..need
-      // to test after uncommeting
-
-    }
-
-    // volume mapping with read write access on docker host machine
-    String volMapping[] = cloudezzImageConfig.getVolumeMapping();
-    if (volMapping != null && volMapping.length > 0) {
-      for (int i = 0; i < volMapping.length; i++) {
-        volMapping[i] = volMapping[i] + ":rw";
-      }
-      hostConfig.setBinds(volMapping);
-    }
-
-    return hostConfig;
-  }
 
   /**
    * Link image as parent child with link name and return the host config to be used to start the
@@ -240,8 +223,9 @@ public class DeployerUtil {
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
 
 
-    HostConfig hostConfig = DeployerUtil.getDefaultHostConfig(applicationImageConfig);
+    HostConfig hostConfig = applicationImageConfig.getHostConfig();
     hostConfig.setLinks(new String[] {containerInspectResponse.name + ":" + linkName});
+    applicationImageConfig.setHostConfig(hostConfig);
     NetworkSettings networkSettings = containerInspectResponse.networkSettings;
     if (networkSettings != null) {
       String[] servicePorts = serviceImageConfig.getPorts();
@@ -318,6 +302,15 @@ public class DeployerUtil {
       Container container = iterator.next();
       dockerClient.stopContainer(container.getId());
       dockerClient.removeContainer(container.getId(), true);
+    }
+  }
+
+  public static boolean deleteContainer(DockerClient dockerClient, BaseImageConfig baseImageConfig)
+      throws CloudezzDeployException {
+    try {
+      return dockerClient.removeContainer(baseImageConfig.getContainerId());
+    } catch (DockerClientException e) {
+      throw new CloudezzDeployException(e);
     }
   }
 

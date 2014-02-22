@@ -13,17 +13,8 @@ import com.cloudezz.houston.domain.ApplicationImageConfig;
 public interface Deployer {
 
   /**
-   * Deploy the app image config along with service images. The deploy creates containers and stores
+   * Start the app image config along with service images it, creates containers and stores
    * them inside image config and they are started
-   * 
-   * @param appImageConfig
-   * @return
-   */
-  public boolean deploy(ApplicationImageConfig appImageConfig) throws CloudezzDeployException;
-
-  /**
-   * Start the containers contained inside the app image config and service images that were created
-   * during deploy
    * 
    * @param appImageConfig
    * @return

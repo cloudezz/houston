@@ -1,5 +1,6 @@
 package com.cloudezz.houston.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,17 +18,15 @@ import com.google.common.base.Preconditions;
  * @author Thanneer
  * 
  */
-public class ApplicationImageConfig extends BaseCloudezzImageConfig {
-
-  protected static final String TCP_FORWARD = "TCP_FORWARD";
-
-  protected static final String GIT_URL = "gitURL";
+public class ApplicationImageConfig extends BaseImageConfig {
 
   private String gitURL;
 
   private String appName;
 
   private List<ServiceImageConfig> serviceImages = new LinkedList<ServiceImageConfig>();
+
+
 
   /**
    * @return the appName
@@ -66,20 +65,11 @@ public class ApplicationImageConfig extends BaseCloudezzImageConfig {
 
   /**
    * @param serviceImages the serviceImages to set
+   * @throws CloudezzDeployException
    */
-  public void setServiceImages(List<ServiceImageConfig> serviceImages) {
-    Preconditions.checkArgument(serviceImages != null && serviceImages.size() > 0,
-        "Service Images cannot be empty");
-    this.serviceImages = serviceImages;
-  }
-
-  /**
-   * @param serviceImages the serviceImages to set
-   */
-  public void addServiceImages(ServiceImageConfig serviceImage) {
+  public void addServiceImages(ServiceImageConfig serviceImage) throws CloudezzDeployException {
     Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
     this.serviceImages.add(serviceImage);
-
   }
 
   /**
@@ -96,19 +86,24 @@ public class ApplicationImageConfig extends BaseCloudezzImageConfig {
     if (ports == null)
       throw new CloudezzDeployException("The App instance ports to be exposed are not set");
 
-    List<String> allExposedPorts = Arrays.asList(this.ports);
+    List<String> allExposedPorts = new ArrayList<String>();
+    allExposedPorts.addAll(Arrays.asList(this.ports));
     for (Iterator<ServiceImageConfig> iterator = serviceImages.iterator(); iterator.hasNext();) {
-      BaseCloudezzImageConfig baseCloudezzImageConfig = iterator.next();
+      BaseImageConfig baseCloudezzImageConfig = iterator.next();
       String[] servicePorts = baseCloudezzImageConfig.getPorts();
-      for (int i = 0; i < servicePorts.length; i++) {
-        if (allExposedPorts.contains(servicePorts[i])) {
-          return true;
-        } else {
-          allExposedPorts.add(servicePorts[i]);
+      if (servicePorts != null) {
+        for (int i = 0; i < servicePorts.length; i++) {
+          if (allExposedPorts.contains(servicePorts[i])) {
+            return true;
+          } else {
+            allExposedPorts.add(servicePorts[i]);
+          }
         }
       }
     }
     return false;
   }
+
+
 
 }

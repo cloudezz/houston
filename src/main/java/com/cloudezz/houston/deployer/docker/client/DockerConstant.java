@@ -14,4 +14,6 @@ public class DockerConstant {
   
   public static final String ENV_SSH_ROOT_PASSWORD = "SSH_ROOT_PASSWORD";
   
+  public static final String GIT_URL = "gitURL";
+  
 }

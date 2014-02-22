@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class BaseCloudezzImageConfig {
+import com.cloudezz.houston.deployer.docker.model.HostConfig;
+import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
+
+public class BaseImageConfig {
 
   protected String containerId;
 
@@ -29,6 +32,8 @@ public class BaseCloudezzImageConfig {
   protected Boolean daemon;
 
   protected Boolean tty;
+
+  private HostConfig hostConfig;
 
 
   /**
@@ -209,6 +214,25 @@ public class BaseCloudezzImageConfig {
   }
 
   /**
+   * @return the hostConfig
+   */
+  public HostConfig getHostConfig() {
+    if (hostConfig == null) {
+      hostConfig = getDefaultHostConfig();
+    }
+    return hostConfig;
+  }
+
+  /**
+   * @param hostConfig the hostConfig to set
+   */
+  public void setHostConfig(HostConfig hostConfig) {
+    this.hostConfig = hostConfig;
+  }
+
+
+
+  /**
    * @return the volumeMapping
    */
   public String[] getVolumeMapping() {
@@ -228,4 +252,35 @@ public class BaseCloudezzImageConfig {
     return volumeMapping;
   }
 
+
+  protected HostConfig getDefaultHostConfig() {
+
+    HostConfig hostConfig = new HostConfig();
+    hostConfig.setPublishAllPorts(true);
+
+    // port mappings
+    Map<String, HostPortBinding[]> portBindings = hostConfig.getPortBindings();
+    String portMappings[] = this.getPorts();
+    if (portMappings != null) {
+      for (int i = 0; i < portMappings.length; i++) {
+        HostPortBinding[] portBindingForContainerPort = new HostPortBinding[1];
+        portBindingForContainerPort[0] = new HostPortBinding();
+        portBindings.put(portMappings[i] + "/tcp", portBindingForContainerPort);
+      }
+      // note : lil doubtful abt this settings as we are setting port for host so commented ..need
+      // to test after uncommeting
+
+    }
+
+    // volume mapping with read write access on docker host machine
+    String volMapping[] = this.getVolumeMapping();
+    if (volMapping != null && volMapping.length > 0) {
+      for (int i = 0; i < volMapping.length; i++) {
+        volMapping[i] = volMapping[i] + ":rw";
+      }
+      hostConfig.setBinds(volMapping);
+    }
+
+    return hostConfig;
+  }
 }
