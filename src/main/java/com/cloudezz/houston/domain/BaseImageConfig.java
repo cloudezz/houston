@@ -2,22 +2,55 @@ package com.cloudezz.houston.domain;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 
-public class BaseImageConfig {
+/**
+ * The base class for image config
+ * 
+ * @author Thanneer
+ * @since 1.0.0
+ */
+@MappedSuperclass
+public abstract class BaseImageConfig extends BaseEntity {
+
+  private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
 
   protected String dockerImageName;
 
   protected String hostName;
 
-  protected String[] ports;
+  protected String user;
+
+  protected String domainName;
+
+  @ElementCollection(targetClass = String.class)
+//  @CollectionTable(name = "T_IMAGE_DNS")
+  protected List<String> dns = new LinkedList<String>();
+
+  @ElementCollection(targetClass = String.class)
+//  @CollectionTable(name = "T_IMAGE_PORTS")
+  protected List<String> ports = new LinkedList<String>();
 
   protected Long memory;
 
@@ -25,16 +58,25 @@ public class BaseImageConfig {
 
   protected Integer cpuShares;
 
+  @ElementCollection
+  @MapKeyColumn(name = "host_volume")
+  @Column(name = "volume_mapping")
+  @CollectionTable(name = "T_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
 
+  @ElementCollection
+  @MapKeyColumn(name = "env_name")
+  @Column(name = "env_mapping")
+  @CollectionTable(name = "T_ENVIRONMENT_VARIABLE_MAPPING", joinColumns = @JoinColumn(
+      name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
 
   protected Boolean daemon;
 
   protected Boolean tty;
 
-  private HostConfig hostConfig;
-
+  @Transient
+  protected HostConfig hostConfig;
 
   /**
    * @return the containerId
@@ -93,12 +135,46 @@ public class BaseImageConfig {
   }
 
 
-  public String[] getPorts() {
+  public String getUser() {
+    return user;
+  }
+
+  public void setUser(String user) {
+    this.user = user;
+  }
+
+  public String getDomainName() {
+    return domainName;
+  }
+
+  public void setDomainName(String domainName) {
+    this.domainName = domainName;
+  }
+
+  public List<String> getDns() {
+    return dns;
+  }
+
+  public void setDns(List<String> dns) {
+    this.dns = dns;
+  }
+
+  public List<String> getPorts() {
     return ports;
   }
 
-  public void setPorts(String[] ports) {
+  public void setPorts(List<String> ports) {
     this.ports = ports;
+  }
+
+  
+  public String[] getDnsAsArray() {
+    return dns.toArray(new String[dns.size()]);
+  }
+
+
+  public String[] getPortsAsArray() {
+    return ports.toArray(new String[ports.size()]);
   }
 
   /**
@@ -216,6 +292,7 @@ public class BaseImageConfig {
   /**
    * @return the hostConfig
    */
+  @Transient
   public HostConfig getHostConfig() {
     if (hostConfig == null) {
       hostConfig = getDefaultHostConfig();
@@ -252,7 +329,7 @@ public class BaseImageConfig {
     return volumeMapping;
   }
 
-
+  @Transient
   protected HostConfig getDefaultHostConfig() {
 
     HostConfig hostConfig = new HostConfig();
@@ -260,7 +337,7 @@ public class BaseImageConfig {
 
     // port mappings
     Map<String, HostPortBinding[]> portBindings = hostConfig.getPortBindings();
-    String portMappings[] = this.getPorts();
+    String portMappings[] = this.getPortsAsArray();
     if (portMappings != null) {
       for (int i = 0; i < portMappings.length; i++) {
         HostPortBinding[] portBindingForContainerPort = new HostPortBinding[1];

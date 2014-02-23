@@ -20,6 +20,8 @@ import java.util.Map;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PersistentAuditEvent  extends BaseEntity {
 
+  private static final long serialVersionUID = 55138762249008026L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")

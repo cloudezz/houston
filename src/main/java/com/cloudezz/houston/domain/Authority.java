@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * An authority (a security role) used by Spring Security.
@@ -16,51 +15,63 @@ import java.io.Serializable;
 @Table(name = "T_AUTHORITY")
 public class Authority extends BaseEntity {
 
-    @NotNull
-    @Size(min = 0, max = 50)
-    @Id
-    private String name;
+  private static final long serialVersionUID = 859782860278000178L;
 
-    public String getName() {
-        return name;
+  @NotNull
+  @Size(min = 0, max = 50)
+  @Id
+  private String authorityName;
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    Authority authority = (Authority) o;
+
+    if (name != null ? !name.equals(authority.name) : authority.name != null) {
+      return false;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    return true;
+  }
 
-        Authority authority = (Authority) o;
+  @Override
+  public int hashCode() {
+    return name != null ? name.hashCode() : 0;
+  }
 
-        if (name != null ? !name.equals(authority.name) : authority.name != null) {
-            return false;
-        }
+  @Override
+  public String toString() {
+    return "Authority{" + "name='" + name + '\'' + "}";
+  }
 
-        return true;
-    }
+  @Override
+  public String getId() {
+    return authorityName;
+  }
 
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
+  @Override
+  public void setId(String id) {
+    authorityName = id;
+  }
 
-    @Override
-    public String toString() {
-        return "Authority{" +
-                "name='" + name + '\'' +
-                "}";
-    }
+  /**
+   * @return the authorityName
+   */
+  public String getAuthorityName() {
+    return authorityName;
+  }
 
-    @Override
-    public String getId() {
-      return name;
-    }
+  /**
+   * @param authorityName the authorityName to set
+   */
+  public void setAuthorityName(String authorityName) {
+    this.authorityName = authorityName;
+  }
 }

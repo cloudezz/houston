@@ -1,6 +1,8 @@
 package com.cloudezz.houston.deployer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -43,7 +45,9 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     applicationImageConfig.setHostName("testmachine");
     applicationImageConfig.setMemory(512L);
     applicationImageConfig.setMemorySwap(1024L);
-    applicationImageConfig.setPorts(new String[] {"8990"});
+    List<String> ports = new ArrayList<>();
+    ports.add("8990");
+    applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
     Map<String, String> environmentMapping = new HashMap<String, String>();
     environmentMapping.put("MYSQL_ROOT_PASSWORD", "test123");
@@ -61,7 +65,10 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);
-    serviceImageConfig.setPorts(new String[] {"80", "8009"});
+    List<String> servicePorts = new ArrayList<>();
+    servicePorts.add("80");
+    servicePorts.add("8009");
+    serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
   }

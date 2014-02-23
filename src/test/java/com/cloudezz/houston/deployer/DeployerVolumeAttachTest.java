@@ -1,6 +1,8 @@
 package com.cloudezz.houston.deployer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -39,7 +41,10 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);
-    serviceImageConfig.setPorts(new String[] {"80", "8009"});
+    List<String> servicePorts = new ArrayList<>();
+    servicePorts.add("80");
+    servicePorts.add("8009");
+    serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     
     Map<String,String> hostToDockervolumeMapping = new HashMap<String,String>();

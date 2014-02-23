@@ -1,5 +1,12 @@
 package com.cloudezz.houston.config.reload;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -15,12 +22,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 /**
  * Reloads Spring Beans.
@@ -66,6 +67,7 @@ public class SpringReloader {
                 }
                 Field[] fields = beanInstance.getClass().getDeclaredFields();
                 for (Field field : fields) {
+                    @SuppressWarnings("unused")
                     Annotation[] annotations = field.getDeclaredAnnotations();
                     if (AnnotationUtils.getAnnotation(field, Inject.class) != null ||
                             AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
@@ -81,6 +83,7 @@ public class SpringReloader {
 
                 Method[] methods = beanInstance.getClass().getDeclaredMethods();
                 for (Method method : methods) {
+                    @SuppressWarnings("unused")
                     Annotation[] annotations = method.getDeclaredAnnotations();
                     if (AnnotationUtils.getAnnotation(method, PostConstruct.class) != null) {
                         log.debug("@PostConstruct annotation found on method {}", method.getName());

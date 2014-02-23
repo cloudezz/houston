@@ -2,17 +2,20 @@ package com.cloudezz.houston.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.MappedSuperclass;
+
 /**
  * Base entity for holding information that is available across the entities
  * 
  * @author Dhanush Gopinath
  * @since 1.0.0
  */
+@MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
   private static final long serialVersionUID = -5534745615089076782L;
 
-  private String name;
+  protected String name;
 
 
   /**
@@ -35,6 +38,8 @@ public abstract class BaseEntity implements Serializable {
    * @return
    */
   public abstract String getId();
+  
+  public abstract void setId(String id);
 
 
   /*

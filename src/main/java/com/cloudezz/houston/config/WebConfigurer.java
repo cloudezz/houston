@@ -1,29 +1,32 @@
 package com.cloudezz.houston.config;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.codahale.metrics.servlets.MetricsServlet;
-import com.cloudezz.houston.web.filter.CachingHttpHeadersFilter;
-import com.cloudezz.houston.web.filter.StaticResourcesProductionFilter;
-import com.cloudezz.houston.web.filter.gzip.GZipServletFilter;
-import com.cloudezz.houston.web.servlet.HealthCheckServlet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.context.embedded.ServletContextInitializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.JstlView;
-
-import javax.inject.Inject;
-import javax.servlet.*;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.context.embedded.ServletContextInitializer;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import com.cloudezz.houston.web.filter.CachingHttpHeadersFilter;
+import com.cloudezz.houston.web.filter.StaticResourcesProductionFilter;
+import com.cloudezz.houston.web.filter.gzip.GZipServletFilter;
+import com.cloudezz.houston.web.servlet.HealthCheckServlet;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.servlet.InstrumentedFilter;
+import com.codahale.metrics.servlets.MetricsServlet;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.

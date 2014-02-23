@@ -64,9 +64,11 @@ public class DeployerUtil {
     config.setTty(cloudezzImageConfig.getTty());
     config.setCpuShares(cloudezzImageConfig.getCpuShares());
     config.setHostName(cloudezzImageConfig.getHostName());
+    config.setDomainName(cloudezzImageConfig.getDomainName());
+    config.setDns(cloudezzImageConfig.getDnsAsArray());
+    config.setUser(cloudezzImageConfig.getUser());
 
-
-    String[] ports = cloudezzImageConfig.getPorts();
+    String[] ports = cloudezzImageConfig.getPortsAsArray();
     if (ports != null && ports.length > 0) {
       Map<String, Map<String, HostPortBinding>> exposedPorts =
           new HashMap<String, Map<String, HostPortBinding>>();
@@ -228,7 +230,7 @@ public class DeployerUtil {
     applicationImageConfig.setHostConfig(hostConfig);
     NetworkSettings networkSettings = containerInspectResponse.networkSettings;
     if (networkSettings != null) {
-      String[] servicePorts = serviceImageConfig.getPorts();
+      String[] servicePorts = serviceImageConfig.getPortsAsArray();
       String serviceMachineIp = containerInspectResponse.networkSettings.ipAddress;
       Map<String, HostPortBinding[]> ports = networkSettings.ports;
       String tcpForwards = "";

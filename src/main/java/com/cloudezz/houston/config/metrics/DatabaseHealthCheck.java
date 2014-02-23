@@ -1,7 +1,14 @@
 package com.cloudezz.houston.config.metrics;
 
-import com.codahale.metrics.health.HealthCheck;
-import com.cloudezz.houston.config.MetricsConfiguration;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -11,13 +18,8 @@ import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import com.cloudezz.houston.config.MetricsConfiguration;
+import com.codahale.metrics.health.HealthCheck;
 
 /**
  * Metrics HealthCheck for the Database.
@@ -51,6 +53,7 @@ public class DatabaseHealthCheck extends HealthCheck {
     public DatabaseHealthCheck() {
     }
 
+    @SuppressWarnings("unused")
     @PostConstruct
     private void init() {
         log.debug("Initializing Database Metrics healthcheck");

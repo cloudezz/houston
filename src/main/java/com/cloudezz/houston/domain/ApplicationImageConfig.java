@@ -1,10 +1,17 @@
 package com.cloudezz.houston.domain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.google.common.base.Preconditions;
@@ -18,15 +25,31 @@ import com.google.common.base.Preconditions;
  * @author Thanneer
  * 
  */
+@Entity
+@Table(name = "T_APP_IMAGE_CONFIG")
 public class ApplicationImageConfig extends BaseImageConfig {
+
+  private static final long serialVersionUID = 6647698228363181877L;
 
   private String gitURL;
 
+  @Column(name="app_name")
+  @Id
   private String appName;
-
+  
+  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="applicationImageConfig")
   private List<ServiceImageConfig> serviceImages = new LinkedList<ServiceImageConfig>();
 
 
+  @Override
+  public String getId() {
+    return appName;
+  }
+  
+  @Override
+  public void setId(String id) {
+    appName = id;
+  }
 
   /**
    * @return the appName
@@ -87,10 +110,10 @@ public class ApplicationImageConfig extends BaseImageConfig {
       throw new CloudezzDeployException("The App instance ports to be exposed are not set");
 
     List<String> allExposedPorts = new ArrayList<String>();
-    allExposedPorts.addAll(Arrays.asList(this.ports));
+    allExposedPorts.addAll(this.ports);
     for (Iterator<ServiceImageConfig> iterator = serviceImages.iterator(); iterator.hasNext();) {
       BaseImageConfig baseCloudezzImageConfig = iterator.next();
-      String[] servicePorts = baseCloudezzImageConfig.getPorts();
+      String[] servicePorts = baseCloudezzImageConfig.getPortsAsArray();
       if (servicePorts != null) {
         for (int i = 0; i < servicePorts.length; i++) {
           if (allExposedPorts.contains(servicePorts[i])) {
@@ -103,6 +126,7 @@ public class ApplicationImageConfig extends BaseImageConfig {
     }
     return false;
   }
+
 
 
 

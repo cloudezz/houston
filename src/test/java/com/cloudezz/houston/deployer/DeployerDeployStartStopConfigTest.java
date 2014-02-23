@@ -1,6 +1,8 @@
 package com.cloudezz.houston.deployer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -44,7 +46,9 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     applicationImageConfig.setHostName("testmachine");
     applicationImageConfig.setMemory(512L);
     applicationImageConfig.setMemorySwap(1024L);
-    applicationImageConfig.setPorts(new String[] {"8990"});
+    List<String> ports = new ArrayList<>();
+    ports.add("8990");
+    applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
     applicationImageConfig.addServiceImages(serviceImageConfig);
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
@@ -59,7 +63,10 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);
-    serviceImageConfig.setPorts(new String[] {"80", "8009"});
+    List<String> servicePorts = new ArrayList<>();
+    servicePorts.add("80");
+    servicePorts.add("8009");
+    serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
 

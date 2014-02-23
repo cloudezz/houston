@@ -1,14 +1,23 @@
 package com.cloudezz.houston.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * The host machine of docker where the docker instances will be started.
  * 
  * @author Thanneer
  * 
  */
-public class DockerHostMachine {
+@Entity
+@Table(name = "T_DOCKER_HOST_MACHINE")
+public class DockerHostMachine extends BaseEntity {
+
+  private static final long serialVersionUID = 6685249869925623669L;
 
   // public ip address of the host machine
+  @Id
   private String ipAddress;
 
   // port on which docker api is listening
@@ -25,6 +34,17 @@ public class DockerHostMachine {
 
   // docker rest api on http or https
   private boolean https = false;
+
+
+  @Override
+  public String getId() {
+    return ipAddress;
+  }
+  
+  @Override
+  public void setId(String id) {
+    ipAddress = id;
+  }
 
   /**
    * public ip address of the host machine
@@ -127,7 +147,8 @@ public class DockerHostMachine {
     if (https) {
       protocol = "https";
     }
-    return protocol+"://"+ipAddress+":"+dockerPort;
+    return protocol + "://" + ipAddress + ":" + dockerPort;
   }
+
 
 }

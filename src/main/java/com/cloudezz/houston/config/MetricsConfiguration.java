@@ -80,6 +80,7 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter implements En
             this.propertyResolver = new RelaxedPropertyResolver(environment, "metrics.graphite");
         }
 
+        @SuppressWarnings("unused")
         @PostConstruct
         private void init() {
             Boolean graphiteEnabled = propertyResolver.getProperty("enabled", Boolean.class, false);
