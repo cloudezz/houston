@@ -1,0 +1,8 @@
+Mvn command to generate the db-changelog-new.xml file. Please delete the 
+file before running else it will append the change-log to the end 
+of the file. Alternative way from eclipse create maven build configuration 
+to run the command at project level. 
+
+
+$ mvn liquibase:generateChangeLog 
+
