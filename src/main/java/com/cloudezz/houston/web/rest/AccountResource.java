@@ -68,7 +68,7 @@ public class AccountResource {
         }
         Map<String, Boolean> roles = new HashMap<>();
         for (Authority authority : user.getAuthorities()) {
-            roles.put(authority.getName(), Boolean.TRUE);
+            roles.put(authority.getId(), Boolean.TRUE);
         }
         return new UserDTO(user.getLogin(), user.getFirstName(), user.getLastName(),
                 user.getEmail(), roles);
