@@ -77,7 +77,6 @@ public class DatabaseConfiguration implements EnvironmentAware {
 	}
 
 	@Bean
-	@Profile(value={"prod","production"})
 	public SpringLiquibase liquibase() {
 		log.debug("Configuring Liquibase");
 		SpringLiquibase liquibase = new SpringLiquibase();
