@@ -12,8 +12,8 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "T_IMAGE_BUILD_PACK_INFO")
-public class ImageBuildPackInfo extends BaseEntity {
+@Table(name = "T_IMAGE_INFO")
+public class ImageInfo extends BaseEntity {
 
   private static final long serialVersionUID = 8051510635093548094L;
 
@@ -21,6 +21,8 @@ public class ImageBuildPackInfo extends BaseEntity {
   private String imageName;
 
   private String buildPackGitURL;
+  
+  private String logoURL;
 
   @Override
   public String getId() {
@@ -58,6 +60,14 @@ public class ImageBuildPackInfo extends BaseEntity {
    */
   public void setBuildPackGitURL(String buildPackGitURL) {
     this.buildPackGitURL = buildPackGitURL;
+  }
+
+  public String getLogoURL() {
+    return logoURL;
+  }
+
+  public void setLogoURL(String logoURL) {
+    this.logoURL = logoURL;
   }
 
 

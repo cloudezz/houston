@@ -33,8 +33,8 @@ public class ApplicationImageConfig extends BaseImageConfig {
 
   private String gitURL;
 
-  @Column(name="app_name")
   @Id
+  @Column(name="app_name")
   private String appName;
   
   @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="applicationImageConfig")
