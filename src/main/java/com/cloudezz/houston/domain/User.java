@@ -49,12 +49,13 @@ public class User extends BaseEntity {
   @Email
   @Size(min = 0, max = 100)
   @Id
+  @Column(name = "email", unique=true)
   private String email;
 
   @JsonIgnore
   @ManyToMany
-  @JoinTable(name = "T_USER_AUTHORITY", joinColumns = {@JoinColumn(name = "login",
-      referencedColumnName = "login")}, inverseJoinColumns = {@JoinColumn(name = "name",
+  @JoinTable(name = "T_USER_AUTHORITY", joinColumns = {@JoinColumn(name = "email",
+      referencedColumnName = "email")}, inverseJoinColumns = {@JoinColumn(name = "name",
       referencedColumnName = "name")})
   private Set<Authority> authorities;
 
@@ -138,7 +139,7 @@ public class User extends BaseEntity {
 
   @Override
   public int hashCode() {
-    return login.hashCode();
+    return email.hashCode();
   }
 
   @Override

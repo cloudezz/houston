@@ -15,6 +15,7 @@
             <column name="password" type="varchar(100)"/>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
+            <column name="account_id" type="varchar(50)"/>
             <column name="email" type="varchar(100)"/>
         </createTable>
 
@@ -34,7 +35,7 @@
             <column name="series" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_login" type="varchar(50)"/>
+            <column name="user_email" type="varchar(50)"/>
             <column name="token_value" type="varchar(255)"/>
             <column name="token_date" type="date"/>
             <column name="ip_address" type="varchar(39)"/>
@@ -82,7 +83,9 @@
                      unique="false">
             <column name="event_id" type="bigint"/>
         </createIndex>
-
+		
+		<addUniqueConstraint columnNames="email" tableName="T_USER"/>
+		
         <addForeignKeyConstraint baseColumnNames="name"
                                  baseTableName="T_USER_AUTHORITY"
                                  constraintName="fk_authority_name"
@@ -95,10 +98,10 @@
                                  referencedColumnNames="login"
                                  referencedTableName="T_USER"/>
 
-        <addForeignKeyConstraint baseColumnNames="user_login"
+        <addForeignKeyConstraint baseColumnNames="user_email"
                                  baseTableName="T_PERSISTENT_TOKEN"
                                  constraintName="fk_user_persistent_token"
-                                 referencedColumnNames="login"
+                                 referencedColumnNames="email"
                                  referencedTableName="T_USER"/>
 
         <loadData encoding="UTF-8"
