@@ -55,8 +55,8 @@ public class User extends BaseEntity {
   @JsonIgnore
   @ManyToMany
   @JoinTable(name = "T_USER_AUTHORITY", joinColumns = {@JoinColumn(name = "email",
-      referencedColumnName = "email")}, inverseJoinColumns = {@JoinColumn(name = "name",
-      referencedColumnName = "name")})
+      referencedColumnName = "email")}, inverseJoinColumns = {@JoinColumn(name = "authority_name",
+      referencedColumnName = "authority_name")})
   private Set<Authority> authorities;
 
   @JsonIgnore

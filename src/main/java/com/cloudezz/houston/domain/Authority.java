@@ -2,6 +2,7 @@ package com.cloudezz.houston.domain;
 
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,6 +21,7 @@ public class Authority extends BaseEntity {
   @NotNull
   @Size(min = 0, max = 50)
   @Id
+  @Column(name = "authority_name", unique = true)
   private String authorityName;
 
 
@@ -34,7 +36,8 @@ public class Authority extends BaseEntity {
 
     Authority authority = (Authority) o;
 
-    if (name != null ? !name.equals(authority.name) : authority.name != null) {
+    if (authorityName != null ? !authorityName.equals(authority.authorityName)
+        : authority.authorityName != null) {
       return false;
     }
 
@@ -43,12 +46,12 @@ public class Authority extends BaseEntity {
 
   @Override
   public int hashCode() {
-    return name != null ? name.hashCode() : 0;
+    return authorityName != null ? authorityName.hashCode() : 0;
   }
 
   @Override
   public String toString() {
-    return "Authority{" + "name='" + name + '\'' + "}";
+    return "Authority{" + "name='" + authorityName + '\'' + "}";
   }
 
   @Override

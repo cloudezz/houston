@@ -40,7 +40,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
         for (Authority authority : userFromDatabase.getAuthorities()) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getName());
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getId());
             grantedAuthorities.add(grantedAuthority);
         }
 

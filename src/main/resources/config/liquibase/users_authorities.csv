@@ -1,4 +1,4 @@
-login;name
-admin;ROLE_ADMIN
-admin;ROLE_USER
-user;ROLE_USER
+email;authority_name
+admin@cloudezz.com;ROLE_ADMIN
+admin@cloudezz.com;ROLE_USER
+user@cloudezz.com;ROLE_USER
