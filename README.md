@@ -22,17 +22,19 @@ Once the code is downloaded run the following commands from the root project fol
 
 Then to run the application you can choose either of the following options
 
-1. Run from eclipse IDE -
+1. Run from eclipse IDE:
 
 	On the Eclipse IDE run the class `Application.java` using the option Run As Java Application. The application will be running on `http://localhost:8090`
 
-2. Run using Spring Boot
+2. Run using Spring Boot using Maven command: 
 
 	On the command prompt run `mvn` task `mvn spring-boot:run` . The application will be running on `http://localhost:8090`
 
-3. Run using Grunt & Java Server together
+3. Run using Grunt & Java Server together:
 
-	You can run Grunt to work on the client-side JavaScript application:
+	Run the application in any of the form given above. We use this only as a backend Restful service.
+
+	You can now run Grunt to work on the client-side JavaScript application:
 
 	On the command prompt run `grunt server` . This should open up your Web browser, with live reload enabled, on `http://localhost:9000.` Any changes to HTML, JS files would be auto deployed. This is the best way to run the application if you are developing frontend.
 
@@ -40,10 +42,19 @@ Then to run the application you can choose either of the following options
 
 	If you want more information on using Grunt, please go to [http://gruntjs.com](http://gruntjs.com).
 
+### Login Credentials
+
+    Email: admin@cloudezz.com
+	Password: admin
+	Role: ROLE_ADMIN
+
+	Email: user@cloudezz.com
+	Password: user
+	Role: ROLE_USER 
 
 ### Dependency Updates ###
 
-#### Javascript ####
+#### Maven/Java ####
 
 Update the `pom.xml`.
 
