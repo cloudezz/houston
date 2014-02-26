@@ -56,6 +56,15 @@ houstonApp
                     templateUrl: 'views/main.html',
                     controller: 'LogoutController'
                 })
+                .when('/appimagecfg', {
+                    templateUrl: 'views/appimagecfgs.html',
+                    controller: 'AppImageCfgController',
+                    resolve:{
+                        resolvedAppImageCfg: ['AppImageCfg', function (AppImageCfg) {
+                            return AppImageCfg.query();
+                        }]
+                    }
+                })
                 .otherwise({
                     templateUrl: 'views/main.html',
                     controller: 'MainController'

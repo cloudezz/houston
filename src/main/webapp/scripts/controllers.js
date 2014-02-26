@@ -30,7 +30,7 @@ houstonApp.controller('LoginController', ['$scope', '$location', 'Authentication
                 password: $scope.password,
                 rememberMe: $scope.rememberMe,
                 success: function () {
-                    $location.path('');
+                    $location.path('/appimagecfg');
                 }
             });
         };
@@ -204,3 +204,33 @@ houstonApp.controller('AuditsController', ['$scope', '$translate', '$filter', 'A
         });
     }]);
 
+houstonApp.controller('AppImageCfgController', ['$scope', 'resolvedAppImageCfg', 'AppImageCfg',
+    function ($scope, resolvedAppImageCfg, AppImageCfg) {
+
+        $scope.appimagecfgs = resolvedAppImageCfg;
+
+        $scope.create = function () {
+            AppImageCfg.save($scope.appimagecfg,
+                function () {
+                    $scope.appimagecfgs = AppImageCfg.query();
+                    $('#saveAppImageCfgModal').modal('hide');
+                    $scope.clear();
+                });
+        };
+
+        $scope.update = function (id) {
+            $scope.appimagecfg = AppImageCfg.get({id: id});
+            $('#saveAppImageCfgModal').modal('show');
+        };
+
+        $scope.delete = function (id) {
+            AppImageCfg.delete({id: id},
+                function () {
+                    $scope.appimagecfgs = AppImageCfg.query();
+                });
+        };
+
+        $scope.clear = function () {
+            $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
+        };
+    }]);
