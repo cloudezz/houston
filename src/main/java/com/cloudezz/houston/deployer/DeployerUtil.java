@@ -17,9 +17,9 @@ import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse.Netwo
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.deployer.docker.model.Image;
-import com.cloudezz.houston.domain.ApplicationImageConfig;
-import com.cloudezz.houston.domain.BaseImageConfig;
-import com.cloudezz.houston.domain.ServiceImageConfig;
+import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.BaseImageCfg;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.google.common.base.Preconditions;
 
 /**
@@ -48,14 +48,14 @@ public class DeployerUtil {
   }
 
   /**
-   * Convert {@link BaseImageConfig} the pojo to {@link ContainerConfig} understood by docker remote
+   * Convert {@link BaseImageCfg} the pojo to {@link ContainerConfig} understood by docker remote
    * api
    * 
    * @param dockerInstance
    * @return
    */
   public static ContainerConfig getDockerConfigFromCloudezzConfig(
-      BaseImageConfig cloudezzImageConfig) {
+      BaseImageCfg cloudezzImageConfig) {
 
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -128,7 +128,7 @@ public class DeployerUtil {
    * @throws CloudezzDeployException
    */
   private static boolean createAndSetContainerOnImageConfig(DockerClient dockerClient,
-      BaseImageConfig cloudezzImageConfig) throws CloudezzDeployException {
+      BaseImageCfg cloudezzImageConfig) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -143,7 +143,7 @@ public class DeployerUtil {
 
   }
 
-  public static boolean stopContainer(DockerClient dockerClient, BaseImageConfig cloudezzImageConfig)
+  public static boolean stopContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
@@ -165,12 +165,12 @@ public class DeployerUtil {
    * @throws CloudezzDeployException
    */
   public static boolean startContainer(DockerClient dockerClient,
-      BaseImageConfig cloudezzImageConfig) throws CloudezzDeployException {
+      BaseImageCfg cloudezzImageConfig) throws CloudezzDeployException {
     return startContainer(dockerClient, cloudezzImageConfig, null);
   }
 
   public static boolean startContainer(DockerClient dockerClient,
-      BaseImageConfig cloudezzImageConfig, HostConfig hostConfig) throws CloudezzDeployException {
+      BaseImageCfg cloudezzImageConfig, HostConfig hostConfig) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -209,7 +209,7 @@ public class DeployerUtil {
    * @throws CloudezzDeployException
    */
   public static HostConfig linkImage(DockerClient dockerClient,
-      ApplicationImageConfig applicationImageConfig, ServiceImageConfig serviceImageConfig,
+      AppImageCfg applicationImageConfig, ServiceImageCfg serviceImageConfig,
       String linkName) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(applicationImageConfig, "applicationImageConfig arg cannot be null");
@@ -307,7 +307,7 @@ public class DeployerUtil {
     }
   }
 
-  public static boolean deleteContainer(DockerClient dockerClient, BaseImageConfig baseImageConfig)
+  public static boolean deleteContainer(DockerClient dockerClient, BaseImageCfg baseImageConfig)
       throws CloudezzDeployException {
     try {
       return dockerClient.removeContainer(baseImageConfig.getContainerId());

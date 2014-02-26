@@ -25,7 +25,7 @@ import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
  * @since 1.0.0
  */
 @MappedSuperclass
-public abstract class BaseImageConfig extends BaseEntity {
+public abstract class BaseImageCfg extends BaseEntity {
 
   private static final long serialVersionUID = 5524208892445624915L;
 
@@ -38,12 +38,12 @@ public abstract class BaseImageConfig extends BaseEntity {
   @Column(name="image_name")
   protected String imageName;
 
-  @Column(name="host_name")
+  @Column(name = "host_name")
   protected String hostName;
 
   protected String user;
 
-  @Column(name="domain_name")
+  @Column(name = "domain_name")
   protected String domainName;
 
   protected Long memory;
@@ -51,7 +51,7 @@ public abstract class BaseImageConfig extends BaseEntity {
   @Column(name="memory_swap")
   protected Long memorySwap;
 
-  @Column(name="cpu_shares")
+  @Column(name = "cpu_shares")
   protected Integer cpuShares;
 
   @ElementCollection

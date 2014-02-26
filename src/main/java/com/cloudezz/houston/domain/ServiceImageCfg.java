@@ -24,7 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_SERVICE_IMAGE_CONFIG")
-public class ServiceImageConfig extends BaseImageConfig {
+public class ServiceImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 1857747836263604938L;
 
@@ -45,7 +45,7 @@ public class ServiceImageConfig extends BaseImageConfig {
   
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "app_config_id")
-  private ApplicationImageConfig applicationImageConfig;
+  private AppImageCfg applicationImageConfig;
 
   @Override
   public String getId() {
@@ -126,14 +126,14 @@ public class ServiceImageConfig extends BaseImageConfig {
   /**
    * @return the applicationImageConfig
    */
-  public ApplicationImageConfig getApplicationImageConfig() {
+  public AppImageCfg getApplicationImageConfig() {
     return applicationImageConfig;
   }
 
   /**
    * @param applicationImageConfig the applicationImageConfig to set
    */
-  public void setApplicationImageConfig(ApplicationImageConfig applicationImageConfig) {
+  public void setApplicationImageConfig(AppImageCfg applicationImageConfig) {
     this.applicationImageConfig = applicationImageConfig;
   }
 
