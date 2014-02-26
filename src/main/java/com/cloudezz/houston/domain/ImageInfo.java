@@ -1,5 +1,6 @@
 package com.cloudezz.houston.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,10 +19,13 @@ public class ImageInfo extends BaseEntity {
   private static final long serialVersionUID = 8051510635093548094L;
 
   @Id
+  @Column(name = "image_name")
   private String imageName;
 
+  @Column(name = "build_pack_git_url")
   private String buildPackGitURL;
   
+  @Column(name = "logo_url")
   private String logoURL;
 
   @Override

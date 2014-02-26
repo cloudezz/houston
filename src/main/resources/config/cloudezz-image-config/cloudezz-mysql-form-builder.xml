@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="cloudezz/mysql">
+
+	<form-element type="input" name="mysqlDB" display-name="Databases to be created" />
+	<form-element type="input" name="mysqlUserName"
+		display-name="Mysql Username" />
+	<form-element type="input" name="mysqlPassword"
+		display-name="Mysql Password" />
+	<form-element type="input" name="port" display-name="Mysql Port" />
+	<form-element type="password" name="sshRootPassword"
+		display-name="SSH Root Password" />
+	<form-element type="checkbox" name="webShell"
+		display-name="Shell Web Access " />
+
+</form>

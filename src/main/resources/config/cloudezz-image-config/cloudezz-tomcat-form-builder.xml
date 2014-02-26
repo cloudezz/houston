@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="cloudezz/tomcat7">
+
+	<form-element type="input" name="gitURL" display-name="Git URL" />
+	<form-element type="file-upload" name="uploadWar"
+		display-name="Upload WAR" />
+	<form-element type="input" name="port" display-name="Tomcat Port" />
+	<form-element type="password" name="sshRootPassword"
+		display-name="SSH Root Password" />
+	<form-element type="checkbox" name="webShell"
+		display-name="Shell Web Access " />
+		
+</form>

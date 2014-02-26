@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -31,13 +33,22 @@ public class ApplicationImageConfig extends BaseImageConfig {
 
   private static final long serialVersionUID = 6647698228363181877L;
 
+  @Column(name = "git_url")
   private String gitURL;
 
+  @ElementCollection(targetClass = String.class)
+  @CollectionTable(name = "T_APP_IMAGE_DNS")
+  protected List<String> dns = new LinkedList<String>();
+
+  @ElementCollection(targetClass = String.class)
+  @CollectionTable(name = "T_APP_IMAGE_PORTS")
+  protected List<String> ports = new LinkedList<String>();
+
   @Id
-  @Column(name="app_name")
+  @Column(name = "app_name")
   private String appName;
-  
-  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="applicationImageConfig")
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
   private List<ServiceImageConfig> serviceImages = new LinkedList<ServiceImageConfig>();
 
 
@@ -45,7 +56,7 @@ public class ApplicationImageConfig extends BaseImageConfig {
   public String getId() {
     return appName;
   }
-  
+
   @Override
   public void setId(String id) {
     appName = id;
@@ -78,6 +89,33 @@ public class ApplicationImageConfig extends BaseImageConfig {
   public void setGitURL(String gitURL) {
     this.gitURL = gitURL;
   }
+
+  public List<String> getDns() {
+    return dns;
+  }
+
+  public void setDns(List<String> dns) {
+    this.dns = dns;
+  }
+
+  public List<String> getPorts() {
+    return ports;
+  }
+
+  public void setPorts(List<String> ports) {
+    this.ports = ports;
+  }
+
+
+  public String[] getDnsAsArray() {
+    return dns.toArray(new String[dns.size()]);
+  }
+
+
+  public String[] getPortsAsArray() {
+    return ports.toArray(new String[ports.size()]);
+  }
+
 
   /**
    * @return the serviceImages
@@ -126,7 +164,6 @@ public class ApplicationImageConfig extends BaseImageConfig {
     }
     return false;
   }
-
 
 
 

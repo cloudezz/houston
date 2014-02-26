@@ -1,5 +1,6 @@
 package com.cloudezz.houston.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,12 +19,15 @@ public class DockerHostMachine extends BaseEntity {
 
   // public ip address of the host machine
   @Id
+  @Column(name = "ip_address")
   private String ipAddress;
 
   // port on which docker api is listening
+  @Column(name = "docker_port")
   private String dockerPort;
 
   // IAAS provider name like ec2 or digital ocean
+  @Column(name = "cloud_provider")
   private String cloudProviderName;
 
   // docker rest api auth details

@@ -2,7 +2,6 @@ package com.cloudezz.houston.domain;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,26 +35,23 @@ public abstract class BaseImageConfig extends BaseEntity {
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
 
-  protected String dockerImageName;
+  @Column(name="image_name")
+  protected String imageName;
 
+  @Column(name="host_name")
   protected String hostName;
 
   protected String user;
 
+  @Column(name="domain_name")
   protected String domainName;
-
-  @ElementCollection(targetClass = String.class)
-//  @CollectionTable(name = "T_IMAGE_DNS")
-  protected List<String> dns = new LinkedList<String>();
-
-  @ElementCollection(targetClass = String.class)
-//  @CollectionTable(name = "T_IMAGE_PORTS")
-  protected List<String> ports = new LinkedList<String>();
 
   protected Long memory;
 
+  @Column(name="memory_swap")
   protected Long memorySwap;
 
+  @Column(name="cpu_shares")
   protected Integer cpuShares;
 
   @ElementCollection
@@ -110,14 +106,14 @@ public abstract class BaseImageConfig extends BaseEntity {
    * @return the dockerImageName
    */
   public String getDockerImageName() {
-    return dockerImageName;
+    return imageName;
   }
 
   /**
    * @param dockerImageName the dockerImageName to set
    */
   public void setDockerImageName(String dockerImageName) {
-    this.dockerImageName = dockerImageName;
+    this.imageName = dockerImageName;
   }
 
   /**
@@ -151,31 +147,7 @@ public abstract class BaseImageConfig extends BaseEntity {
     this.domainName = domainName;
   }
 
-  public List<String> getDns() {
-    return dns;
-  }
 
-  public void setDns(List<String> dns) {
-    this.dns = dns;
-  }
-
-  public List<String> getPorts() {
-    return ports;
-  }
-
-  public void setPorts(List<String> ports) {
-    this.ports = ports;
-  }
-
-  
-  public String[] getDnsAsArray() {
-    return dns.toArray(new String[dns.size()]);
-  }
-
-
-  public String[] getPortsAsArray() {
-    return ports.toArray(new String[ports.size()]);
-  }
 
   /**
    * @return the memory
@@ -232,6 +204,18 @@ public abstract class BaseImageConfig extends BaseEntity {
   public void addEnvironmentMapping(String envName, String envValue) {
     this.environmentMapping.put(envName, envValue);
   }
+
+  public abstract List<String> getDns();
+
+  public abstract void setDns(List<String> dns);
+
+  public abstract List<String> getPorts();
+
+  public abstract void setPorts(List<String> ports);
+
+  public abstract String[] getDnsAsArray();
+
+  public abstract String[] getPortsAsArray();
 
   /**
    * @return the daemon

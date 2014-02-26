@@ -201,7 +201,7 @@
 			<artifactId>guava</artifactId>
 			<version>16.0.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.ryantenney.metrics</groupId>
 			<artifactId>metrics-spring</artifactId>
@@ -440,6 +440,32 @@
 					</arguments>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<outputChangeLogFile>src/main/resources/config/liquibase/db-changelog-new.xml</outputChangeLogFile>
+					<changeLogFile>src/main/resources/config/liquibase/db-changelog.xml</changeLogFile>
+					<propertyFile>src/main/resources/config/liquibase/liquibase.mysql.properties</propertyFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>status</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.6</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
+
+
 </project>
