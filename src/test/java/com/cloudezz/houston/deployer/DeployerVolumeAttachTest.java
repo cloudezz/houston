@@ -16,7 +16,7 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.ServiceImageConfig;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 
 
 public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
@@ -24,11 +24,11 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
   @Autowired
   private DockerClient dockerClient;
 
-  private ServiceImageConfig serviceImageConfig;
+  private ServiceImageCfg serviceImageConfig;
 
   @Before
   public void setup() throws CloudezzDeployException {
-    serviceImageConfig = new ServiceImageConfig();
+    serviceImageConfig = new ServiceImageCfg();
     DockerHostMachine dockerHostMachine = new DockerHostMachine();
     dockerHostMachine.setIpAddress("localhost");
     dockerHostMachine.setDockerPort("4243");

@@ -26,7 +26,7 @@ import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
  * @since 1.0.0
  */
 @MappedSuperclass
-public abstract class BaseImageConfig extends BaseEntity {
+public abstract class BaseImageCfg extends BaseEntity {
 
   private static final long serialVersionUID = 5524208892445624915L;
 

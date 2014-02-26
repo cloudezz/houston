@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
-import com.cloudezz.houston.domain.ApplicationImageConfig;
+import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.ServiceImageConfig;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 
 /**
  * Test class for the all image config related repository.
@@ -30,9 +30,9 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
   @Autowired
   private DockerHostMachineRepository dockerHostMachineRepository;
 
-  private ServiceImageConfig serviceImageConfig = new ServiceImageConfig();
+  private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
-  private ApplicationImageConfig applicationImageConfig = new ApplicationImageConfig();
+  private AppImageCfg applicationImageConfig = new AppImageCfg();
   
   private  DockerHostMachine dockerHostMachine = new DockerHostMachine();
 

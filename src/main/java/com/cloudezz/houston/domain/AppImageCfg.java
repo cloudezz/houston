@@ -27,7 +27,7 @@ import com.google.common.base.Preconditions;
  */
 @Entity
 @Table(name = "T_APP_IMAGE_CONFIG")
-public class ApplicationImageConfig extends BaseImageConfig {
+public class AppImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 6647698228363181877L;
 
@@ -38,7 +38,7 @@ public class ApplicationImageConfig extends BaseImageConfig {
   private String appName;
   
   @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="applicationImageConfig")
-  private List<ServiceImageConfig> serviceImages = new LinkedList<ServiceImageConfig>();
+  private List<ServiceImageCfg> serviceImages = new LinkedList<ServiceImageCfg>();
 
 
   @Override
@@ -82,7 +82,7 @@ public class ApplicationImageConfig extends BaseImageConfig {
   /**
    * @return the serviceImages
    */
-  public List<ServiceImageConfig> getServiceImages() {
+  public List<ServiceImageCfg> getServiceImages() {
     return serviceImages;
   }
 
@@ -90,7 +90,7 @@ public class ApplicationImageConfig extends BaseImageConfig {
    * @param serviceImages the serviceImages to set
    * @throws CloudezzDeployException
    */
-  public void addServiceImages(ServiceImageConfig serviceImage) throws CloudezzDeployException {
+  public void addServiceImages(ServiceImageCfg serviceImage) throws CloudezzDeployException {
     Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
     this.serviceImages.add(serviceImage);
   }
@@ -111,8 +111,8 @@ public class ApplicationImageConfig extends BaseImageConfig {
 
     List<String> allExposedPorts = new ArrayList<String>();
     allExposedPorts.addAll(this.ports);
-    for (Iterator<ServiceImageConfig> iterator = serviceImages.iterator(); iterator.hasNext();) {
-      BaseImageConfig baseCloudezzImageConfig = iterator.next();
+    for (Iterator<ServiceImageCfg> iterator = serviceImages.iterator(); iterator.hasNext();) {
+      BaseImageCfg baseCloudezzImageConfig = iterator.next();
       String[] servicePorts = baseCloudezzImageConfig.getPortsAsArray();
       if (servicePorts != null) {
         for (int i = 0; i < servicePorts.length; i++) {

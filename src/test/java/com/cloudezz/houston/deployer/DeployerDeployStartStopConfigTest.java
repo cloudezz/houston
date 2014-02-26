@@ -15,9 +15,9 @@ import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
-import com.cloudezz.houston.domain.ApplicationImageConfig;
+import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.ServiceImageConfig;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 
 
 public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoader {
@@ -28,9 +28,9 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
   @Autowired
   private Deployer deployer;
 
-  private ServiceImageConfig serviceImageConfig = new ServiceImageConfig();
+  private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
-  private ApplicationImageConfig applicationImageConfig = new ApplicationImageConfig();
+  private AppImageCfg applicationImageConfig = new AppImageCfg();
 
   @Before
   public void setup() throws CloudezzDeployException {

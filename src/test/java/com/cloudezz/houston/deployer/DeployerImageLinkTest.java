@@ -16,9 +16,9 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.client.StreamResponseListener;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
-import com.cloudezz.houston.domain.ApplicationImageConfig;
+import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.ServiceImageConfig;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 
 
 public class DeployerImageLinkTest extends BaseApplicationContextLoader {
@@ -26,9 +26,9 @@ public class DeployerImageLinkTest extends BaseApplicationContextLoader {
   @Autowired
   private DockerClient dockerClient;
 
-  private ServiceImageConfig serviceImageConfig = new ServiceImageConfig();
+  private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
-  private ApplicationImageConfig applicationImageConfig = new ApplicationImageConfig();
+  private AppImageCfg applicationImageConfig = new AppImageCfg();
 
   @Before
   public void setup() throws CloudezzDeployException {

@@ -1,7 +1,7 @@
 package com.cloudezz.houston.deployer;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
-import com.cloudezz.houston.domain.ApplicationImageConfig;
+import com.cloudezz.houston.domain.AppImageCfg;
 
 /**
  * Main interface to start cloudezz app instance along with the service instance that is embedded
@@ -19,7 +19,7 @@ public interface Deployer {
    * @param appImageConfig
    * @return
    */
-  public boolean start(ApplicationImageConfig appImageConfig) throws CloudezzDeployException;
+  public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException;
 
   /**
    * ReStart the containers contained inside the app image config and service images that were
@@ -29,7 +29,7 @@ public interface Deployer {
    * @return
    */
 
-  public boolean restart(ApplicationImageConfig appImageConfig) throws CloudezzDeployException;
+  public boolean restart(AppImageCfg appImageConfig) throws CloudezzDeployException;
 
   /**
    * Stop the containers contained inside the app image config and service images that were created
@@ -38,7 +38,7 @@ public interface Deployer {
    * @param appImageConfig
    * @return
    */
-  public boolean stop(ApplicationImageConfig appImageConfig) throws CloudezzDeployException;
+  public boolean stop(AppImageCfg appImageConfig) throws CloudezzDeployException;
 
   /**
    * Delete only the containers contained inside the app image config and service images that were
@@ -48,7 +48,7 @@ public interface Deployer {
    * @param appImageConfig
    * @return
    */
-  public boolean deleteInstance(ApplicationImageConfig appImageConfig)
+  public boolean deleteInstance(AppImageCfg appImageConfig)
       throws CloudezzDeployException;
 
   /**
@@ -58,6 +58,6 @@ public interface Deployer {
    * @param appImageConfig
    * @return
    */
-  public boolean delete(ApplicationImageConfig appImageConfig) throws CloudezzDeployException;
+  public boolean delete(AppImageCfg appImageConfig) throws CloudezzDeployException;
 
 }
