@@ -36,11 +36,13 @@ public class ServiceImageCfg extends BaseImageCfg {
   private String serviceName;
   
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_SERVICE_IMAGE_DNS")
+  @CollectionTable(name = "T_SERVICE_IMAGE_DNS", joinColumns = @JoinColumn(
+      name = "service_img_dns_id"))
   protected List<String> dns = new LinkedList<String>();
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_SERVICE_IMAGE_PORTS")
+  @CollectionTable(name = "T_SERVICE_IMAGE_PORTS",joinColumns = @JoinColumn(
+      name = "service_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
   
   @ManyToOne(fetch = FetchType.LAZY)

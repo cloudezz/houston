@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The base class for image config
@@ -35,7 +36,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
 
-  @Column(name="image_name")
+  @Column(name = "image_name")
   protected String imageName;
 
   @Column(name = "host_name")
@@ -48,19 +49,19 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   protected Long memory;
 
-  @Column(name="memory_swap")
+  @Column(name = "memory_swap")
   protected Long memorySwap;
 
   @Column(name = "cpu_shares")
   protected Integer cpuShares;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
   @Column(name = "volume_mapping")
   @CollectionTable(name = "T_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
   @Column(name = "env_mapping")
   @CollectionTable(name = "T_ENVIRONMENT_VARIABLE_MAPPING", joinColumns = @JoinColumn(
@@ -72,6 +73,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected Boolean tty;
 
   @Transient
+  @JsonIgnore
   protected HostConfig hostConfig;
 
   /**

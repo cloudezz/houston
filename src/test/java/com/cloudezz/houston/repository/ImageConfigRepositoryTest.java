@@ -25,7 +25,7 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
 
 
   @Autowired
-  private AppImageConfigRepository appImageConfigRepository;
+  private AppImageCfgRepository appImageConfigRepository;
   
   @Autowired
   private DockerHostMachineRepository dockerHostMachineRepository;

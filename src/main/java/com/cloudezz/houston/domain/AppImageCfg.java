@@ -12,6 +12,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,11 +38,13 @@ public class AppImageCfg extends BaseImageCfg {
   private String gitURL;
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_APP_IMAGE_DNS")
+  @CollectionTable(name = "T_APP_IMAGE_DNS", joinColumns = @JoinColumn(
+      name = "app_img_dns_id"))
   protected List<String> dns = new LinkedList<String>();
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_APP_IMAGE_PORTS")
+  @CollectionTable(name = "T_APP_IMAGE_PORTS", joinColumns = @JoinColumn(
+      name = "app_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
 
   @Id

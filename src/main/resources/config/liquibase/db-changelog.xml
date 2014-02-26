@@ -28,7 +28,7 @@
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-2">
         <createTable catalogName="houston" tableName="t_app_image_dns">
-            <column name="ApplicationImageConfig_app_name" type="VARCHAR(255)">
+            <column name="app_img_dns_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="dns" type="VARCHAR(255)"/>
@@ -36,7 +36,7 @@
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-3">
         <createTable catalogName="houston" tableName="t_app_image_ports">
-            <column name="ApplicationImageConfig_app_name" type="VARCHAR(255)">
+            <column name="app_img_port_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="ports" type="VARCHAR(255)"/>
@@ -135,7 +135,7 @@
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-11">
         <createTable catalogName="houston" tableName="t_service_image_dns">
-            <column name="ServiceImageConfig_service_name" type="VARCHAR(255)">
+            <column name="service_img_dns_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="dns" type="VARCHAR(255)"/>
@@ -143,7 +143,7 @@
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-12">
         <createTable catalogName="houston" tableName="t_service_image_ports">
-            <column name="ServiceImageConfig_service_name" type="VARCHAR(255)">
+            <column name="service_img_port_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="ports" type="VARCHAR(255)"/>
