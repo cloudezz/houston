@@ -36,12 +36,15 @@ public abstract class BaseImageCfg extends BaseEntity {
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
 
+  @Column(name="image_name")
   protected String dockerImageName;
 
+  @Column(name = "host_name")
   protected String hostName;
 
   protected String user;
 
+  @Column(name = "domain_name")
   protected String domainName;
 
   @ElementCollection(targetClass = String.class)
@@ -54,8 +57,10 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   protected Long memory;
 
+  @Column(name="memory_swap")
   protected Long memorySwap;
 
+  @Column(name = "cpu_shares")
   protected Integer cpuShares;
 
   @ElementCollection

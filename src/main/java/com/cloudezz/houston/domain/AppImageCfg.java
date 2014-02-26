@@ -31,6 +31,7 @@ public class AppImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 6647698228363181877L;
 
+  @Column(name="git_url")
   private String gitURL;
 
   @Id

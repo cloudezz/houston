@@ -1,81 +1,78 @@
 <div>
 
-    <h2>AppImageCfgs</h2>
+	<h3>Application Image Configs</h3>
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveAppImageCfgModal">
-        <span class="glyphicon glyphicon-flash"></span> Create a new AppImageCfg
-    </button>
-    <div class="modal fade" id="saveAppImageCfgModal" tabindex="-1" role="dialog" aria-labelledby="myAppImageCfgLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form name="form" role="form" novalidate
-                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
-                      ng-submit="create()">
+	<div class="modal fade" id="saveAppImageCfgModal" tabindex="-1"
+		role="dialog" aria-labelledby="myAppImageCfgLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form name="form" role="form" novalidate
+					class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+					ng-submit="create()">
 
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
-                        <h4 class="modal-title" id="myAppImageCfgLabel">Create or edit a AppImageCfg</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" class="form-control" name="id"
-                                   ng-model="appimagecfg.id" readonly>
-                        </div>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true" ng-click="clear()">&times;</button>
+						<h4 class="modal-title" id="myAppImageCfgLabel">Create or
+							edit a AppImageCfg</h4>
+					</div>
+					<div class="modal-body">
 
-                        <div class="form-group">
-                            <label>Sample text attribute</label>
-                            <input type="text" class="form-control" name="test"
-                                   ng-model="appimagecfg.sampleTextAttribute" ng-minlength=1 ng-maxlength=50 required>
-                        </div>
+						<div class="form-group">
+							<label>App Name</label> <input type="text"
+								class="form-control" name="test"
+								ng-model="appimagecfg.appName" ng-minlength=1
+								ng-maxlength=50 required>
+						</div>
 
-                        <div class="form-group">
-                            <label>Sample date attribute</label>
-                            <input type="date" class="form-control" name="test"
-                                   ng-model="appimagecfg.sampleDateAttribute" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">Cancel
-                        </button>
-                        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+	<!-- 					<div class="form-group">
+							<label>Sample date attribute</label> <input type="date"
+								class="form-control" name="test"
+								ng-model="appimagecfg.sampleDateAttribute" required>
+						</div> -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							ng-click="clear()">Cancel</button>
+						<button type="submit" ng-disabled="form.$invalid"
+							class="btn btn-primary">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sample text</th>
-                    <th>Sample date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="appimagecfg in appimagecfgs">
-                    <td>{{appimagecfg.id}}</td>
-                    <td>{{appimagecfg.sampleTextAttribute}}</td>
-                    <td>{{appimagecfg.sampleDateAttribute}}</td>
-                    <td>
-                        <button type="submit"
-                                ng-click="update(appimagecfg.id)"
-                                class="btn">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
-                        <button type="submit"
-                                ng-click="delete(appimagecfg.id)"
-                                class="btn btn-danger">
-                            <span class="glyphicon glyphicon-remove-circle"></span> Delete
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>App Name</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="appimagecfg in appimagecfgs">
+					<td>{{appimagecfg.appName}}</td>
+					<td>{{appimagecfg.sampleDateAttribute}}</td>
+					<td>
+						<button type="submit" ng-click="update(appimagecfg.id)"
+							class="btn">
+							<span class="glyphicon glyphicon-pencil"></span> Edit
+						</button>
+						<button type="submit" ng-click="delete(appimagecfg.id)"
+							class="btn btn-danger">
+							<span class="glyphicon glyphicon-remove-circle"></span> Delete
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<button class="btn btn-primary btn-lg" style="font-size: 12px; float: right;" data-toggle="modal"
+		data-target="#saveAppImageCfgModal" >
+		<span class="glyphicon glyphicon-flash"></span> New
+		AppImageCfg
+	</button>
 </div>

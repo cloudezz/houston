@@ -2,6 +2,7 @@ package com.cloudezz.houston.domain;
 
 import java.util.Random;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -23,9 +24,11 @@ public class ServiceImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 1857747836263604938L;
 
+  @Column(name="link_name")
   private String linkName;
 
   @Id
+  @Column(name="service_name")
   private String serviceName;
 
   @ManyToOne(fetch = FetchType.LAZY)

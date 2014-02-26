@@ -18,60 +18,61 @@ import java.util.List;
 @RequestMapping("/app")
 public class AppImageCfgResource {
 
-    private final Logger log = LoggerFactory.getLogger(AppImageCfgResource.class);
+  private final Logger log = LoggerFactory.getLogger(AppImageCfgResource.class);
 
-    @Inject
-    private AppImageCfgRepository appimagecfgRepository;
+  @Inject
+  private AppImageCfgRepository appimagecfgRepository;
 
-    /**
-     * POST  /rest/appimagecfgs -> Create a new appimagecfg.
-     */
-    @RequestMapping(value = "/rest/appimagecfgs",
-            method = RequestMethod.POST,
-            produces = "application/json")
-    @Timed
-    public void create(@RequestBody AppImageCfg appimagecfg) {
-        log.debug("REST request to save AppImageCfg : {}", appimagecfg);
-        appimagecfgRepository.save(appimagecfg);
+  /**
+   * POST /rest/appimagecfgs -> Create a new appimagecfg.
+   */
+  @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST,
+      produces = "application/json")
+  @Timed
+  public void create(@RequestBody AppImageCfg appimagecfg) {
+    log.debug("REST request to save AppImageCfg : {}", appimagecfg);
+    appimagecfgRepository.save(appimagecfg);
+  }
+
+  /**
+   * GET /rest/appimagecfgs -> get all the appimagecfgs.
+   */
+  @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.GET,
+      produces = "application/json")
+  @Timed
+  public List<AppImageCfg> getAll() {
+    log.debug("REST request to get all AppImageCfgs");
+    try {
+      return appimagecfgRepository.findAll();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return null;
+  }
 
-    /**
-     * GET  /rest/appimagecfgs -> get all the appimagecfgs.
-     */
-    @RequestMapping(value = "/rest/appimagecfgs",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    @Timed
-    public List<AppImageCfg> getAll() {
-        log.debug("REST request to get all AppImageCfgs");
-        return appimagecfgRepository.findAll();
+  /**
+   * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
+   */
+  @RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.GET,
+      produces = "application/json")
+  @Timed
+  public AppImageCfg get(@PathVariable Long id, HttpServletResponse response) {
+    log.debug("REST request to get AppImageCfg : {}", id);
+    AppImageCfg appimagecfg = appimagecfgRepository.findOne(id);
+    if (appimagecfg == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
+    return appimagecfg;
+  }
 
-    /**
-     * GET  /rest/appimagecfgs/:id -> get the "id" appimagecfg.
-     */
-    @RequestMapping(value = "/rest/appimagecfgs/{id}",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    @Timed
-    public AppImageCfg get(@PathVariable Long id, HttpServletResponse response) {
-        log.debug("REST request to get AppImageCfg : {}", id);
-        AppImageCfg appimagecfg = appimagecfgRepository.findOne(id);
-        if (appimagecfg == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        return appimagecfg;
-    }
-
-    /**
-     * DELETE  /rest/appimagecfgs/:id -> delete the "id" appimagecfg.
-     */
-    @RequestMapping(value = "/rest/appimagecfgs/{id}",
-            method = RequestMethod.DELETE,
-            produces = "application/json")
-    @Timed
-    public void delete(@PathVariable Long id, HttpServletResponse response) {
-        log.debug("REST request to delete AppImageCfg : {}", id);
-        appimagecfgRepository.delete(id);
-    }
+  /**
+   * DELETE /rest/appimagecfgs/:id -> delete the "id" appimagecfg.
+   */
+  @RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.DELETE,
+      produces = "application/json")
+  @Timed
+  public void delete(@PathVariable Long id, HttpServletResponse response) {
+    log.debug("REST request to delete AppImageCfg : {}", id);
+    appimagecfgRepository.delete(id);
+  }
 }
