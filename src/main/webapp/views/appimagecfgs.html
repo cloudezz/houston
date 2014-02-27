@@ -2,45 +2,101 @@
 
 	<h3>Application Image Configs</h3>
 
-	<div class="modal fade" id="saveAppImageCfgModal" tabindex="-1"
-		role="dialog" aria-labelledby="myAppImageCfgLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form name="form" role="form" novalidate
-					class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
-					ng-submit="create()">
+	<div class="wizard" id="appImageConfigWzd"
+		data-title="Application Config">
 
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true" ng-click="clear()">&times;</button>
-						<h4 class="modal-title" id="myAppImageCfgLabel">Create or
-							edit a AppImageCfg</h4>
-					</div>
-					<div class="modal-body">
+		<div class="wizard-card" data-cardname="card1">
+			<h3 hidden="true">App Name</h3>
+			<div class="wizard-input-section">
+				<label>App Name</label> <input type="text" class="form-control"
+					name="test" ng-model="appimagecfg.appName" ng-minlength=1
+					ng-maxlength=50 required />
+			</div>
 
-						<div class="form-group">
-							<label>App Name</label> <input type="text"
-								class="form-control" name="test"
-								ng-model="appimagecfg.appName" ng-minlength=1
-								ng-maxlength=50 required>
+			<div class="wizard-input-section">
+
+				<div class="row">
+					<div class=" col-xs-4">
+						<div class="thumbnail">
+							<a href="#"> <img class="thumbnail"
+								src="http://placehold.it/170x140" alt="">
+							</a>
+							<div class="caption" style="padding: 2px">
+								<p>Tomcat</p>
+							</div>
 						</div>
+					</div>
+					<div class=" col-xs-4">
+						<div class="thumbnail">
+							<a href="#"> <img class="thumbnail"
+								src="http://placehold.it/170x140" alt="">
+							</a>
+							<div class="caption" style="padding: 2px">
+								<p>NodeJS</p>
+							</div>
+						</div>
+					</div>
+					<div class=" col-xs-4">
+						<div class="thumbnail">
+							<a href="#"> <img class="thumbnail"
+								src="http://placehold.it/170x140" alt="">
+							</a>
+							<div class="caption" style="padding: 2px">
+								<p>Python</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wizard-card" data-cardname="card2">
+			<h3 hidden="true">Machine Configuration</h3>
+			<div class="wizard-input-section">
+				<label>Memory (MB)</label> <input type="text" class="form-control"
+					name="test" ng-model="appimagecfg.memory" ng-minlength=1
+					ng-maxlength=50 required />
+			</div>
 
-	<!-- 					<div class="form-group">
-							<label>Sample date attribute</label> <input type="date"
-								class="form-control" name="test"
-								ng-model="appimagecfg.sampleDateAttribute" required>
-						</div> -->
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal"
-							ng-click="clear()">Cancel</button>
-						<button type="submit" ng-disabled="form.$invalid"
-							class="btn btn-primary">Save</button>
-					</div>
-				</form>
+			<div class="wizard-input-section">
+				<label>Memory Swap (MB)</label> <input type="text"
+					class="form-control" name="test" ng-model="appimagecfg.memorySwap"
+					ng-minlength=1 ng-maxlength=50 required />
+			</div>
+
+			<div class="wizard-input-section">
+				<label>CPU Shares</label> <input type="text" class="form-control"
+					name="test" ng-model="appimagecfg.cpuShares" ng-minlength=1
+					ng-maxlength=50 required />
+			</div>
+
+			<div class="wizard-input-section">
+				<label>SSH passwprd</label> <input type="password"
+					class="form-control" name="test" ng-model="appimagecfg.password"
+					ng-minlength=5 ng-maxlength=10 required />
+			</div>
+		</div>
+
+		<div class="wizard-card" data-cardname="card1">
+			<h3 hidden="true">Environment</h3>
+			<div class="wizard-input-section">
+				<h2>auto generated form</h2>
+			</div>
+		</div>
+
+		<div class="wizard-card" data-cardname="card1">
+			<h3 hidden="true">Services</h3>
+			<div class="wizard-input-section">
+				<h2>NA</h2>
 			</div>
 		</div>
 	</div>
+
+	<!-- 	<div class="modal fade" id="saveAppImageCfgModal" tabindex="-1"
+		role="dialog" aria-labelledby="myAppImageCfgLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			
+		</div>
+	</div> -->
 
 	<div class="table-responsive">
 		<table class="table table-striped">
@@ -69,10 +125,24 @@
 			</tbody>
 		</table>
 	</div>
-	
-	<button class="btn btn-primary btn-lg" style="font-size: 12px; float: right;" data-toggle="modal"
-		data-target="#saveAppImageCfgModal" >
-		<span class="glyphicon glyphicon-flash"></span> New
-		AppImageCfg
+
+	<button class="btn btn-primary btn-lg"
+		style="font-size: 12px; float: right;" data-toggle="modal"
+		data-target="#appImageConfigWzd" id="open-wizard">
+		<span class="glyphicon glyphicon-flash"></span> New AppImageCfg
 	</button>
+	<script type="text/javascript">
+		$(function() {
+			var options = {
+				contentWidth : 800,
+				contentHeight : 400
+			};
+			var wizard = $("#appImageConfigWzd").wizard(options);
+
+			$("#open-wizard").click(function() {
+				wizard.show();
+			});
+
+		});
+	</script>
 </div>
