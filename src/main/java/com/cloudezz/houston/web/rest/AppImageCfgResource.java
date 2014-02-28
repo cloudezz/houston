@@ -41,8 +41,7 @@ public class AppImageCfgResource {
   }
 
 
-  @RequestMapping(value = "/rest/appimagecfgs/:id", method = RequestMethod.POST,
-      produces = "application/json")
+  @RequestMapping(value = "/rest/appimagecfgs/start/{id}", method = RequestMethod.POST)
   @Timed
   public boolean start(@PathVariable String id, HttpServletResponse response) {
     AppImageCfg appImageCfg = appimagecfgRepository.findOne(id);

@@ -114,12 +114,29 @@ houstonApp.factory('AuthenticationSharedService', ['$rootScope', '$http', 'authS
 
 houstonApp.factory('AppImageCfg', ['$resource',
    function ($resource) {
-       return $resource('app/rest/appimagecfgs/:id', {}, {
+       return $resource('app/rest/appimagecfgs/:id', {id:'@id'}, {
            'query': { method: 'GET', isArray: true},
            'get': { method: 'GET'}
-           'start': { method: 'POST'}
        });
    }]);
+
+
+houstonApp.factory('AppImageService', ['$http',
+     function ($http) {
+         return {
+        	 start: function(id, callback) {
+        		 var url = 'app/rest/appimagecfgs/start/' + id
+                 $http.post(url).success(function (data, status){
+                	 callback(data)
+                 }).error(function (data, status){
+        			 
+                 })
+             }
+         }
+     }]);
+
+
+
 
 houstonApp.factory('ServiceImageCfg', ['$resource',
    function ($resource) {

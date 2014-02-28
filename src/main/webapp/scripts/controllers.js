@@ -205,17 +205,6 @@ houstonApp.controller('AuditsController', ['$scope', '$translate', '$filter', 'A
     }]);
 
 
-//houstonApp.controller('AddImageCfgWzdController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg', 'wizard',
-//                                                function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, wizard) {
-//	
-//}]);
-
-function AddImageCfgWzdController($scope, AppImageCfg) {
-	$scope.appimagecfg = {appName:"Your App"};
-	$scope.appimagecfgs = [{appName:"One"},{appName:"Two"}]
-	$scope.good = "good";
-	
-}
 
 function QueryStringToJSON(queryStr) {            
     var pairs = queryStr.split('&');
@@ -230,8 +219,8 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg',
-    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg) {
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',
+    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService) {
 
 		$scope.test = "Test";
         $scope.appimagecfgs = resolvedAppImageCfg;
@@ -254,6 +243,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       		wizard.show();
 				console.log(angular.element("#appImageConfigWzd").scope());
 	       		console.log(angular.element("#appName").scope());
+	       		
 	       		wizard.on("submit", function(wizard) {
 	       			console.log( $scope.appimagecfg);
 	       			$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
@@ -289,9 +279,8 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
         };
 
         $scope.start = function (appimagecfgId) {
-        	var input = {"id": appimagcfgId};
-        	AppImageCfg.start(input, function (data) {
-        		
+        	AppImageService.start(appimagecfgId, function (data) {
+        		alert(data);
         	});
         	
         };
