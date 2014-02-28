@@ -127,9 +127,18 @@ houstonApp.factory('AppImageService', ['$http',
         	 start: function(id, callback) {
         		 var url = 'app/rest/appimagecfgs/start/' + id
                  $http.post(url).success(function (data, status){
-                	 callback(data)
+                	 callback(data, status)
                  }).error(function (data, status){
-        			 
+                	 callback(data, status)
+                 })
+             },
+             
+        	 stop: function(id, callback) {
+        		 var url = 'app/rest/appimagecfgs/stop/' + id
+                 $http.post(url).success(function (data, status){
+                	 callback(data, status)
+                 }).error(function (data, status){
+                	 callback(data, status)
                  })
              }
          }

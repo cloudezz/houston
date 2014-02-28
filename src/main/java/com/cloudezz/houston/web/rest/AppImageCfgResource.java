@@ -49,15 +49,32 @@ public class AppImageCfgResource {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean status = false;
-    try {
-      status = deployer.start(appImageCfg);
-    } catch (CloudezzDeployException e) {
-      log.error(e.getMessage());
-    }
+//    try {
+//      status = deployer.start(appImageCfg);
+//    } catch (CloudezzDeployException e) {
+//      log.error(e.getMessage());
+//    }
     return status;
   }
 
 
+  @RequestMapping(value = "/rest/appimagecfgs/stop/{id}", method = RequestMethod.POST)
+  @Timed
+  public boolean stop(@PathVariable String id, HttpServletResponse response) {
+    AppImageCfg appImageCfg = appimagecfgRepository.findOne(id);
+    if (appImageCfg == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+    boolean status = false;
+//    try {
+//      status = deployer.stop(appImageCfg);
+//    } catch (CloudezzDeployException e) {
+//      log.error(e.getMessage());
+//    }
+    return status;
+  }
+  
+  
   /**
    * GET /rest/appimagecfgs -> get all the appimagecfgs.
    */
@@ -74,6 +91,9 @@ public class AppImageCfgResource {
     return null;
   }
 
+  
+  
+  
   /**
    * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
    */

@@ -102,11 +102,11 @@
 
 		<div class="wizard-success">
 			<div class="alert alert-success">
-				<span class="create-server-name"></span> was created <strong>successfully.</strong>
+				<span class="create-server-name">{{appimagecfg.appName}}</span> was created <strong>successfully.</strong>
 			</div>
 
 			<a class="btn create-another-server">Configure another Image</a> <span
-				style="padding: 0 10px">or</span> <a class="btn im-done">OK</a>
+				style="padding: 0 10px">or</span> <a class="btn im-done">Done</a>
 		</div>
 	</div>
 
@@ -140,14 +140,20 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
-						<button type="start" ng-click="start(appimagecfg.id)"
+						<button ng-if="!started" type="start" ng-click="start(appimagecfg.id)"
 							class="btn">
-							<span class="glyphicon glyphicon-remove-circle"></span> Start
+							<span class="glyphicon glyphicon-play-circle"></span> Start
 						</button>
+						
+						<button ng-if="started" type="start" ng-click="stop(appimagecfg.id)"
+							class="btn">
+							<span class="glyphicon glyphicon-play-circle"></span> Stop
+						</button>
+						
 					</td>
 				</tr>
 			</tbody>
-		</table>
+		</table> 
 	</div>
 
 	<button class="btn btn-primary btn-lg"

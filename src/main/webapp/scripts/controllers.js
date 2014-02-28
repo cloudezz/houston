@@ -227,20 +227,28 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 //		$scope.appimagecfgs.push({appName:"Static Dummy"});
 		
         $scope.service;
+        $scope.startStop ="Start";
+        
+        $scope.started = false;
         
 		$scope.setService = function(serviceId) {
 			 $scope.service = serviceId;
 		}
-		
+		var wizard;
         $scope.openWizard = function () {
 			$scope.appimagecfg = {appName:"Your App"};
 			$scope.sshpwd="";
         	var options = {
     				contentWidth : 800,
-    				contentHeight : 400
+    				contentHeight : 400,
+    				keyboard : false,
+    				backdrop : false
     			};
-        		var wizard = $("#appImageConfigWzd").wizard(options);
+        		if(!wizard) {
+        			wizard = $("#appImageConfigWzd").wizard(options);
+        		}
 	       		wizard.show();
+	       		$('.modal-backdrop').addClass();
 				console.log(angular.element("#appImageConfigWzd").scope());
 	       		console.log(angular.element("#appName").scope());
 	       		
@@ -250,17 +258,30 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       			console.log( $scope.appimagecfg );
 	       			console.log( wizard.serialize() );
 	       			$scope.create(function(){
-	       				wizard.close();
+	       				
+	       				wizard.trigger("success");
+	       				wizard.hideButtons();
+	       				wizard._submitting = false;
+	       				wizard.showSubmitCard("success");
+	       				wizard._updateProgressBar(0);
+	       				
 	       			});
 	       			
 				});
+	       		
+	       		
 				
+	       		wizard.on("closed", function(wizard) {
+	       			$('.modal-backdrop').remove();
+				});
+	       		
 				wizard.on("reset", function(wizard) {
 					wizard.setSubtitle("");
 				});
 
 				wizard.el.find(".wizard-success .im-done").click(function() {
 					wizard.reset().close();
+       				$('.modal-backdrop').remove();
 				});
 
 				wizard.el.find(".wizard-success .create-another-server").click(function() {
@@ -273,17 +294,34 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
                 function () {
                     $scope.appimagecfgs = AppImageCfg.query();
 //                    $('#saveAppImageCfgModal').modal('hide');
-                    $scope.clear();
                     callback();
                 });
         };
 
         $scope.start = function (appimagecfgId) {
-        	AppImageService.start(appimagecfgId, function (data) {
-        		alert(data);
+        	AppImageService.start(appimagecfgId, function (data, status) {
+        		if(status == 200 ) {
+        			alert("Machine Started");
+        			$scope.started = true
+        		}
+        		else {
+        			alert("Machine was not started :: Error is - " + data.error);
+        		}
         	});
-        	
         };
+        
+        $scope.stop = function (appimagecfgId) {
+        	AppImageService.stop(appimagecfgId, function (data, status) {
+        		if(status == 200 ) {
+        			alert("Machine Stopped");
+        			$scope.started = false;
+        		}
+        		else {
+        			alert("Machine was not started :: Error is - " + data.error);
+        		}
+        	});
+        };
+        
         
         $scope.update = function (id) {
             $scope.appimagecfg = AppImageCfg.get({id: id});
@@ -297,9 +335,9 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
                 });
         };
 
-        $scope.clear = function () {
-            $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
-        };
+//        $scope.clear = function () {
+//            $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
+//        };
     }]);
 
 
@@ -307,6 +345,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
     function ($scope, resolvedServiceImageCfg, ServiceImageCfg) {
 
+		
         $scope.serviceimagecfgs = resolvedServiceImageCfg;
 
         $scope.create = function () {
