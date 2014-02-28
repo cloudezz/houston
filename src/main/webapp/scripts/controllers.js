@@ -234,10 +234,9 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
     function ($scope, $modal, resolvedAppImageCfg, AppImageCfg) {
 
 		$scope.test = "Test";
-//		$scope.appimagecfg = {}
-//        $scope.appimagecfgs = resolvedAppImageCfg;
-		$scope.appimagecfgs = [{appName:"One"},{appName:"Two"}]
-
+        $scope.appimagecfgs = resolvedAppImageCfg;
+//		$scope.appimagecfgs.push({appName:"Static Dummy"});
+		
 		$scope.setService = function(serviceId) {
 			//TODO : find and set the service image
 			
@@ -245,7 +244,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 		
         $scope.openWizard = function () {
 			$scope.appimagecfg = {appName:"Your App"};
-			
+			$scope.sshpwd="";
         	var options = {
     				contentWidth : 800,
     				contentHeight : 400
@@ -278,12 +277,13 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 				});
         }
         
-        $scope.create = function () {
+        $scope.create = function (callback) {
             AppImageCfg.save($scope.appimagecfg,
                 function () {
                     $scope.appimagecfgs = AppImageCfg.query();
 //                    $('#saveAppImageCfgModal').modal('hide');
                     $scope.clear();
+                    callback();
                 });
         };
 

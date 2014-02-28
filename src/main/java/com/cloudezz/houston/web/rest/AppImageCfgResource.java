@@ -27,7 +27,7 @@ public class AppImageCfgResource {
    * POST /rest/appimagecfgs -> Create a new appimagecfg.
    */
   @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST,
-      produces = "application/json")
+      produces = "application/json",  consumes = "application/json")
   @Timed
   public void create(@RequestBody AppImageCfg appimagecfg) {
     log.debug("REST request to save AppImageCfg : {}", appimagecfg);
