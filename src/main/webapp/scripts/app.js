@@ -65,6 +65,15 @@ houstonApp
                         }]
                     }
                 })
+                .when('/serviceimagecfg', {
+                    templateUrl: 'views/serviceimagecfgs.html',
+                    controller: 'ServiceImageCfgController',
+                    resolve:{
+                        resolvedServiceImageCfg: ['ServiceImageCfg', function (ServiceImageCfg) {
+                            return ServiceImageCfg.query();
+                        }]
+                    }
+                })
                 .otherwise({
                     templateUrl: 'views/main.html',
                     controller: 'MainController'

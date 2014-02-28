@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Spring Data JPA repository for the AppImageCfg entity.
  */
-public interface AppImageCfgRepository extends JpaRepository<AppImageCfg, Long> {
+public interface AppImageCfgRepository extends JpaRepository<AppImageCfg, String> {
 
 }

@@ -237,9 +237,10 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
         $scope.appimagecfgs = resolvedAppImageCfg;
 //		$scope.appimagecfgs.push({appName:"Static Dummy"});
 		
+        $scope.service;
+        
 		$scope.setService = function(serviceId) {
-			//TODO : find and set the service image
-			
+			 $scope.service = serviceId;
 		}
 		
         $scope.openWizard = function () {
@@ -287,6 +288,14 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
                 });
         };
 
+        $scope.start = function (appimagecfgId) {
+        	var input = {"id": appimagcfgId};
+        	AppImageCfg.start(input, function (data) {
+        		
+        	});
+        	
+        };
+        
         $scope.update = function (id) {
             $scope.appimagecfg = AppImageCfg.get({id: id});
             $('#saveAppImageCfgModal').modal('show');
@@ -304,3 +313,35 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
         };
     }]);
 
+
+
+houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
+    function ($scope, resolvedServiceImageCfg, ServiceImageCfg) {
+
+        $scope.serviceimagecfgs = resolvedServiceImageCfg;
+
+        $scope.create = function () {
+            ServiceImageCfg.save($scope.serviceimagecfg,
+                function () {
+                    $scope.serviceimagecfgs = ServiceImageCfg.query();
+                    $('#saveServiceImageCfgModal').modal('hide');
+                    $scope.clear();
+                });
+        };
+
+        $scope.update = function (id) {
+            $scope.serviceimagecfg = ServiceImageCfg.get({id: id});
+            $('#saveServiceImageCfgModal').modal('show');
+        };
+
+        $scope.delete = function (id) {
+            ServiceImageCfg.delete({id: id},
+                function () {
+                    $scope.serviceimagecfgs = ServiceImageCfg.query();
+                });
+        };
+
+        $scope.clear = function () {
+            $scope.serviceimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
+        };
+    }]);

@@ -117,5 +117,14 @@ houstonApp.factory('AppImageCfg', ['$resource',
        return $resource('app/rest/appimagecfgs/:id', {}, {
            'query': { method: 'GET', isArray: true},
            'get': { method: 'GET'}
+           'start': { method: 'POST'}
+       });
+   }]);
+
+houstonApp.factory('ServiceImageCfg', ['$resource',
+   function ($resource) {
+       return $resource('app/rest/serviceimagecfgs/:id', {}, {
+           'query': { method: 'GET', isArray: true},
+           'get': { method: 'GET'}
        });
    }]);
