@@ -1,15 +1,11 @@
 <div>
-
 	<h3>Application Image Configs</h3>
-
-	<div class="wizard" id="appImageConfigWzd"
-		data-title="Application Config">
-
-		<div class="wizard-card" data-cardname="card1">
+	<div class="wizard" id="appImageConfigWzd"	data-title="Application Config">
+		<div class="wizard-card" data-cardname="card1" id="card1" >
 			<h3 hidden="true">App Name</h3>
-			<div class="wizard-input-section">
-				<label>App Name</label> <input type="text" class="form-control"
-					name="test" ng-model="appimagecfg.appName" ng-minlength=1
+			<div class="wizard-input-section"   >
+				<label>App Name</label> <input id="appName" type="text" class="form-control"
+					name="appName" ng-model="appimagecfg.appName" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 
@@ -18,7 +14,7 @@
 				<div class="row">
 					<div class=" col-xs-4">
 						<div class="thumbnail">
-							<a href="#"> <img class="thumbnail"
+							<a ng-click=setService('tomcat')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
@@ -28,7 +24,7 @@
 					</div>
 					<div class=" col-xs-4">
 						<div class="thumbnail">
-							<a href="#"> <img class="thumbnail"
+							<a ng-click=setService('nodejs')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
@@ -38,7 +34,7 @@
 					</div>
 					<div class=" col-xs-4">
 						<div class="thumbnail">
-							<a href="#"> <img class="thumbnail"
+							<a ng-click=setService('python')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
@@ -53,43 +49,67 @@
 			<h3 hidden="true">Machine Configuration</h3>
 			<div class="wizard-input-section">
 				<label>Memory (MB)</label> <input type="text" class="form-control"
-					name="test" ng-model="appimagecfg.memory" ng-minlength=1
+					name="memory" ng-model="appimagecfg.memory" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>Memory Swap (MB)</label> <input type="text"
-					class="form-control" name="test" ng-model="appimagecfg.memorySwap"
+					class="form-control" name="memorySwap" ng-model="appimagecfg.memorySwap"
 					ng-minlength=1 ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>CPU Shares</label> <input type="text" class="form-control"
-					name="test" ng-model="appimagecfg.cpuShares" ng-minlength=1
+					name="cpuShares" ng-model="appimagecfg.cpuShares" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
-				<label>SSH passwprd</label> <input type="password"
-					class="form-control" name="test" ng-model="appimagecfg.password"
+				<label>SSH password</label> <input type="password"
+					class="form-control" name="password" ng-model="appimagecfg.password"
 					ng-minlength=5 ng-maxlength=10 required />
 			</div>
 		</div>
 
-		<div class="wizard-card" data-cardname="card1">
+		<div class="wizard-card" data-cardname="card3">
 			<h3 hidden="true">Environment</h3>
 			<div class="wizard-input-section">
 				<h2>auto generated form</h2>
 			</div>
 		</div>
 
-		<div class="wizard-card" data-cardname="card1">
+		<div class="wizard-card" data-cardname="card4">
 			<h3 hidden="true">Services</h3>
 			<div class="wizard-input-section">
 				<h2>NA</h2>
 			</div>
 		</div>
+
+		<div class="wizard-error">
+			<div class="alert alert-error">
+				<strong>There was a problem</strong> with your submission. Please
+				correct the errors and re-submit.
+			</div>
+		</div>
+
+		<div class="wizard-failure">
+			<div class="alert alert-error">
+				<strong>There was a problem</strong> submitting the form. Please try
+				again in a minute.
+			</div>
+		</div>
+
+		<div class="wizard-success">
+			<div class="alert alert-success">
+				<span class="create-server-name"></span> was created <strong>successfully.</strong>
+			</div>
+
+			<a class="btn create-another-server">Configure another Image</a> <span
+				style="padding: 0 10px">or</span> <a class="btn im-done">OK</a>
+		</div>
 	</div>
+
 
 	<!-- 	<div class="modal fade" id="saveAppImageCfgModal" tabindex="-1"
 		role="dialog" aria-labelledby="myAppImageCfgLabel" aria-hidden="true">
@@ -120,6 +140,10 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
+						<button type="start" ng-click="start(appimagecfg.id)"
+							class="btn">
+							<span class="glyphicon glyphicon-remove-circle"></span> Start
+						</button>
 					</td>
 				</tr>
 			</tbody>
@@ -128,21 +152,8 @@
 
 	<button class="btn btn-primary btn-lg"
 		style="font-size: 12px; float: right;" data-toggle="modal"
-		data-target="#appImageConfigWzd" id="open-wizard">
+		data-target="#appImageConfigWzd" id="open-wizard" ng-click="openWizard()">
 		<span class="glyphicon glyphicon-flash"></span> New AppImageCfg
 	</button>
-	<script type="text/javascript">
-		$(function() {
-			var options = {
-				contentWidth : 800,
-				contentHeight : 400
-			};
-			var wizard = $("#appImageConfigWzd").wizard(options);
-
-			$("#open-wizard").click(function() {
-				wizard.show();
-			});
-
-		});
-	</script>
+	<!-- <script src="scripts/wizard.js"></script> -->
 </div>

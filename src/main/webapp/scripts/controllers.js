@@ -204,16 +204,85 @@ houstonApp.controller('AuditsController', ['$scope', '$translate', '$filter', 'A
         });
     }]);
 
-houstonApp.controller('AppImageCfgController', ['$scope', 'resolvedAppImageCfg', 'AppImageCfg',
-    function ($scope, resolvedAppImageCfg, AppImageCfg) {
 
-        $scope.appimagecfgs = resolvedAppImageCfg;
+//houstonApp.controller('AddImageCfgWzdController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg', 'wizard',
+//                                                function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, wizard) {
+//	
+//}]);
 
+function AddImageCfgWzdController($scope, AppImageCfg) {
+	$scope.appimagecfg = {appName:"Your App"};
+	$scope.appimagecfgs = [{appName:"One"},{appName:"Two"}]
+	$scope.good = "good";
+	
+}
+
+function QueryStringToJSON(queryStr) {            
+    var pairs = queryStr.split('&');
+    
+    var result = {};
+    pairs.forEach(function(pair) {
+        pair = pair.split('=');
+        result[pair[0]] = decodeURIComponent(pair[1] || '');
+    });
+
+    return JSON.parse(JSON.stringify(result));
+}
+
+
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg',
+    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg) {
+
+		$scope.test = "Test";
+//		$scope.appimagecfg = {}
+//        $scope.appimagecfgs = resolvedAppImageCfg;
+		$scope.appimagecfgs = [{appName:"One"},{appName:"Two"}]
+
+		$scope.setService = function(serviceId) {
+			//TODO : find and set the service image
+			
+		}
+		
+        $scope.openWizard = function () {
+			$scope.appimagecfg = {appName:"Your App"};
+			
+        	var options = {
+    				contentWidth : 800,
+    				contentHeight : 400
+    			};
+        		var wizard = $("#appImageConfigWzd").wizard(options);
+	       		wizard.show();
+				console.log(angular.element("#appImageConfigWzd").scope());
+	       		console.log(angular.element("#appName").scope());
+	       		wizard.on("submit", function(wizard) {
+	       			console.log( $scope.appimagecfg);
+	       			$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
+	       			console.log( $scope.appimagecfg );
+	       			console.log( wizard.serialize() );
+	       			$scope.create(function(){
+	       				wizard.close();
+	       			});
+	       			
+				});
+				
+				wizard.on("reset", function(wizard) {
+					wizard.setSubtitle("");
+				});
+
+				wizard.el.find(".wizard-success .im-done").click(function() {
+					wizard.reset().close();
+				});
+
+				wizard.el.find(".wizard-success .create-another-server").click(function() {
+					wizard.reset();
+				});
+        }
+        
         $scope.create = function () {
             AppImageCfg.save($scope.appimagecfg,
                 function () {
                     $scope.appimagecfgs = AppImageCfg.query();
-                    $('#saveAppImageCfgModal').modal('hide');
+//                    $('#saveAppImageCfgModal').modal('hide');
                     $scope.clear();
                 });
         };
@@ -234,3 +303,4 @@ houstonApp.controller('AppImageCfgController', ['$scope', 'resolvedAppImageCfg',
             $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
         };
     }]);
+

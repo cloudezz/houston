@@ -3,7 +3,7 @@
 /* App Module */
 
 var houstonApp = angular.module('houstonApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-    'ngResource', 'ngRoute', 'ngCookies', 'pascalprecht.translate']);
+    'ngResource', 'ngRoute', 'ngCookies', 'pascalprecht.translate', 'ui.bootstrap']);
 
 houstonApp
     .config(['$routeProvider', '$httpProvider', '$translateProvider',  'tmhDynamicLocaleProvider',
