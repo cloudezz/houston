@@ -54,8 +54,7 @@ public class DeployerUtil {
    * @param dockerInstance
    * @return
    */
-  public static ContainerConfig getDockerConfigFromCloudezzConfig(
-      BaseImageCfg cloudezzImageConfig) {
+  public static ContainerConfig getDockerConfigFromCloudezzConfig(BaseImageCfg cloudezzImageConfig) {
 
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -132,6 +131,10 @@ public class DeployerUtil {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
+    // pull the image to the host if not there already ..will take a long time to download the file
+    // on the host..time consuming step
+    DeployerUtil.checkAndPullImage(dockerClient, cloudezzImageConfig.getDockerImageName());
+
     ContainerConfig containerConfig = getDockerConfigFromCloudezzConfig(cloudezzImageConfig);
     ContainerInspectResponse containerInspectResponse =
         dockerClient.createAndGetContainer(containerConfig);
@@ -164,13 +167,13 @@ public class DeployerUtil {
    * @return
    * @throws CloudezzDeployException
    */
-  public static boolean startContainer(DockerClient dockerClient,
-      BaseImageCfg cloudezzImageConfig) throws CloudezzDeployException {
+  public static boolean startContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
+      throws CloudezzDeployException {
     return startContainer(dockerClient, cloudezzImageConfig, null);
   }
 
-  public static boolean startContainer(DockerClient dockerClient,
-      BaseImageCfg cloudezzImageConfig, HostConfig hostConfig) throws CloudezzDeployException {
+  public static boolean startContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig,
+      HostConfig hostConfig) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
@@ -181,18 +184,26 @@ public class DeployerUtil {
     }
 
     ContainerInspectResponse containerInspectResponse = dockerClient.inspectContainer(containerId);
-    
+
     if (containerInspectResponse.state != null && containerInspectResponse.state.running) {
       return true;
     }
-    
+
     if (hostConfig != null) {
-      return dockerClient.startContainer(containerId, hostConfig);
+      dockerClient.startContainer(containerId, hostConfig);
     } else {
       // we need to give this as the port binding works by passing only hostConfig : might be a bug
       // in the docker rest api
       hostConfig = cloudezzImageConfig.getHostConfig();
-      return dockerClient.startContainer(containerId, hostConfig);
+      dockerClient.startContainer(containerId, hostConfig);
+    }
+
+    containerInspectResponse = dockerClient.inspectContainer(containerId);
+
+    if (containerInspectResponse.state != null && containerInspectResponse.state.running) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -208,9 +219,8 @@ public class DeployerUtil {
    * @return
    * @throws CloudezzDeployException
    */
-  public static HostConfig linkImage(DockerClient dockerClient,
-      AppImageCfg applicationImageConfig, ServiceImageCfg serviceImageConfig,
-      String linkName) throws CloudezzDeployException {
+  public static HostConfig linkImage(DockerClient dockerClient, AppImageCfg applicationImageConfig,
+      ServiceImageCfg serviceImageConfig, String linkName) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(applicationImageConfig, "applicationImageConfig arg cannot be null");
     Preconditions.checkNotNull(serviceImageConfig, "serviceImageConfig arg cannot be null");
