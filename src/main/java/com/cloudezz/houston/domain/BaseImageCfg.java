@@ -40,12 +40,12 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected String imageName;
 
   @Column(name = "host_name")
-  protected String hostName;
+  protected String hostName="";
 
-  protected String user;
+  protected String user="";
 
   @Column(name = "domain_name")
-  protected String domainName;
+  protected String domainName="";
 
   protected Long memory;
 
@@ -320,6 +320,7 @@ public abstract class BaseImageCfg extends BaseEntity {
 
     HostConfig hostConfig = new HostConfig();
     hostConfig.setPublishAllPorts(true);
+    hostConfig.setLxcConf(new HostConfig.LxcConf[0]);
 
     // port mappings
     Map<String, HostPortBinding[]> portBindings = hostConfig.getPortBindings();
