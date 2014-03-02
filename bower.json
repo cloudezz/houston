@@ -18,7 +18,8 @@
     "angular-translate-loader-static-files": "2.0.0",
     "angular-dynamic-locale": "0.1.1",
     "angular-i18n": "1.2.5",
-    "ui-bootstrap": "~0.10.0"
+    "ui-bootstrap": "~0.10.0",
+    "angular-bootstrap": "~0.10.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",
