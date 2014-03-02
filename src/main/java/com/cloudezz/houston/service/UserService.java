@@ -1,22 +1,23 @@
 package com.cloudezz.houston.service;
 
-import com.cloudezz.houston.domain.PersistentToken;
-import com.cloudezz.houston.domain.User;
-import com.cloudezz.houston.repository.PersistentTokenRepository;
-import com.cloudezz.houston.repository.UserRepository;
-import com.cloudezz.houston.security.SecurityUtils;
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.UUID;
+import com.cloudezz.houston.domain.PersistentToken;
+import com.cloudezz.houston.domain.User;
+import com.cloudezz.houston.repository.PersistentTokenRepository;
+import com.cloudezz.houston.repository.UserRepository;
+import com.cloudezz.houston.security.SecurityUtils;
 
 /**
  * Service class for managing users.
