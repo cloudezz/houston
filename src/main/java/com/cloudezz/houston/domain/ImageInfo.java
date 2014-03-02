@@ -1,9 +1,14 @@
 package com.cloudezz.houston.domain;
 
+import java.io.StringReader;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
  * Docker Image is the one hold the map between the build back git url and docker image name . This
@@ -24,15 +29,21 @@ public class ImageInfo extends BaseEntity {
 
   @Column(name = "build_pack_git_url")
   private String buildPackGitURL;
-  
+
   @Column(name = "logo_url")
   private String logoURL;
+
+  @Column(name = "is_service_image")
+  private boolean isServiceImage;
+
+  @Column(name = "env_form_block")
+  private String envFormBlock;
 
   @Override
   public String getId() {
     return imageName;
   }
-  
+
   @Override
   public void setId(String id) {
     imageName = id;
@@ -72,6 +83,32 @@ public class ImageInfo extends BaseEntity {
 
   public void setLogoURL(String logoURL) {
     this.logoURL = logoURL;
+  }
+
+  public boolean isServiceImage() {
+    return isServiceImage;
+  }
+
+  public void setServiceImage(boolean isServiceImage) {
+    this.isServiceImage = isServiceImage;
+  }
+
+  public String getEnvFormBlock() {
+    return envFormBlock;
+  }
+
+  public void setEnvFormBlock(String envFormBlock) {
+    this.envFormBlock = envFormBlock;
+  }
+
+  public EnvForm getEnvForm() throws JAXBException {
+    if (getEnvFormBlock() == null)
+      throw new IllegalStateException("The env block is not set yet");
+    
+    JAXBContext jc = JAXBContext.newInstance(EnvForm.class);
+    Unmarshaller unmarshaller = jc.createUnmarshaller();
+    StringReader reader = new StringReader(getEnvFormBlock());
+    return (EnvForm) unmarshaller.unmarshal(reader);
   }
 
 
