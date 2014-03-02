@@ -68,9 +68,9 @@ public abstract class BaseImageCfg extends BaseEntity {
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
 
-  protected Boolean daemon;
+  protected Boolean daemon=new Boolean(true);
 
-  protected Boolean tty;
+  protected Boolean tty=new Boolean(true);
 
   @Transient
   @JsonIgnore

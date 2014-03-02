@@ -1,18 +1,26 @@
 package com.cloudezz.houston.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.cloudezz.houston.deployer.Deployer;
-import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
-import com.cloudezz.houston.domain.AppImageCfg;
-import com.cloudezz.houston.repository.AppImageCfgRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cloudezz.houston.deployer.Deployer;
+import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
+import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.DockerHostMachine;
+import com.cloudezz.houston.repository.AppImageCfgRepository;
+import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.codahale.metrics.annotation.Timed;
 
 /**
  * REST controller for managing AppImageCfg.
@@ -26,6 +34,9 @@ public class AppImageCfgResource {
   @Inject
   private AppImageCfgRepository appimagecfgRepository;
 
+  @Inject
+  private DockerHostMachineRepository dockerHostMachineRepository;
+
   @Autowired
   private Deployer deployer;
 
@@ -37,6 +48,11 @@ public class AppImageCfgResource {
   @Timed
   public void create(@RequestBody AppImageCfg appimagecfg) {
     log.debug("REST request to save AppImageCfg : {}", appimagecfg);
+    if (appimagecfg.getDockerHostMachine() == null) {
+      DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
+      appimagecfg.setDockerHostMachine(dockerHostMachine);
+    }
+    appimagecfg.setDockerImageName("cloudezz/tomcat7");
     appimagecfgRepository.save(appimagecfg);
   }
 
@@ -49,11 +65,11 @@ public class AppImageCfgResource {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean status = false;
-//    try {
-//      status = deployer.start(appImageCfg);
-//    } catch (CloudezzDeployException e) {
-//      log.error(e.getMessage());
-//    }
+    try {
+      status = deployer.start(appImageCfg);
+    } catch (CloudezzDeployException e) {
+      log.error(e.getMessage());
+    }
     return status;
   }
 
@@ -66,15 +82,15 @@ public class AppImageCfgResource {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean status = false;
-//    try {
-//      status = deployer.stop(appImageCfg);
-//    } catch (CloudezzDeployException e) {
-//      log.error(e.getMessage());
-//    }
+    // try {
+    // status = deployer.stop(appImageCfg);
+    // } catch (CloudezzDeployException e) {
+    // log.error(e.getMessage());
+    // }
     return status;
   }
-  
-  
+
+
   /**
    * GET /rest/appimagecfgs -> get all the appimagecfgs.
    */
@@ -91,9 +107,8 @@ public class AppImageCfgResource {
     return null;
   }
 
-  
-  
-  
+
+
   /**
    * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
    */
