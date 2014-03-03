@@ -219,8 +219,8 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',
-    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService) {
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',' ImageInfo', 
+    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = resolvedAppImageCfg;
 		
@@ -240,6 +240,12 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 		
 		
         $scope.openWizard = function () {
+        	
+        	$scope.serviceImages = {};
+        	ImageInfo.query(function(data) {
+        		$scope.serviceImages = data;
+        	});
+        	
 			$scope.sshpwd="";
         	var options = {
     				contentWidth : 800,

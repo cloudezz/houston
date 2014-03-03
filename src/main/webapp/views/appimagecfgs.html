@@ -11,18 +11,20 @@
 
 			<div class="wizard-input-section">
 
-				<div class="row">
+				<div class="row" ng-repeat="svcImg in serviceImages">
 					<div class=" col-xs-4">
 						<div class="thumbnail">
-							<a ng-click=setService('tomcat')> <img class="thumbnail"
-								src="http://placehold.it/170x140" alt="">
+							<a ng-click=setService(svcImg.imageName)> <img class="thumbnail"
+								ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
-								<p>Tomcat</p>
+								<p>{{imageName.name}}</p>
 							</div>
 						</div>
 					</div>
-					<div class=" col-xs-4">
+					
+					
+<!-- 					<div class=" col-xs-4">
 						<div class="thumbnail">
 							<a ng-click=setService('nodejs')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
@@ -32,6 +34,7 @@
 							</div>
 						</div>
 					</div>
+					
 					<div class=" col-xs-4">
 						<div class="thumbnail">
 							<a ng-click=setService('python')> <img class="thumbnail"
@@ -41,7 +44,7 @@
 								<p>Python</p>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
