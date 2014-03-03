@@ -1,7 +1,10 @@
 package com.cloudezz.houston;
 
-import com.cloudezz.houston.config.Constants;
-import com.cloudezz.houston.config.reload.JHipsterPluginManagerReloadPlugin;
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -14,9 +17,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springsource.loaded.agent.SpringLoadedAgent;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.io.IOException;
+import com.cloudezz.houston.config.Constants;
+import com.cloudezz.houston.config.reload.JHipsterPluginManagerReloadPlugin;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class,
