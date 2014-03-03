@@ -51,7 +51,7 @@ public class ImageInfoResource {
 
   @RequestMapping(value = "/rest/imageinfos", method = RequestMethod.GET,
       produces = "application/json")
-  @RolesAllowed(AuthoritiesConstants.ADMIN)
+  @RolesAllowed(AuthoritiesConstants.USER)
   public List<ImageInfo> findAll() {
     return imageInfoRepository.findAll();
   }
