@@ -79,11 +79,16 @@
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-7">
         <createTable catalogName="houston" tableName="t_image_info">
+         	<column name="id" type="VARCHAR(255)">
+           		 <constraints nullable="false"/>
+            </column>
             <column name="image_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="name" type="VARCHAR(255)">
+           		 <constraints nullable="false"/>
+            </column>
             <column name="service_image" type="TINYINT" />
-            <column name="name" type="VARCHAR(255)"/>
             <column name="build_pack_git_url" type="VARCHAR(255)"/>
             <column name="logo_url" type="VARCHAR(255)"/>           
         </createTable>
@@ -201,7 +206,7 @@
         <addPrimaryKey catalogName="houston" columnNames="env_mapping_id, env_name" constraintName="PRIMARY" tableName="t_environment_variable_mapping"/>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-20" failOnError="false">
-        <addPrimaryKey catalogName="houston" columnNames="image_name" constraintName="PRIMARY" tableName="t_image_info"/>
+        <addPrimaryKey catalogName="houston" columnNames="id" constraintName="PRIMARY" tableName="t_image_info"/>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-21" failOnError="false">
         <addPrimaryKey catalogName="houston" columnNames="event_id, name" constraintName="PRIMARY" tableName="t_persistent_audit_event_data"/>
