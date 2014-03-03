@@ -6,9 +6,8 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.websocket.server.PathParam;
-import javax.xml.bind.JAXBContext;
 import javax.persistence.EntityNotFoundException;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudezz.houston.domain.EnvForm;
@@ -39,67 +39,42 @@ public class ImageInfoResource {
 	@Inject
 	private ImageInfoRepository imageInfoRepository;
 
-  @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(LocalDateTime.class, new LocaleDateTimeEditor("yyyy-MM-dd", false));
-  }
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(LocalDateTime.class,
+				new LocaleDateTimeEditor("yyyy-MM-dd", false));
+	}
 
-  @RequestMapping(value = "/rest/imageinfos", method = RequestMethod.POST,
-      produces = "application/json", consumes = "application/json")
-  @Timed
-  public void create(@RequestBody ImageInfo imageInfo) {
-    if (imageInfo.getId() == null) {
-      imageInfo.setId(RepositoryUtils.generateId());
-    }
-    imageInfoRepository.save(imageInfo);
-  }
+	@RequestMapping(value = "/rest/imageinfos", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	@Timed
+	public void create(@RequestBody ImageInfo imageInfo) {
+		if (imageInfo.getId() == null) {
+			imageInfo.setId(RepositoryUtils.generateId());
+		}
+		imageInfoRepository.save(imageInfo);
+	}
 
-  @RequestMapping(value = "/rest/imageinfos", method = RequestMethod.GET,
-      produces = "application/json")
-  @RolesAllowed(AuthoritiesConstants.USER)
-  public List<ImageInfo> findAll() {
-    return imageInfoRepository.findAll();
-  }
+	@RequestMapping(value = "/rest/imageinfos", method = RequestMethod.GET, produces = "application/json")
+	@RolesAllowed(AuthoritiesConstants.USER)
+	public List<ImageInfo> findAll() {
+		return imageInfoRepository.findAll();
+	}
 
-  @RequestMapping(value = "/rest/imageInfos/{name}", method = RequestMethod.GET,
-      produces = "application/json")
-  @RolesAllowed(AuthoritiesConstants.USER)
-  public ImageInfo findByName(@PathVariable(value = "name") String name) {
-    return imageInfoRepository.findByImageName(name);
-  }
+	@RequestMapping(value = "/rest/imageInfos/{name}", method = RequestMethod.GET, produces = "application/json")
+	@RolesAllowed(AuthoritiesConstants.USER)
+	public ImageInfo findByName(@PathVariable(value = "name") String name) {
+		return imageInfoRepository.findByImageName(name);
+	}
 
-  @RequestMapping(value = "/rest/imageInfos/form", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/rest/imageInfos/form", method = RequestMethod.GET, produces = "application/json")
 	@RolesAllowed(AuthoritiesConstants.USER)
 	public EnvForm getEnvForm(@RequestParam(value = "name") String name)
 			throws JAXBException {
-		// ImageInfo imageInfo = imageInfoRepository.findByImageName(name);
-		// if (imageInfo == null) {
-		// throw new
-		// EntityNotFoundException("Couldnt find env form for image with name "
-		// + name);
-		// }
-		// return imageInfo.getEnvForm();
-		return getFormFromXml();
-	}
-
-	private EnvForm getFormFromXml() {
-		try {
-			JAXBContext jaxbContext = JAXBContext
-					.newInstance(com.cloudezz.houston.domain.EnvForm.class);
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			EnvForm form = (EnvForm) unmarshaller
-					.unmarshal(new FileInputStream(
-							"C:/Projects/CloudezzWS/Cloudezz/src/main/resources/form/cloudezz-tomcat-form-builder.xml"));
-			return form;
-
-		} catch (JAXBException je) {
-			je.printStackTrace();
-			return null;
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return null;
+		ImageInfo imageInfo = imageInfoRepository.findByImageName(name);
+		if (imageInfo == null) {
+			throw new EntityNotFoundException(
+					"Couldnt find env form for image with name " + name);
 		}
+		return imageInfo.getEnvForm();
 	}
-
-
 }
