@@ -60,7 +60,7 @@ public class DeployerUtil {
 
     ContainerConfig config = new ContainerConfig();
     config.setImage(cloudezzImageConfig.getDockerImageName());
-    config.setTty(cloudezzImageConfig.getTty());
+    config.setTty(cloudezzImageConfig.isTty());
     config.setCpuShares(cloudezzImageConfig.getCpuShares());
     config.setHostName(cloudezzImageConfig.getHostName());
     config.setDomainName(cloudezzImageConfig.getDomainName());
