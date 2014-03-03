@@ -254,9 +254,16 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       		
 	       		wizard.on("submit", function(wizard) {
 	       			console.log( $scope.appimagecfg);
+	       			
+	       			//TODO: x = wizard.serialize()
+	       			// convert x to json of type AppImageCfgDTO
+	       			// call $scope.create()
+	       			
 	       			$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
 	       			console.log( $scope.appimagecfg );
 	       			console.log( wizard.serialize() );
+	       			
+	       			
 	       			$scope.create(function(){
 	       				
 	       				wizard.trigger("success");
@@ -269,7 +276,11 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       			
 				});
 	       		
-	       		
+	       		wizard.on("incrementCard", function(wizard) {
+					//Populate The Environment Mapping card identified by card3
+	       			console.log(wizard.getActiveCard());
+	       			//call rest and populate HTML
+				});
 				
 	       		wizard.on("closed", function(wizard) {
 	       			$('.modal-backdrop').remove();
