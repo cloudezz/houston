@@ -26,6 +26,10 @@
 	</bean>
 	<import resource="classpath*:spring/avis-client-app-context.xml" />
 
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+
 	<bean id="velocityEngine"
 		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
 		<property name="velocityProperties">

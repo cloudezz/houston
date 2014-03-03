@@ -1,12 +1,13 @@
 <div>
 	<h3>Application Image Configs</h3>
-	<div class="wizard" id="appImageConfigWzd"	data-title="Application Config">
-		<div class="wizard-card" data-cardname="card1" id="card1" >
+	<div class="wizard" id="appImageConfigWzd"
+		data-title="Application Config">
+		<div class="wizard-card" data-cardname="card1" id="card1">
 			<h3 hidden="true">App Name</h3>
-			<div class="wizard-input-section"   >
-				<label>App Name</label> <input id="appName" type="text" class="form-control"
-					name="appName" ng-model="appimagecfg.appName" ng-minlength=1
-					ng-maxlength=50 required />
+			<div class="wizard-input-section">
+				<label>App Name</label> <input id="appName" type="text"
+					class="form-control" name="appName" ng-model="appimagecfg.appName"
+					ng-minlength=1 ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
@@ -55,8 +56,9 @@
 
 			<div class="wizard-input-section">
 				<label>Memory Swap (MB)</label> <input type="text"
-					class="form-control" name="memorySwap" ng-model="appimagecfg.memorySwap"
-					ng-minlength=1 ng-maxlength=50 required />
+					class="form-control" name="memorySwap"
+					ng-model="appimagecfg.memorySwap" ng-minlength=1 ng-maxlength=50
+					required />
 			</div>
 
 			<div class="wizard-input-section">
@@ -67,15 +69,14 @@
 
 			<div class="wizard-input-section">
 				<label>SSH password</label> <input type="password"
-					class="form-control" 
-					ng-minlength=5 ng-maxlength=10 required />
+					class="form-control" ng-minlength=5 ng-maxlength=10 required />
 			</div>
 		</div>
 
 		<div class="wizard-card" data-cardname="card3">
 			<h3 hidden="true">Environment</h3>
 			<div class="wizard-input-section">
-				<h2>auto generated form</h2>
+				<div id="formDiv"></div>
 			</div>
 		</div>
 
@@ -102,7 +103,8 @@
 
 		<div class="wizard-success">
 			<div class="alert alert-success">
-				<span class="create-server-name">{{appimagecfg.appName}}</span> was created <strong>successfully.</strong>
+				<span class="create-server-name">{{appimagecfg.appName}}</span> was
+				created <strong>successfully.</strong>
 			</div>
 
 			<a class="btn create-another-server">Configure another Image</a> <span
@@ -140,25 +142,26 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
-						<button ng-if="!started" type="start" ng-click="start(appimagecfg.id)"
-							class="btn">
+						<button ng-if="!started" type="start"
+							ng-click="start(appimagecfg.id)" class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Start
 						</button>
-						
-						<button ng-if="started" type="start" ng-click="stop(appimagecfg.id)"
-							class="btn">
+
+						<button ng-if="started" type="start"
+							ng-click="stop(appimagecfg.id)" class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Stop
 						</button>
-						
+
 					</td>
 				</tr>
 			</tbody>
-		</table> 
+		</table>
 	</div>
 
 	<button class="btn btn-primary btn-lg"
 		style="font-size: 12px; float: right;" data-toggle="modal"
-		data-target="#appImageConfigWzd" id="open-wizard" ng-click="openWizard()">
+		data-target="#appImageConfigWzd" id="open-wizard"
+		ng-click="openWizard()">
 		<span class="glyphicon glyphicon-flash"></span> New AppImageCfg
 	</button>
 </div>

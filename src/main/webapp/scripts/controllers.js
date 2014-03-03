@@ -219,12 +219,12 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',
-    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService) {
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',
+    function ($scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService) {
 
 		$scope.test = "Test";
         $scope.appimagecfgs = resolvedAppImageCfg;
-//		$scope.appimagecfgs.push({appName:"Static Dummy"});
+// $scope.appimagecfgs.push({appName:"Static Dummy"});
 		
         $scope.service;
         $scope.startStop ="Start";
@@ -269,7 +269,12 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       			
 				});
 	       		
-	       		
+	       		wizard.on("incrementCard", function(wizard) {
+	       		var activeCard=	wizard.getActiveCard();
+	       		if(activeCard.name=="card3"){
+	       			$scope.loadForm();
+	       		}
+				});
 				
 	       		wizard.on("closed", function(wizard) {
 	       			$('.modal-backdrop').remove();
@@ -287,13 +292,59 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 				wizard.el.find(".wizard-success .create-another-server").click(function() {
 					wizard.reset();
 				});
+				
+
+        		$scope.loadForm = function () {
+        			AppImageService.loadForm($scope.service).then(function(data){
+        				createForm(data);
+        			});
+        		};
+        		$scope.formSave = function(){
+        			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
+        				var item = $scope.currentForm.formElement[i];  
+        				if(item.type=='file-upload'){
+        					item.value=$("#"+item.name+"").val();
+        				}
+        				else{
+        				item.value=$scope.formElementHolder[item.name];
+        				}
+        				$scope.currentForm.formElement[i]=item;
+        			}
+        			AppImageService.saveFormValues($scope.currentForm);
+            	};
+        		function createForm(data){                                        
+        			var comp = $("#formDiv"); 
+        			$scope.currentForm=data;
+        			$scope.formElementHolder=new Object();
+        			var htmlCont = " <form class=\"form-inline\" role=\"form\" name=\""+data.name+"\"><fieldset> ";
+        			for ( var i = 0; i < data.formElement.length; i++) {   
+        			$scope.formloaded=true;
+        			var item = data.formElement[i];      
+        			switch (item.type) {
+        			case "input":
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
+        			break;
+        			case "password":
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
+        				break;
+        			case "checkbox":
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" value=\"option1\" ng-model=\"formElementHolder['"+item.name+"']\"></label></div>";
+        				break;
+        			case "file-upload": 
+        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" upload></div><div><span ng-click=\"upload()\">Upload</span></div>";
+        				break;
+        			};}                                                                                                    			
+        		     var $el = $(htmlCont).appendTo(comp);
+        			 $compile($el)($scope);       			
+        		};
+        	
         }
         
         $scope.create = function (callback) {
             AppImageCfg.save($scope.appimagecfg,
                 function () {
                     $scope.appimagecfgs = AppImageCfg.query();
-//                    $('#saveAppImageCfgModal').modal('hide');
+// $('#saveAppImageCfgModal').modal('hide');
                     callback();
                 });
         };
@@ -335,9 +386,10 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
                 });
         };
 
-//        $scope.clear = function () {
-//            $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
-//        };
+// $scope.clear = function () {
+// $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute:
+// ""};
+// };
     }]);
 
 
@@ -373,3 +425,25 @@ houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceIm
             $scope.serviceimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
         };
     }]);
+houstonApp.controller('FileUploadCtrl',
+	    ['$scope', '$rootScope', 'uploadManager', 
+	    function ($scope, $rootScope, uploadManager) {
+	    $scope.files = [];
+	    $scope.percentage = 0;
+
+	    $scope.upload = function () {
+	        uploadManager.upload();
+	        $scope.files = [];
+	    };
+
+	    $rootScope.$on('fileAdded', function (e, call) {
+	        $scope.files.push(call);
+	        $scope.$apply();
+	    });
+
+	    $rootScope.$on('uploadProgress', function (e, call) {
+	        $scope.percentage = call;
+	        $scope.$apply();
+	    });
+	}]);
+
