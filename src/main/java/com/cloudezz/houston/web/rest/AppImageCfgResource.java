@@ -176,4 +176,35 @@ public class AppImageCfgResource {
     log.debug("REST request to delete AppImageCfg : {}", id);
     appimagecfgRepository.delete(id);
   }
+  LinkedList<FileMeta> files = new LinkedList<FileMeta>();
+	FileMeta fileMeta = null;
+
+	@RequestMapping(value = "/rest/upload", method = RequestMethod.POST)
+	public @ResponseBody
+	LinkedList<FileMeta> upload(MultipartHttpServletRequest request,
+			HttpServletResponse response) {
+		Iterator<String> itr = request.getFileNames();
+		MultipartFile mpf = null;
+		while (itr.hasNext()) {
+			mpf = request.getFile(itr.next());
+			System.out.println((mpf.getOriginalFilename() + "uploaded!" + files
+					.size()));
+			if (files.size() >= 10)
+				files.poll();
+			fileMeta = new FileMeta();
+			fileMeta.setFileName(mpf.getOriginalFilename());
+			fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
+			fileMeta.setFileType(mpf.getContentType());
+			try {
+				fileMeta.setBytes(mpf.getBytes());
+				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
+						"C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			files.add(fileMeta);
+		}
+		return files;
+	}
+  
 }

@@ -219,8 +219,8 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
-    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
+    function ($scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = resolvedAppImageCfg;
 		
@@ -241,8 +241,8 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 		
         $scope.openWizard = function () {
 
-			$scope.appimagecfg = new Object();
-			$scope.appimagecfg.appName="Your App";
+			$scope.appImageCfgDTO = new Object();
+			$scope.appImageCfgDTO.appName="Your App";
 
         	
         	$scope.serviceImages = {};
@@ -269,17 +269,23 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
 	       		$('.modal-backdrop').addClass();
 
 	       		
-	       		wizard.on("submit", function(wizard) {       			
-	       
+	       		wizard.on("submit", function(wizard) { 
+	       			var fileSelected;
+	       			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
+        				var item = $scope.currentForm.formElement[i];  
+        				if(item.type=='file-upload'){        					
+        					fileSelected=$("#"+item.name+"").val();
+        					$scope.formElementHolder[item.name]=fileSelected;
+        				}
+        			}
+	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 	       			console.log($scope.appimagecfg);
 	       			
-	       			// TODO: x = wizard.serialize()
-	       			// convert x to json of type AppImageCfgDTO
-	       			 $scope.create();
+	       			$scope.create();
 	       			
-	       			$scope.appImageCfgDTO = QueryStringToJSON(wizard.serialize() );
+	       			//$scope.appImageCfgDTO = QueryStringToJSON(wizard.serialize() );
 	       			console.log( $scope.appImageCfgDTO );
-	       			console.log( wizard.serialize() );
+	       			//console.log( wizard.serialize() );
 	       			
 	       			
 	       			$scope.create(function(){	       				
@@ -354,7 +360,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAp
         				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" value=\"option1\" ng-model=\"formElementHolder['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
-        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload></div><div><span ng-click=\"upload()\">Upload</span></div>";
+        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload><div><span ng-click=\"upload()\">Upload</span></div></div>";
         				break;
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);

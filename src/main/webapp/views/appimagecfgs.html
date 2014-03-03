@@ -6,7 +6,7 @@
 			<h3 hidden="true">App Name</h3>
 			<div class="wizard-input-section "   >
 				<label>App Name</label> <input id="appName" type="text" class="form-control"
-					name="appName" ng-model="appimagecfg.appName" ng-minlength=1
+					name="appName" ng-model="appImageCfgDTO.appName" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 
@@ -53,20 +53,20 @@
 			<h3 hidden="true">Machine Configuration</h3>
 			<div class="wizard-input-section">
 				<label>Memory (MB)</label> <input type="text" class="form-control"
-					name="memory" ng-model="appimagecfg.memory" ng-minlength=1
+					name="memory" ng-model="appImageCfgDTO.memory" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>Memory Swap (MB)</label> <input type="text"
 					class="form-control" name="memorySwap"
-					ng-model="appimagecfg.memorySwap" ng-minlength=1 ng-maxlength=50
+					ng-model="appImageCfgDTO.memorySwap" ng-minlength=1 ng-maxlength=50
 					required />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>CPU Shares</label> <input type="text" class="form-control"
-					name="cpuShares" ng-model="appimagecfg.cpuShares" ng-minlength=1
+					name="cpuShares" ng-model="appImageCfgDTO.cpuShares" ng-minlength=1
 					ng-maxlength=50 required />
 			</div>
 		</div>
