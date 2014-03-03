@@ -254,9 +254,16 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 	       		
 	       		wizard.on("submit", function(wizard) {
 	       			console.log( $scope.appimagecfg);
+	       			
+	       			//TODO: x = wizard.serialize()
+	       			// convert x to json of type AppImageCfgDTO
+	       			// call $scope.create()
+	       			
 	       			$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
 	       			console.log( $scope.appimagecfg );
 	       			console.log( wizard.serialize() );
+	       			
+	       			
 	       			$scope.create(function(){
 	       				
 	       				wizard.trigger("success");
