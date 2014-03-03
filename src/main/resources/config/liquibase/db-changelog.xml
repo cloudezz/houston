@@ -133,7 +133,7 @@
             <column name="link_name" type="VARCHAR(255)"/>
             <column name="docker_host" type="VARCHAR(255)"/>
             <column name="app_config_id" type="VARCHAR(255)"/>
-            <column name="running" type="TINYINT"/>
+             <column name="running" type="TINYINT"/>
         </createTable>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-11">
