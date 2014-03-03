@@ -11,8 +11,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Docker Image is the one hold the map between the build back git url and docker image name . This
@@ -28,6 +26,9 @@ public class ImageInfo extends BaseEntity {
   private static final long serialVersionUID = 8051510635093548094L;
 
   @Id
+  @Column(name = "id")
+  protected String id;
+  
   @Column(name = "image_name")
   private String imageName;
 
@@ -45,12 +46,12 @@ public class ImageInfo extends BaseEntity {
 
   @Override
   public String getId() {
-    return imageName;
+    return id;
   }
 
   @Override
   public void setId(String id) {
-    imageName = id;
+    this.id = id;
   }
 
   /**
