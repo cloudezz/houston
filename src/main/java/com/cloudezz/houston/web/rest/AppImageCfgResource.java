@@ -20,6 +20,7 @@ import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -46,14 +47,36 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST,
       produces = "application/json", consumes = "application/json")
   @Timed
-  public void create(@RequestBody AppImageCfg appimagecfg) {
-    log.debug("REST request to save AppImageCfg : {}", appimagecfg);
-    if (appimagecfg.getDockerHostMachine() == null) {
+  public void create(@RequestBody AppImageCfgDTO appimagecfgDto) {
+    log.debug("REST request to save AppImageCfg : {}", appimagecfgDto);
+    
+    AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
+    
+    if (appImageCfg.getDockerHostMachine() == null) {
       DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
-      appimagecfg.setDockerHostMachine(dockerHostMachine);
+      appImageCfg.setDockerHostMachine(dockerHostMachine);
     }
-    appimagecfg.setDockerImageName("cloudezz/tomcat7");
-    appimagecfgRepository.save(appimagecfg);
+    appImageCfg.setDockerImageName("cloudezz/tomcat7");
+    
+    appimagecfgRepository.save(appImageCfg);
+  }
+
+
+  private AppImageCfg createAppImageCfg(AppImageCfgDTO appimagecfgDto) {
+    AppImageCfg cfg = new AppImageCfg();
+    cfg.setAppName(appimagecfgDto.getAppName());
+    cfg.setCpuShares(appimagecfgDto.getCpuShares());
+    cfg.setDaemon(appimagecfgDto.getDaemon());
+    cfg.setDockerImageName(appimagecfgDto.getImageName());
+    cfg.setDomainName(appimagecfgDto.getDomainName());
+    cfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
+    cfg.setGitURL(appimagecfgDto.getGitURL());
+    cfg.setHostName(appimagecfgDto.getHostName());
+    cfg.setMemory(appimagecfgDto.getMemory());
+    cfg.setMemorySwap(appimagecfgDto.getMemorySwap());
+    cfg.setPorts(appimagecfgDto.getPorts());
+    cfg.setUser(appimagecfgDto.getUser());
+    return cfg;
   }
 
 
