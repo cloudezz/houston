@@ -64,13 +64,18 @@ public class AppImageCfgResource {
     if (appImageCfg == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
-    boolean status = false;
+    boolean success = false;
     try {
-      status = deployer.start(appImageCfg);
+      success = deployer.start(appImageCfg);
+      if (success) {
+        appImageCfg.setRunning(true);
+        appimagecfgRepository.save(appImageCfg);
+      }
+
     } catch (CloudezzDeployException e) {
       log.error(e.getMessage());
     }
-    return status;
+    return success;
   }
 
 
@@ -81,13 +86,17 @@ public class AppImageCfgResource {
     if (appImageCfg == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
-    boolean status = false;
+    boolean success = false;
     try {
-      status = deployer.stop(appImageCfg);
+      success = deployer.stop(appImageCfg);
+      if (success) {
+        appImageCfg.setRunning(false);
+        appimagecfgRepository.save(appImageCfg);
+      }
     } catch (CloudezzDeployException e) {
       log.error(e.getMessage());
     }
-    return status;
+    return success;
   }
 
 
