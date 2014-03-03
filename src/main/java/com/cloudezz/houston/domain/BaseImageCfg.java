@@ -47,13 +47,13 @@ public abstract class BaseImageCfg extends BaseEntity {
   @Column(name = "domain_name")
   protected String domainName="";
 
-  protected Long memory;
+  protected Long memory=0L;
 
   @Column(name = "memory_swap")
-  protected Long memorySwap;
+  protected Long memorySwap=0L;
 
   @Column(name = "cpu_shares")
-  protected Integer cpuShares;
+  protected Integer cpuShares=0;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
