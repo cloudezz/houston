@@ -1,6 +1,6 @@
 {
     "global": {
-        "title": "JHipster",
+        "title": "Cloudezz Houston",
         "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.",
         "menu": {
             "home": "Home",
@@ -12,6 +12,7 @@
                 "tracker": "User tracker",
                 "metrics": "Metrics",
                 "logs": "Logs",
+                "imageinfo" : " Image Config" ,
                 "audits": "Audits",
                 "login": "Authenticate",
                 "logout": "Log out"
