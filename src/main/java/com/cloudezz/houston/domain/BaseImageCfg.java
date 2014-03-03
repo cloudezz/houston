@@ -71,10 +71,26 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected Boolean daemon=new Boolean(true);
 
   protected Boolean tty=new Boolean(true);
+  
+  protected Boolean running=new Boolean(false);
 
   @Transient
   @JsonIgnore
   protected HostConfig hostConfig;
+  
+  
+  public abstract List<String> getDns();
+
+  public abstract void setDns(List<String> dns);
+
+  public abstract List<String> getPorts();
+
+  public abstract void setPorts(List<String> ports);
+
+  public abstract String[] getDnsAsArray();
+
+  public abstract String[] getPortsAsArray();
+
 
   /**
    * @return the containerId
@@ -207,22 +223,11 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.environmentMapping.put(envName, envValue);
   }
 
-  public abstract List<String> getDns();
-
-  public abstract void setDns(List<String> dns);
-
-  public abstract List<String> getPorts();
-
-  public abstract void setPorts(List<String> ports);
-
-  public abstract String[] getDnsAsArray();
-
-  public abstract String[] getPortsAsArray();
 
   /**
    * @return the daemon
    */
-  public Boolean getDaemon() {
+  public Boolean isDaemon() {
     return daemon;
   }
 
@@ -233,10 +238,18 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.daemon = daemon;
   }
 
+  public Boolean isRunning() {
+    return running;
+  }
+
+  public void setRunning(Boolean running) {
+    this.running = running;
+  }
+
   /**
    * @return the tty
    */
-  public Boolean getTty() {
+  public Boolean isTty() {
     return tty;
   }
 
