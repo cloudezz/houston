@@ -1,6 +1,6 @@
 package com.cloudezz.houston.service;
 
-import javax.annotation.PostConstruct;
+import javax.el.MethodNotFoundException;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -24,21 +24,16 @@ public class DockerHostMachineService {
   @Inject
   private DockerHostMachineRepository dockerHostMachineRepository;
 
-//  @PostConstruct
-  private void initDBWithLocahost() {
-    if (dockerHostMachineRepository.count() == 0L) {
-      DockerHostMachine dockerHostMachine = new DockerHostMachine();
-      dockerHostMachine.setCloudProviderName("local");
-      dockerHostMachine.setDockerPort("4243");
-      dockerHostMachine.setHttps(false);
-      dockerHostMachine.setId("127.0.0.1");
-      dockerHostMachine.setIpAddress("127.0.0.1");
-      dockerHostMachine.setName("localhost");
-      dockerHostMachine.setPassword("");
-      dockerHostMachine.setUsername("");
-
-      dockerHostMachineRepository.save(dockerHostMachine);
-    }
+  /**
+   * Returns the best available docker host machine based on available resource
+   * 
+   * @return
+   */
+  public DockerHostMachine getAvailableHostMachine() {
+    log.error("Docker host machine based on available resource logic not yet implemented");
+    throw new MethodNotFoundException(
+        "Get docker host machine based on available resource logic not yet implemented");
   }
+
 
 }
