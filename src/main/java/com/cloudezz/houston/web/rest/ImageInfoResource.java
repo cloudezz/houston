@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
-import javax.websocket.server.PathParam;
 import javax.xml.bind.JAXBException;
 
 import org.joda.time.LocalDateTime;
@@ -15,15 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudezz.houston.domain.EnvForm;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.repository.ImageInfoRepository;
+import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.security.AuthoritiesConstants;
 import com.cloudezz.houston.web.propertyeditors.LocaleDateTimeEditor;
-import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -40,11 +38,14 @@ public class ImageInfoResource {
   public void initBinder(WebDataBinder binder) {
     binder.registerCustomEditor(LocalDateTime.class, new LocaleDateTimeEditor("yyyy-MM-dd", false));
   }
-  
+
   @RequestMapping(value = "/rest/imageinfos", method = RequestMethod.POST,
       produces = "application/json", consumes = "application/json")
   @Timed
   public void create(@RequestBody ImageInfo imageInfo) {
+    if (imageInfo.getId() == null) {
+      imageInfo.setId(RepositoryUtils.generateId());
+    }
     imageInfoRepository.save(imageInfo);
   }
 
@@ -62,13 +63,13 @@ public class ImageInfoResource {
     return imageInfoRepository.findByImageName(name);
   }
 
-  @RequestMapping(value = "/rest/imageInfos/{name}/form", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/imageInfos/{id}/form", method = RequestMethod.GET,
       produces = "application/json")
   @RolesAllowed(AuthoritiesConstants.USER)
-  public EnvForm getEnvForm(@PathVariable(value = "name") String name) throws JAXBException {
-    ImageInfo imageInfo = imageInfoRepository.findByImageName(name);
+  public EnvForm getEnvForm(@PathVariable(value = "id") String id) throws JAXBException {
+    ImageInfo imageInfo = imageInfoRepository.findOne(id);
     if (imageInfo == null) {
-      throw new EntityNotFoundException("Couldnt find env form for image with name " + name);
+      throw new EntityNotFoundException("Couldnt find env form for image with id " + id);
     }
     return imageInfo.getEnvForm();
   }
