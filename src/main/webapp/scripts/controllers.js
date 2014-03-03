@@ -236,7 +236,8 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 		}
 		var wizard;
         $scope.openWizard = function () {
-			$scope.appimagecfg = {appName:"Your App"};
+			$scope.appimagecfg = new Object();
+			$scope.appimagecfg.appName="Your App";
 			$scope.sshpwd="";
         	var options = {
     				contentWidth : 800,
@@ -252,26 +253,24 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 				console.log(angular.element("#appImageConfigWzd").scope());
 	       		console.log(angular.element("#appName").scope());
 	       		
-	       		wizard.on("submit", function(wizard) {
-	       			console.log( $scope.appimagecfg);
+	       		wizard.on("submit", function(wizard) {       			
+	       
+	       			console.log($scope.appimagecfg);
 	       			
-	       			//TODO: x = wizard.serialize()
+	       			// TODO: x = wizard.serialize()
 	       			// convert x to json of type AppImageCfgDTO
-	       			// call $scope.create()
+	       			 $scope.create();
 	       			
-	       			$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
+	       		//	$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
 	       			console.log( $scope.appimagecfg );
-	       			console.log( wizard.serialize() );
+	       			console.log( wizard);	       			
 	       			
-	       			
-	       			$scope.create(function(){
-	       				
+	       			$scope.create(function(){	       				
 	       				wizard.trigger("success");
 	       				wizard.hideButtons();
 	       				wizard._submitting = false;
 	       				wizard.showSubmitCard("success");
-	       				wizard._updateProgressBar(0);
-	       				
+	       				wizard.updateProgressBar(0);	       				
 	       			});
 	       			
 				});
@@ -329,16 +328,16 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
         			var item = data.formElement[i];      
         			switch (item.type) {
         			case "input":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
         			break;
         			case "password":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\"formElementHolder['"+item.name+"']\"></div>";
         				break;
         			case "checkbox":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" value=\"option1\" ng-model=\"formElementHolder['"+item.name+"']\"></label></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" value=\"option1\" ng-model=\"formElementHolder['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
-        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" upload></div><div><span ng-click=\"upload()\">Upload</span></div>";
+        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload></div><div><span ng-click=\"upload()\">Upload</span></div>";
         				break;
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);

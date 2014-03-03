@@ -141,8 +141,8 @@ houstonApp.factory('AppImageService', ['$http',
                 	 callback(data, status)
                  })
              },
-				loadForm : function(serviceId) {
-					var form=$http.get('app/rest/loadForm',{params:{serviceId:serviceId}}).then(
+				loadForm : function(name) {
+					var form=$http.get('app/rest/imageInfos/form',{params:{name:name}}).then(
 							function(response) {
 								return response.data;
 							});

@@ -1,6 +1,5 @@
 package com.cloudezz.houston.web.rest;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -9,9 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +30,7 @@ import com.cloudezz.houston.domain.EnvForm;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -61,7 +57,7 @@ public class AppImageCfgResource {
 	 */
 	@RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@Timed
-	public void create(@RequestBody AppImageCfg appimagecfg) {
+	public void create(@RequestBody AppImageCfgDTO appimagecfg) {
 		log.debug("REST request to save AppImageCfg : {}", appimagecfg);
 		if (appimagecfg.getDockerHostMachine() == null) {
 			DockerHostMachine dockerHostMachine = dockerHostMachineRepository
@@ -119,7 +115,7 @@ public class AppImageCfgResource {
 		return null;
 	}
 
-	/**
+	/** 
 	 * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
 	 */
 	@RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -141,13 +137,6 @@ public class AppImageCfgResource {
 	public void delete(@PathVariable String id, HttpServletResponse response) {
 		log.debug("REST request to delete AppImageCfg : {}", id);
 		appimagecfgRepository.delete(id);
-	}
-
-	@RequestMapping(value = "/rest/loadForm", method = RequestMethod.GET, produces = "application/json")
-	@Timed
-	public EnvForm getForm(@RequestParam String serviceId) {
-		EnvForm formObj = getFormFromXml();
-		return formObj;
 	}
 
 	@RequestMapping(value = "/rest/saveForm", method = RequestMethod.POST, produces = "application/json")
@@ -193,24 +182,4 @@ public class AppImageCfgResource {
 		}
 		return files;
 	}
-
-	private EnvForm getFormFromXml() {
-		try {
-			JAXBContext jaxbContext = JAXBContext
-					.newInstance(com.cloudezz.houston.domain.EnvForm.class);
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			EnvForm form = (EnvForm) unmarshaller
-					.unmarshal(new FileInputStream(
-							"C:/Projects/CloudezzWS/Cloudezz/src/main/resources/form/cloudezz-tomcat-form-builder.xml"));
-			return form;
-
-		} catch (JAXBException je) {
-			je.printStackTrace();
-			return null;
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return null;
-		}
-	}
-
 }
