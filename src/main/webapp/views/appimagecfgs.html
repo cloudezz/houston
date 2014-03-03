@@ -140,12 +140,12 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
-						<button ng-if="!started" type="start" ng-click="start(appimagecfg.id)"
+						<button ng-if="!appimagecfg.running" type="start" ng-click="start(appimagecfg.id)"
 							class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Start
 						</button>
 						
-						<button ng-if="started" type="start" ng-click="stop(appimagecfg.id)"
+						<button ng-if="appimagecfg.running" type="start" ng-click="stop(appimagecfg.id)"
 							class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Stop
 						</button>

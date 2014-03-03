@@ -72,6 +72,7 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   protected Boolean tty=new Boolean(true);
   
+  @Column(name = "running")
   protected Boolean running=new Boolean(false);
 
   @Transient
