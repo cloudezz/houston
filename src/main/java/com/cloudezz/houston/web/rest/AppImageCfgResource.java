@@ -82,11 +82,11 @@ public class AppImageCfgResource {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean status = false;
-    // try {
-    // status = deployer.stop(appImageCfg);
-    // } catch (CloudezzDeployException e) {
-    // log.error(e.getMessage());
-    // }
+    try {
+      status = deployer.stop(appImageCfg);
+    } catch (CloudezzDeployException e) {
+      log.error(e.getMessage());
+    }
     return status;
   }
 
