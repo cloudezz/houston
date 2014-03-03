@@ -24,6 +24,7 @@
             <column name="user" type="VARCHAR(255)"/>
             <column name="git_url" type="VARCHAR(255)"/>
             <column name="docker_host" type="VARCHAR(255)"/>
+            <column name="running" type="TINYINT"/>
         </createTable>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-2">
@@ -58,7 +59,7 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="cloud_provider" type="VARCHAR(255)"/>
             <column name="docker_port" type="VARCHAR(255)"/>
-            <column name="https" type="BIT(1)">
+            <column name="https" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
             <column name="password" type="VARCHAR(255)"/>
@@ -131,6 +132,7 @@
             <column name="link_name" type="VARCHAR(255)"/>
             <column name="docker_host" type="VARCHAR(255)"/>
             <column name="app_config_id" type="VARCHAR(255)"/>
+             <column name="running" type="TINYINT"/>
         </createTable>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-11">
