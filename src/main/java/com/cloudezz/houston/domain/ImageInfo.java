@@ -33,7 +33,7 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "logo_url")
   private String logoURL;
 
-  @Column(name = "is_service_image")
+  @Column(name = "service_image")
   private boolean isServiceImage;
 
   @Column(name = "env_form_block")
