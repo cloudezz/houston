@@ -219,7 +219,7 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',' ImageInfo', 
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
     function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = resolvedAppImageCfg;
@@ -405,6 +405,7 @@ houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'Im
           ImageInfo.save($scope.imageinfo,
               function () {
                   $scope.imageinfos = ImageInfo.query();
+                  $('#saveImageInfoModal').modal('hide');
               });
       };
 
