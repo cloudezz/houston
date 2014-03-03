@@ -74,6 +74,15 @@ houstonApp
                         }]
                     }
                 })
+                .when('/imageinfo', {
+                    templateUrl: 'views/imageinfos.html',
+                    controller: 'ImageInfoController',
+                    resolve:{
+                        resolvedImageInfo: ['ImageInfo', function (ImageInfo) {
+                            return ImageInfo.query();
+                        }]
+                    }
+                })                
                 .otherwise({
                     templateUrl: 'views/main.html',
                     controller: 'MainController'

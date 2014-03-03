@@ -14,16 +14,17 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="containerId" type="VARCHAR(255)"/>
             <column name="cpu_shares" type="INT(10)"/>
-            <column name="daemon" type="BIT(1)"/>
+            <column name="daemon" type="TINYINT"/>
             <column name="domain_name" type="VARCHAR(255)"/>
             <column name="host_name" type="VARCHAR(255)"/>
             <column name="image_name" type="VARCHAR(255)"/>
             <column name="memory" type="BIGINT(19)"/>
             <column name="memory_swap" type="BIGINT(19)"/>
-            <column name="tty" type="BIT(1)"/>
+            <column name="tty" type="TINYINT"/>
             <column name="user" type="VARCHAR(255)"/>
             <column name="git_url" type="VARCHAR(255)"/>
             <column name="docker_host" type="VARCHAR(255)"/>
+            <column name="running" type="TINYINT"/>
         </createTable>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-2">
@@ -58,7 +59,7 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="cloud_provider" type="VARCHAR(255)"/>
             <column name="docker_port" type="VARCHAR(255)"/>
-            <column name="https" type="BIT(1)">
+            <column name="https" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
             <column name="password" type="VARCHAR(255)"/>
@@ -81,6 +82,7 @@
             <column name="image_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="service_image" type="TINYINT" />
             <column name="name" type="VARCHAR(255)"/>
             <column name="build_pack_git_url" type="VARCHAR(255)"/>
             <column name="logo_url" type="VARCHAR(255)"/>           
@@ -120,17 +122,18 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="containerId" type="VARCHAR(255)"/>
             <column name="cpu_shares" type="INT(10)"/>
-            <column name="daemon" type="BIT(1)"/>
+            <column name="daemon" type="TINYINT"/>
             <column name="domain_name" type="VARCHAR(255)"/>
             <column name="host_name" type="VARCHAR(255)"/>
             <column name="image_name" type="VARCHAR(255)"/>
             <column name="memory" type="BIGINT(19)"/>
             <column name="memory_swap" type="BIGINT(19)"/>
-            <column name="tty" type="BIT(1)"/>
+            <column name="tty" type="TINYINT"/>
             <column name="user" type="VARCHAR(255)"/>
             <column name="link_name" type="VARCHAR(255)"/>
             <column name="docker_host" type="VARCHAR(255)"/>
             <column name="app_config_id" type="VARCHAR(255)"/>
+             <column name="running" type="TINYINT"/>
         </createTable>
     </changeSet>
     <changeSet author="Thanneer (generated)" id="1393253097982-11">
@@ -319,7 +322,12 @@
 			<column name="env_form_block" type="varchar(5000)" />
 		</addColumn>
 	</changeSet>
-
+	
+	<changeSet author="Thanneer" id="1393253097982-41">
+		<loadData encoding="UTF-8" file="config/liquibase/docker_host_machine.csv"
+			separator="," tableName="T_DOCKER_HOST_MACHINE" />
+	</changeSet>
+	
 
     <!-- Sample changeSet for creating a new Entity with the entity sub-generator -->
     <!-- 
@@ -335,3 +343,4 @@
     -->
 
 </databaseChangeLog>
+

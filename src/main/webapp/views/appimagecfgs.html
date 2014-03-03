@@ -4,26 +4,28 @@
 		data-title="Application Config">
 		<div class="wizard-card" data-cardname="card1" id="card1">
 			<h3 hidden="true">App Name</h3>
-			<div class="wizard-input-section">
-				<label>App Name</label> <input id="appName" type="text"
-					class="form-control" name="appName" ng-model="appimagecfg.appName"
-					ng-minlength=1 ng-maxlength=50 required />
+			<div class="wizard-input-section "   >
+				<label>App Name</label> <input id="appName" type="text" class="form-control"
+					name="appName" ng-model="appimagecfg.appName" ng-minlength=1
+					ng-maxlength=50 required />
 			</div>
 
 			<div class="wizard-input-section">
 
-				<div class="row">
+				<div class="row" ng-repeat="svcImg in serviceImages">
 					<div class=" col-xs-4">
 						<div class="thumbnail">
-							<a ng-click=setService('tomcat')> <img class="thumbnail"
-								src="http://placehold.it/170x140" alt="">
+							<a ng-click=setService(svcImg.imageName)> <img class="thumbnail"
+								ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
-								<p>Tomcat</p>
+								<p>{{svcImg.name}}</p>
 							</div>
 						</div>
 					</div>
-					<div class=" col-xs-4">
+					
+					
+<!-- 					<div class=" col-xs-4">
 						<div class="thumbnail">
 							<a ng-click=setService('nodejs')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
@@ -33,6 +35,7 @@
 							</div>
 						</div>
 					</div>
+					
 					<div class=" col-xs-4">
 						<div class="thumbnail">
 							<a ng-click=setService('python')> <img class="thumbnail"
@@ -42,7 +45,7 @@
 								<p>Python</p>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -134,13 +137,13 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
-						<button ng-if="!started" type="start"
-							ng-click="start(appimagecfg.id)" class="btn">
+						<button ng-if="!appimagecfg.running" type="start" ng-click="start(appimagecfg.id)"
+							class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Start
 						</button>
-
-						<button ng-if="started" type="start"
-							ng-click="stop(appimagecfg.id)" class="btn">
+						
+						<button ng-if="appimagecfg.running" type="start" ng-click="stop(appimagecfg.id)"
+							class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Stop
 						</button>
 

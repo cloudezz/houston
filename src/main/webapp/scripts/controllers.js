@@ -219,25 +219,38 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService',
-    function ($scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService) {
+houstonApp.controller('AppImageCfgController', ['$scope', '$modal' , 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
+    function ($scope, $modal, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
-		$scope.test = "Test";
         $scope.appimagecfgs = resolvedAppImageCfg;
-// $scope.appimagecfgs.push({appName:"Static Dummy"});
 		
         $scope.service;
         $scope.startStop ="Start";
         
         $scope.started = false;
         
+        $scope.appImageCfgDTO = {};
+        
+        var wizard;
+        
 		$scope.setService = function(serviceId) {
 			 $scope.service = serviceId;
+			 $scope.appImageCfgDTO.imageName = serviceId;
 		}
-		var wizard;
+		
+		
         $scope.openWizard = function () {
+
 			$scope.appimagecfg = new Object();
 			$scope.appimagecfg.appName="Your App";
+
+        	
+        	$scope.serviceImages = {};
+        	ImageInfo.query(function(data) {
+        		$scope.serviceImages = data;
+        	});
+        	
+
 			$scope.sshpwd="";
         	var options = {
     				contentWidth : 800,
@@ -248,10 +261,13 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
         		if(!wizard) {
         			wizard = $("#appImageConfigWzd").wizard(options);
         		}
+        		
+        		//TODO: query ImageInfo and populate all on the load of the Wizard
+        		
+        		
 	       		wizard.show();
 	       		$('.modal-backdrop').addClass();
-				console.log(angular.element("#appImageConfigWzd").scope());
-	       		console.log(angular.element("#appName").scope());
+
 	       		
 	       		wizard.on("submit", function(wizard) {       			
 	       
@@ -261,9 +277,10 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 	       			// convert x to json of type AppImageCfgDTO
 	       			 $scope.create();
 	       			
-	       		//	$scope.appimagecfg = QueryStringToJSON(wizard.serialize() );
-	       			console.log( $scope.appimagecfg );
-	       			console.log( wizard);	       			
+	       			$scope.appImageCfgDTO = QueryStringToJSON(wizard.serialize() );
+	       			console.log( $scope.appImageCfgDTO );
+	       			console.log( wizard.serialize() );
+	       			
 	       			
 	       			$scope.create(function(){	       				
 	       				wizard.trigger("success");
@@ -347,7 +364,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
         }
         
         $scope.create = function (callback) {
-            AppImageCfg.save($scope.appimagecfg,
+            AppImageCfg.save($scope.appImageCfgDTO,
                 function () {
                     $scope.appimagecfgs = AppImageCfg.query();
 // $('#saveAppImageCfgModal').modal('hide');
@@ -403,7 +420,6 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
     function ($scope, resolvedServiceImageCfg, ServiceImageCfg) {
 
-		
         $scope.serviceimagecfgs = resolvedServiceImageCfg;
 
         $scope.create = function () {
@@ -431,6 +447,7 @@ houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceIm
             $scope.serviceimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
         };
     }]);
+
 houstonApp.controller('FileUploadCtrl',
 	    ['$scope', '$rootScope', 'uploadManager', 
 	    function ($scope, $rootScope, uploadManager) {
@@ -453,3 +470,31 @@ houstonApp.controller('FileUploadCtrl',
 	    });
 	}]);
 
+
+
+houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'ImageInfo',
+  function ($scope, resolvedImageInfo, ImageInfo) {
+
+      $scope.imageinfos = resolvedImageInfo;
+
+      $scope.create = function () {
+          ImageInfo.save($scope.imageinfo,
+              function () {
+                  $scope.imageinfos = ImageInfo.query();
+                  $('#saveImageInfoModal').modal('hide');
+              });
+      };
+
+      $scope.update = function (id) {
+          $scope.imageinfo = ImageInfo.get({id: id});
+          $('#saveImageInfoModal').modal('show');
+      };
+
+      $scope.delete = function (id) {
+          ImageInfo.delete({id: id},
+              function () {
+                  $scope.imageinfos = ImageInfo.query();
+              });
+      };
+
+  }]);

@@ -10,6 +10,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Docker Image is the one hold the map between the build back git url and docker image name . This
  * object is a jpa object to the table that holds the map info
@@ -33,8 +37,8 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "logo_url")
   private String logoURL;
 
-  @Column(name = "is_service_image")
-  private boolean isServiceImage;
+  @Column(name = "service_image")
+  private boolean serviceImage;
 
   @Column(name = "env_form_block")
   private String envFormBlock;
@@ -86,11 +90,11 @@ public class ImageInfo extends BaseEntity {
   }
 
   public boolean isServiceImage() {
-    return isServiceImage;
+    return serviceImage;
   }
 
   public void setServiceImage(boolean isServiceImage) {
-    this.isServiceImage = isServiceImage;
+    this.serviceImage = isServiceImage;
   }
 
   public String getEnvFormBlock() {
@@ -101,16 +105,27 @@ public class ImageInfo extends BaseEntity {
     this.envFormBlock = envFormBlock;
   }
 
+  @JsonIgnore
   public EnvForm getEnvForm() throws JAXBException {
     if (getEnvFormBlock() == null)
       throw new IllegalStateException("The env block is not set yet");
-    
+
     JAXBContext jc = JAXBContext.newInstance(EnvForm.class);
     Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader(getEnvFormBlock());
     return (EnvForm) unmarshaller.unmarshal(reader);
   }
 
-
+//  public static void main(String args[]) throws JsonProcessingException {
+//    ObjectMapper mapper = new ObjectMapper();
+//    ImageInfo info = new ImageInfo();
+//    info.setImageName(" a ");
+//    info.setBuildPackGitURL(" asa");
+//    info.setEnvFormBlock(" asa");
+//    info.setServiceImage(false);
+//    info.setLogoURL(" asa");
+//
+//    System.out.println(mapper.writeValueAsString(info));
+//  }
 
 }

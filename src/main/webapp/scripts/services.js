@@ -112,6 +112,16 @@ houstonApp.factory('AuthenticationSharedService', ['$rootScope', '$http', 'authS
         };
     }]);
 
+
+houstonApp.factory('ImageInfo', ['$resource',
+ function ($resource) {
+     return $resource('app/rest/imageinfos/:id', {}, {
+         'query': { method: 'GET', isArray: true},
+         'get': { method: 'GET'}
+     });
+ }]);
+
+
 houstonApp.factory('AppImageCfg', ['$resource',
    function ($resource) {
        return $resource('app/rest/appimagecfgs/:id', {id:'@id'}, {
