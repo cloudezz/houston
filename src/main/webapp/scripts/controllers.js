@@ -219,8 +219,8 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
-    function ($scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
+houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
+    function ($rootScope,$scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = resolvedAppImageCfg;
 		
@@ -274,8 +274,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
 	       			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
         				var item = $scope.currentForm.formElement[i];  
         				if(item.type=='file-upload'){        					
-        					fileSelected=$("#"+item.name+"").val();
-        					$scope.formElementHolder[item.name]=fileSelected;
+        					$scope.formElementHolder[item.name]=$rootScope.fileSelected;
         				}
         			}
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
@@ -343,6 +342,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
             	};
         		function createForm(data){                                        
         			var comp = $("#formDiv"); 
+        			comp.empty();
         			$scope.currentForm=data;
         			$scope.formElementHolder=new Object();
         			var htmlCont = " <form class=\"form-inline\" role=\"form\" name=\""+data.name+"\"><fieldset> ";
@@ -365,8 +365,7 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);
         			 $compile($el)($scope);       			
-        		};
-        	
+        		};        	
         }
         
         $scope.create = function (callback) {
@@ -461,6 +460,7 @@ houstonApp.controller('FileUploadCtrl',
 	    $scope.percentage = 0;
 
 	    $scope.upload = function () {
+	    	$rootScope.fileSelected= $scope.files[0];
 	        uploadManager.upload();
 	        $scope.files = [];
 	    };

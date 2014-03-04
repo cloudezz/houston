@@ -68,11 +68,12 @@
 				<label>CPU Shares</label> <input type="text" class="form-control"
 					name="cpuShares" ng-model="appImageCfgDTO.cpuShares" ng-minlength=1
 					ng-maxlength=50 required />
-			</div>
+			</div>			
 		</div>
 
-		<div class="wizard-card" data-cardname="card3" id="formDiv">
+		<div class="wizard-card" data-cardname="card3">
 			<h3 hidden="true">Environment</h3>
+			<div id="formDiv"></div>
 		</div>
 
 		<div class="wizard-card" data-cardname="card4">
@@ -98,7 +99,7 @@
 
 		<div class="wizard-success">
 			<div class="alert alert-success">
-				<span class="create-server-name">{{appimagecfg.appName}}</span> was
+				<span class="create-server-name">{{appImageCfgDTO.appName}}</span> was
 				created <strong>successfully.</strong>
 			</div>
 
