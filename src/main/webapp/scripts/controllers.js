@@ -235,15 +235,12 @@ houstonApp.controller('AppImageCfgController', ['$scope', '$modal' ,'$compile', 
         
 		$scope.setService = function(serviceId) {
 			 $scope.service = serviceId;
-			 $scope.appImageCfgDTO.imageName = serviceId;
 		}
 		
 		
         $scope.openWizard = function () {
 
 			$scope.appImageCfgDTO = new Object();
-			$scope.appImageCfgDTO.appName="Your App";
-
         	
         	$scope.serviceImages = {};
         	ImageInfo.query(function(data) {

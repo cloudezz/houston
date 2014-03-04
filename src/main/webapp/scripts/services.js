@@ -151,16 +151,16 @@ houstonApp.factory('AppImageService', ['$http',
                 	 callback(data, status)
                  })
              },
-				loadForm : function(name) {
-					var form=$http.get('app/rest/imageInfos/form',{params:{name:name}}).then(
-							function(response) {
-								return response.data;
-							});
-					return form;
-				},
-				saveFormValues:function(formData){
-					$http.post('app/rest/saveForm',formData);
-				}
+			loadForm : function(id) {
+				var form=$http.get('app/rest/imageInfos/form/'+id).then(
+						function(response) {
+							return response.data;
+						});
+				return form;
+			},
+			saveFormValues:function(formData){
+				$http.post('app/rest/saveForm',formData);
+			}
 			
          }
      }]);

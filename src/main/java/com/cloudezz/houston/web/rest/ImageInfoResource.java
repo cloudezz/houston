@@ -66,14 +66,14 @@ public class ImageInfoResource {
 		return imageInfoRepository.findByImageName(name);
 	}
 
-	@RequestMapping(value = "/rest/imageInfos/form", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/rest/imageInfos/form/{id}", method = RequestMethod.GET, produces = "application/json")
 	@RolesAllowed(AuthoritiesConstants.USER)
-	public EnvForm getEnvForm(@RequestParam(value = "name") String name)
+	public EnvForm getEnvForm(@PathVariable(value = "id") String id)
 			throws JAXBException {
-		ImageInfo imageInfo = imageInfoRepository.findByImageName(name);
+		ImageInfo imageInfo = imageInfoRepository.findOne(id);
 		if (imageInfo == null) {
 			throw new EntityNotFoundException(
-					"Couldnt find env form for image with name " + name);
+					"Couldnt find env form for image with name " + id);
 		}
 		return imageInfo.getEnvForm();
 	}
