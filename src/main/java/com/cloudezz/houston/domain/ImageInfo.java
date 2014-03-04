@@ -4,8 +4,6 @@ import java.io.StringReader;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.JAXBContext;
@@ -28,7 +26,6 @@ public class ImageInfo extends BaseEntity {
   private static final long serialVersionUID = 8051510635093548094L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   protected String id;
   
@@ -49,12 +46,12 @@ public class ImageInfo extends BaseEntity {
 
   @Override
   public String getId() {
-    return imageName;
+    return id;
   }
 
   @Override
   public void setId(String id) {
-    imageName = id;
+    this.id = id;
   }
 
   /**

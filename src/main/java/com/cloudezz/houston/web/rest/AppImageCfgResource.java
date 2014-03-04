@@ -1,5 +1,9 @@
 package com.cloudezz.houston.web.rest;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,16 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.cloudezz.houston.deployer.Deployer;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
+import com.cloudezz.houston.domain.EnvForm;
+import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
@@ -166,4 +176,35 @@ public class AppImageCfgResource {
     log.debug("REST request to delete AppImageCfg : {}", id);
     appimagecfgRepository.delete(id);
   }
+  LinkedList<FileMeta> files = new LinkedList<FileMeta>();
+	FileMeta fileMeta = null;
+
+	@RequestMapping(value = "/rest/upload", method = RequestMethod.POST)
+	public @ResponseBody
+	LinkedList<FileMeta> upload(MultipartHttpServletRequest request,
+			HttpServletResponse response) {
+		Iterator<String> itr = request.getFileNames();
+		MultipartFile mpf = null;
+		while (itr.hasNext()) {
+			mpf = request.getFile(itr.next());
+			System.out.println((mpf.getOriginalFilename() + "uploaded!" + files
+					.size()));
+			if (files.size() >= 10)
+				files.poll();
+			fileMeta = new FileMeta();
+			fileMeta.setFileName(mpf.getOriginalFilename());
+			fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
+			fileMeta.setFileType(mpf.getContentType());
+			try {
+				fileMeta.setBytes(mpf.getBytes());
+				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
+						"C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			files.add(fileMeta);
+		}
+		return files;
+	}
+  
 }
