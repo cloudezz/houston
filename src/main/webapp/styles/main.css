@@ -58,3 +58,27 @@ body {
 .voffset7 { margin-top: 80px; }
 .voffset8 { margin-top: 100px; }
 .voffset9 { margin-top: 150px; }
+
+
+.btn-file {
+    overflow: hidden;
+    position: relative;
+}
+.btn-file input[type="file"] {
+    background: none repeat scroll 0 0 #FF0000;
+    cursor: inherit;
+    display: block;
+    font-size: 999px;
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+}
+input[readonly] {
+    background-color: #FFFFFF !important;
+    cursor: text !important;
+}
+
