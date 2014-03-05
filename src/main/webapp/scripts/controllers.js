@@ -357,7 +357,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" value=\"option1\" ng-model=\"formElementHolder['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
-        				htmlCont=htmlCont+"<div ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload><div><span ng-click=\"upload()\">Upload</span></div></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";
         				break;
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);
@@ -457,13 +457,14 @@ houstonApp.controller('FileUploadCtrl',
 	    $scope.percentage = 0;
 
 	    $scope.upload = function () {
-	    	$rootScope.fileSelected= $scope.files[0];
 	        uploadManager.upload();
 	        $scope.files = [];
 	    };
 
 	    $rootScope.$on('fileAdded', function (e, call) {
 	        $scope.files.push(call);
+	        var len= $scope.files.length;
+	        $rootScope.fileSelected= $scope.files[len-1];
 	        $scope.$apply();
 	    });
 
