@@ -46,7 +46,7 @@ public class ServiceImageCfg extends BaseImageCfg {
   protected List<String> ports = new LinkedList<String>();
   
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "app_config_id")
+  @JoinColumn(name = "app_config_id",nullable=false)
   private AppImageCfg applicationImageConfig;
 
   @Override

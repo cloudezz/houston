@@ -26,7 +26,6 @@ import com.cloudezz.houston.deployer.Deployer;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.EnvForm;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;

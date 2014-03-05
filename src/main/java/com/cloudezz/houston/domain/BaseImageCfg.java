@@ -57,13 +57,13 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping")
+  @Column(name = "volume_mapping",nullable=true)
   @CollectionTable(name = "T_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping")
+  @Column(name = "env_mapping",nullable=true)
   @CollectionTable(name = "T_ENVIRONMENT_VARIABLE_MAPPING", joinColumns = @JoinColumn(
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
