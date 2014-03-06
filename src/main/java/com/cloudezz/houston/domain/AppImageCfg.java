@@ -34,9 +34,6 @@ public class AppImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 6647698228363181877L;
 
-  @Column(name = "git_url")
-  private String gitURL;
-
   @ElementCollection(targetClass = String.class)
   @CollectionTable(name = "T_APP_IMAGE_DNS", joinColumns = @JoinColumn(name = "app_img_dns_id"))
   protected List<String> dns = new LinkedList<String>();
@@ -76,20 +73,6 @@ public class AppImageCfg extends BaseImageCfg {
    */
   public void setAppName(String appName) {
     this.appName = appName;
-  }
-
-  /**
-   * @return the gitURL
-   */
-  public String getGitURL() {
-    return gitURL;
-  }
-
-  /**
-   * @param gitURL the gitURL to set
-   */
-  public void setGitURL(String gitURL) {
-    this.gitURL = gitURL;
   }
 
   public List<String> getDns() {

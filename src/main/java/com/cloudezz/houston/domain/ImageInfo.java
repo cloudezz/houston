@@ -10,6 +10,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.cloudezz.houston.domain.image.EnvForm;
+import com.cloudezz.houston.domain.image.ImgSettings;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -28,7 +30,7 @@ public class ImageInfo extends BaseEntity {
   @Id
   @Column(name = "id")
   protected String id;
-  
+
   @Column(name = "image_name")
   private String imageName;
 
@@ -41,8 +43,8 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "service_image")
   private boolean serviceImage;
 
-  @Column(name = "env_form_block")
-  private String envFormBlock;
+  @Column(name = "img_settings_block")
+  private String imgSettingsBlock;
 
   @Override
   public String getId() {
@@ -98,35 +100,37 @@ public class ImageInfo extends BaseEntity {
     this.serviceImage = isServiceImage;
   }
 
-  public String getEnvFormBlock() {
-    return envFormBlock;
+
+  public String getImgSettingsBlock() {
+    return imgSettingsBlock;
   }
 
-  public void setEnvFormBlock(String envFormBlock) {
-    this.envFormBlock = envFormBlock;
+  public void setImgSettingsBlock(String imgSettingsBlock) {
+    this.imgSettingsBlock = imgSettingsBlock;
   }
 
   @JsonIgnore
   public EnvForm getEnvForm() throws JAXBException {
-    if (getEnvFormBlock() == null)
+    if (getImgSettingsBlock() == null)
       throw new IllegalStateException("The env block is not set yet");
 
-    JAXBContext jc = JAXBContext.newInstance(EnvForm.class);
+    JAXBContext jc = JAXBContext.newInstance(ImgSettings.class);
     Unmarshaller unmarshaller = jc.createUnmarshaller();
-    StringReader reader = new StringReader(getEnvFormBlock());
-    return (EnvForm) unmarshaller.unmarshal(reader);
+    StringReader reader = new StringReader(getImgSettingsBlock());
+    ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
+    return imgSettings.getForm();
   }
 
-//  public static void main(String args[]) throws JsonProcessingException {
-//    ObjectMapper mapper = new ObjectMapper();
-//    ImageInfo info = new ImageInfo();
-//    info.setImageName(" a ");
-//    info.setBuildPackGitURL(" asa");
-//    info.setEnvFormBlock(" asa");
-//    info.setServiceImage(false);
-//    info.setLogoURL(" asa");
-//
-//    System.out.println(mapper.writeValueAsString(info));
-//  }
+  // public static void main(String args[]) throws JsonProcessingException {
+  // ObjectMapper mapper = new ObjectMapper();
+  // ImageInfo info = new ImageInfo();
+  // info.setImageName(" a ");
+  // info.setBuildPackGitURL(" asa");
+  // info.setEnvFormBlock(" asa");
+  // info.setServiceImage(false);
+  // info.setLogoURL(" asa");
+  //
+  // System.out.println(mapper.writeValueAsString(info));
+  // }
 
 }

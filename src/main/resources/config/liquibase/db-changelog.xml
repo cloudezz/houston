@@ -23,7 +23,6 @@
 			<column name="memory" type="BIGINT(19)" />
 			<column name="memory_swap" type="BIGINT(19)" />
 			<column name="tty" type="TINYINT(3)" />
-			<column name="git_url" type="VARCHAR(255)" />
 			<column name="docker_host" type="VARCHAR(255)" />
 			<column name="running" type="TINYINT(3)" />
 		</createTable>
@@ -92,7 +91,7 @@
 			<column name="service_image" type="TINYINT(3)" />
 			<column name="build_pack_git_url" type="VARCHAR(255)" />
 			<column name="logo_url" type="VARCHAR(255)" />
-			<column name="env_form_block" type="VARCHAR(5000)" />
+			<column name="img_settings_block" type="VARCHAR(5000)" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Thanneer (generated)" id="1394014274096-9">

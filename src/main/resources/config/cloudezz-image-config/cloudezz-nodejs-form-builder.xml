@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form name="cloudezz/tomcat7">
 
-	<form-element type="input" name="gitURL" display-name="Git URL" />
-	<form-element type="input" name="main-js"
-		display-name="Main JS" />
-	<form-element type="password" name="ROOT_SSH_PASSWD"
-		display-name="SSH Root Password" />
-	<form-element type="checkbox" name="WEB_SHELL"
-		display-name="Shell Web Access " />
-		
-</form>
+<img-settings>
+	<form name="cloudezz/tomcat7">
+		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
+		<form-element type="input" name="main-js" display-name="Main JS" optional="true" />
+		<form-element type="password" name="ROOT_SSH_PASSWD"
+			display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL"
+			display-name="Shell Web Access " optional="true" />
+	</form>
+	<ports>
+		<port name="node_web" display-name="Node JS Web" default-value="3000" />
+	</ports>
+</img-settings>

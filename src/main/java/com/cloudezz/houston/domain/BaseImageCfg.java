@@ -15,7 +15,6 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.fasterxml.jackson.annotation.JsonIgnore;

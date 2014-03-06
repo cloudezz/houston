@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudezz.houston.domain.EnvForm;
 import com.cloudezz.houston.domain.ImageInfo;
+import com.cloudezz.houston.domain.image.EnvForm;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.security.AuthoritiesConstants;

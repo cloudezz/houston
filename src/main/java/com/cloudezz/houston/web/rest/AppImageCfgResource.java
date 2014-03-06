@@ -81,7 +81,6 @@ public class AppImageCfgResource {
     cfg.setDockerImageName(appimagecfgDto.getImageName());
     cfg.setDomainName(appimagecfgDto.getDomainName());
     cfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
-    cfg.setGitURL(appimagecfgDto.getGitURL());
     cfg.setHostName(appimagecfgDto.getHostName());
     cfg.setMemory(appimagecfgDto.getMemory());
     cfg.setMemorySwap(appimagecfgDto.getMemorySwap());

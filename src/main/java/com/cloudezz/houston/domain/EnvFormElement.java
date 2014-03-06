@@ -6,27 +6,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-/**
- * <p>
- * Java class for anonymous complex type form element.
- * 
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType>
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="display-name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"value"})
 public class EnvFormElement {
@@ -39,85 +18,127 @@ public class EnvFormElement {
   protected String name;
   @XmlAttribute(name = "display-name")
   protected String displayName;
+  @XmlAttribute(name = "optional")
+  protected String optional;
 
   /**
    * Gets the value of the value property.
    * 
-   * @return possible object is {@link String }
-   * 
+   * @return
+   *     possible object is
+   *     {@link String }
+   *     
    */
   public String getValue() {
-    return value;
+      return value;
   }
 
   /**
    * Sets the value of the value property.
    * 
-   * @param value allowed object is {@link String }
-   * 
+   * @param value
+   *     allowed object is
+   *     {@link String }
+   *     
    */
   public void setValue(String value) {
-    this.value = value;
+      this.value = value;
   }
 
   /**
    * Gets the value of the type property.
    * 
-   * @return possible object is {@link String }
-   * 
+   * @return
+   *     possible object is
+   *     {@link String }
+   *     
    */
   public String getType() {
-    return type;
+      return type;
   }
 
   /**
    * Sets the value of the type property.
    * 
-   * @param value allowed object is {@link String }
-   * 
+   * @param value
+   *     allowed object is
+   *     {@link String }
+   *     
    */
   public void setType(String value) {
-    this.type = value;
+      this.type = value;
   }
 
   /**
    * Gets the value of the name property.
    * 
-   * @return possible object is {@link String }
-   * 
+   * @return
+   *     possible object is
+   *     {@link String }
+   *     
    */
   public String getName() {
-    return name;
+      return name;
   }
 
   /**
    * Sets the value of the name property.
    * 
-   * @param value allowed object is {@link String }
-   * 
+   * @param value
+   *     allowed object is
+   *     {@link String }
+   *     
    */
   public void setName(String value) {
-    this.name = value;
+      this.name = value;
   }
 
   /**
    * Gets the value of the displayName property.
    * 
-   * @return possible object is {@link String }
-   * 
+   * @return
+   *     possible object is
+   *     {@link String }
+   *     
    */
   public String getDisplayName() {
-    return displayName;
+      return displayName;
   }
 
   /**
    * Sets the value of the displayName property.
    * 
-   * @param value allowed object is {@link String }
-   * 
+   * @param value
+   *     allowed object is
+   *     {@link String }
+   *     
    */
   public void setDisplayName(String value) {
-    this.displayName = value;
+      this.displayName = value;
+  }
+
+  /**
+   * Gets the value of the optional property.
+   * 
+   * @return
+   *     possible object is
+   *     {@link String }
+   *     
+   */
+  public String getOptional() {
+      return optional;
+  }
+
+  /**
+   * Sets the value of the optional property.
+   * 
+   * @param value
+   *     allowed object is
+   *     {@link String }
+   *     
+   */
+  public void setOptional(String value) {
+      this.optional = value;
   }
 
 }

@@ -1,42 +1,45 @@
-id,image_name,name,service_image,build_pack_git_url,logo_url,env_form_block
-07887,cloudezz/nodejs,"Node JS",0,NULL,http://neilk.net/projects/letterpwn/nodejs.png,"<?xml version=""1.0"" encoding=""UTF-8""?>
-<form name=""cloudezz/tomcat7"">
+id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
+07887,cloudezz/nodejs,"Node JS",0,NULL,http://neilk.net/projects/letterpwn/nodejs.png,"<?xml version="1.0" encoding="UTF-8"?>
 
-	<form-element type=""input"" name=""gitURL"" display-name=""Git URL"" />
-	<form-element type=""input"" name=""main-js""
-		display-name=""Main JS"" />
-	<form-element type=""input"" name=""port"" display-name=""Tomcat Port"" />
-	<form-element type=""password"" name=""ROOT_SSH_PASSWD""
-		display-name=""SSH Root Password"" />
-	<form-element type=""checkbox"" name=""WEB_SHELL""
-		display-name=""Shell Web Access "" />
-		
-</form>"
-81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,http://www.digicert.com/images/tomcat-logo.png,"<?xml version=""1.0"" encoding=""UTF-8""?>
-<form name=""cloudezz/tomcat7"">
+<img-settings>
+	<form name="cloudezz/tomcat7">
+		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
+		<form-element type="input" name="main-js" display-name="Main JS" optional="true" />
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<ports>
+		<port name="node_web" display-name="Node JS Web" default-value="3000" />
+	</ports>
+</img-settings>"
+81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,http://www.digicert.com/images/tomcat-logo.png,"<?xml version="1.0" encoding="UTF-8"?>
+<img-settings>
+<form name="cloudezz/tomcat7">
 
-<form-element type=""input"" name=""gitURL"" display-name=""Git URL"" />
-<form-element type=""file-upload"" name=""uploadWar""
-display-name=""Upload WAR"" />
-<form-element type=""input"" name=""port"" display-name=""Tomcat Port"" />
-<form-element type=""password"" name=""ROOT_SSH_PASSWD""
-display-name=""SSH Root Password"" />
-<form-element type=""checkbox"" name=""WEB_SHELL""
-display-name=""Shell Web Access "" />
+	<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
+	<form-element type="file-upload" name="uploadWar" display-name="Upload WAR" optional="false" />
+	<form-element type="input" name="port" display-name="Tomcat Port" optional="true" />
+	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+</form>
 
-</form>"
-91004,cloudezz/mysql,MySQL,1,NULL,http://www.sqlparser.com/images/database-logos/mysql_187_118.png,"<?xml version=""1.0"" encoding=""UTF-8""?>
-<form name=""cloudezz/mysql"">
+<ports>
+	<port name="tomcat_web" display-name="Tomcat Web" default-value="8080"/>  
+</ports>
 
-<form-element type=""input"" name=""mysqlDB"" display-name=""Databases to be created"" />
-<form-element type=""input"" name=""mysqlUserName""
-display-name=""Mysql Username"" />
-<form-element type=""input"" name=""mysqlPassword""
-display-name=""Mysql Password"" />
-<form-element type=""input"" name=""port"" display-name=""Mysql Port"" />
-<form-element type=""password"" name=""ROOT_SSH_PASSWD""
-display-name=""SSH Root Password"" />
-<form-element type=""checkbox"" name=""WEB_SHELL""
-display-name=""Shell Web Access "" />
+</img-settings>"
+91004,cloudezz/mysql,MySQL,1,NULL,http://www.sqlparser.com/images/database-logos/mysql_187_118.png,"<?xml version="1.0" encoding="UTF-8"?>
 
-</form>"
+<img-settings>
+	<form name="cloudezz/mysql">
+		<form-element type="input" name="mysqlDB" display-name="Databases to be created" optional="false" />
+		<form-element type="input" name="mysqlUserName" display-name="Mysql Username" optional="false" />
+		<form-element type="input" name="mysqlPassword" display-name="Mysql Password" optional="false" />
+		<form-element type="input" name="port" display-name="Mysql Port" optional="true" />
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<ports>
+		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
+	</ports>
+</img-settings>"
