@@ -5,9 +5,9 @@
 	<form-element type="file-upload" name="uploadWar"
 		display-name="Upload WAR" />
 	<form-element type="input" name="port" display-name="Tomcat Port" />
-	<form-element type="password" name="sshRootPassword"
+	<form-element type="password" name="ROOT_SSH_PASSWD"
 		display-name="SSH Root Password" />
-	<form-element type="checkbox" name="webShell"
+	<form-element type="checkbox" name="WEB_SHELL"
 		display-name="Shell Web Access " />
 		
 </form>

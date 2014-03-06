@@ -7,9 +7,9 @@
 	<form-element type="input" name="mysqlPassword"
 		display-name="Mysql Password" />
 	<form-element type="input" name="port" display-name="Mysql Port" />
-	<form-element type="password" name="sshRootPassword"
+	<form-element type="password" name="ROOT_SSH_PASSWD"
 		display-name="SSH Root Password" />
-	<form-element type="checkbox" name="webShell"
+	<form-element type="checkbox" name="WEB_SHELL"
 		display-name="Shell Web Access " />
 
 </form>
