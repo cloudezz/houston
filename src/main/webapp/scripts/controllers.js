@@ -276,14 +276,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         			}
 	       			$scope.appImageCfgDTO.imageName=$scope.serviceImg;
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
-	       			console.log($scope.appimagecfg);
-	       			
-	       			$scope.create();
-	       			
-	       			//$scope.appImageCfgDTO = QueryStringToJSON(wizard.serialize() );
-	       			console.log( $scope.appImageCfgDTO );
-	       			//console.log( wizard.serialize() );
-	       			
+
+	       			console.log( $scope.appImageCfgDTO );	       				       			
 	       			
 	       			$scope.create(function(){	       				
 	       				wizard.trigger("success");
