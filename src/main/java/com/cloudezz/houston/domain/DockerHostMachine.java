@@ -26,6 +26,11 @@ public class DockerHostMachine extends BaseEntity {
   @Column(name = "docker_port")
   private String dockerPort;
 
+
+  // host name of ec2 or digital ocean m/c
+  @Column(name = "host_name")
+  private String hostName;
+
   // IAAS provider name like ec2 or digital ocean
   @Column(name = "cloud_provider")
   private String cloudProviderName;
@@ -44,7 +49,7 @@ public class DockerHostMachine extends BaseEntity {
   public String getId() {
     return ipAddress;
   }
-  
+
   @Override
   public void setId(String id) {
     ipAddress = id;
@@ -152,6 +157,17 @@ public class DockerHostMachine extends BaseEntity {
       protocol = "https";
     }
     return protocol + "://" + ipAddress + ":" + dockerPort;
+  }
+
+  public String getHostName() {
+    if (hostName == null)
+      return ipAddress;
+
+    return hostName;
+  }
+
+  public void setHostName(String hostName) {
+    this.hostName = hostName;
   }
 
 

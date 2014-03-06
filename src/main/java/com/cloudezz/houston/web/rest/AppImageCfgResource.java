@@ -24,11 +24,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.cloudezz.houston.deployer.Deployer;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
+import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
+import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.service.ImageService;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
@@ -49,6 +52,9 @@ public class AppImageCfgResource {
 
   @Autowired
   private Deployer deployer;
+  
+  @Autowired
+  private ImageService imageService;
 
   /**
    * POST /rest/appimagecfgs -> Create a new appimagecfg.
@@ -58,17 +64,17 @@ public class AppImageCfgResource {
   @Timed
   public void create(@RequestBody AppImageCfgDTO appimagecfgDto) {
     log.debug("REST request to save AppImageCfg : {}", appimagecfgDto);
-    
+
     AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
-    
+
     if (appImageCfg.getDockerHostMachine() == null) {
       DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
       appImageCfg.setDockerHostMachine(dockerHostMachine);
     }
-    
-    // to be removed 
+
+    // to be removed
     appImageCfg.setDockerImageName("cloudezz/tomcat7");
-    
+
     appimagecfgRepository.save(appImageCfg);
   }
 
@@ -166,6 +172,29 @@ public class AppImageCfgResource {
     return appimagecfg;
   }
 
+
+  /**
+   * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
+   */
+  @RequestMapping(value = "/rest/appimagecfgs/{id}/service", method = RequestMethod.GET,
+      produces = "application/json")
+  @Timed
+  public ExposedService getServiceExposed(@PathVariable String id, HttpServletResponse response) {
+    log.debug("REST request to get AppImageCfg : {}", id);
+    AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
+    if (appImgCfg == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+    try {
+      return imageService.getExposedService(appImgCfg);
+    } catch (CloudezzException e) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+    return null;
+
+  }
+
+
   /**
    * DELETE /rest/appimagecfgs/:id -> delete the "id" appimagecfg.
    */
@@ -176,35 +205,34 @@ public class AppImageCfgResource {
     log.debug("REST request to delete AppImageCfg : {}", id);
     appimagecfgRepository.delete(id);
   }
-  LinkedList<FileMeta> files = new LinkedList<FileMeta>();
-	FileMeta fileMeta = null;
 
-	@RequestMapping(value = "/rest/upload", method = RequestMethod.POST)
-	public @ResponseBody
-	LinkedList<FileMeta> upload(MultipartHttpServletRequest request,
-			HttpServletResponse response) {
-		Iterator<String> itr = request.getFileNames();
-		MultipartFile mpf = null;
-		while (itr.hasNext()) {
-			mpf = request.getFile(itr.next());
-			System.out.println((mpf.getOriginalFilename() + "uploaded!" + files
-					.size()));
-			if (files.size() >= 10)
-				files.poll();
-			fileMeta = new FileMeta();
-			fileMeta.setFileName(mpf.getOriginalFilename());
-			fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
-			fileMeta.setFileType(mpf.getContentType());
-			try {
-				fileMeta.setBytes(mpf.getBytes());
-				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
-						"C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			files.add(fileMeta);
-		}
-		return files;
-	}
-  
+  LinkedList<FileMeta> files = new LinkedList<FileMeta>();
+  FileMeta fileMeta = null;
+
+  @RequestMapping(value = "/rest/upload", method = RequestMethod.POST)
+  public @ResponseBody
+  LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response) {
+    Iterator<String> itr = request.getFileNames();
+    MultipartFile mpf = null;
+    while (itr.hasNext()) {
+      mpf = request.getFile(itr.next());
+      System.out.println((mpf.getOriginalFilename() + "uploaded!" + files.size()));
+      if (files.size() >= 10)
+        files.poll();
+      fileMeta = new FileMeta();
+      fileMeta.setFileName(mpf.getOriginalFilename());
+      fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
+      fileMeta.setFileType(mpf.getContentType());
+      try {
+        fileMeta.setBytes(mpf.getBytes());
+        FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
+            "C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      files.add(fileMeta);
+    }
+    return files;
+  }
+
 }

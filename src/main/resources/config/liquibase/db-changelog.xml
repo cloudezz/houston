@@ -57,6 +57,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="name" type="VARCHAR(255)" />
+			<column name="host_name" type="VARCHAR(255)" />
 			<column name="cloud_provider" type="VARCHAR(255)" />
 			<column name="docker_port" type="VARCHAR(255)" />
 			<column name="https" type="TINYINT(3)">

@@ -1,9 +1,11 @@
 package com.cloudezz.houston.domain.image;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 
 /**
@@ -38,29 +40,9 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {"port"})
 public class Ports {
 
-  @XmlElement(required = true)
-  protected Port port;
+  
 
-  /**
-   * Gets the value of the port property.
-   * 
-   * @return possible object is {@link ImgSettings.Ports.Port }
-   * 
-   */
-  public Port getPort() {
-    return port;
-  }
 
-  /**
-   * Sets the value of the port property.
-   * 
-   * @param value allowed object is {@link ImgSettings.Ports.Port }
-   * 
-   */
-  public void setPort(Port value) {
-    this.port = value;
-  }
 }

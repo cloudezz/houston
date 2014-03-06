@@ -9,10 +9,9 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.client.DockerImageStartException;
 import com.cloudezz.houston.deployer.docker.client.DockerImageStopException;
+import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
-import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 @Component
@@ -21,7 +20,7 @@ public class DeployerImpl implements Deployer {
   @Override
   public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException {
 
-    DockerClient dockerClient = getDockerClient(appImageConfig.getDockerHostMachine());
+    DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
     List<String> containerIdCache = new ArrayList<String>();
 
     try {
@@ -65,7 +64,7 @@ public class DeployerImpl implements Deployer {
 
   @Override
   public boolean stop(AppImageCfg appImageConfig) throws CloudezzDeployException {
-    DockerClient dockerClient = getDockerClient(appImageConfig.getDockerHostMachine());
+    DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
     List<String> containerIdFailList = new ArrayList<String>();
     List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(appImageConfig.getServiceImages());
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
@@ -89,7 +88,7 @@ public class DeployerImpl implements Deployer {
   @Override
   public boolean deleteInstance(AppImageCfg appImageConfig) throws CloudezzDeployException {
 
-    DockerClient dockerClient = getDockerClient(appImageConfig.getDockerHostMachine());
+    DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
     List<String> containerIdFailList = new ArrayList<String>();
     List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(appImageConfig.getServiceImages());
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
@@ -113,20 +112,6 @@ public class DeployerImpl implements Deployer {
   @Override
   public boolean delete(AppImageCfg appImageConfig) {
     return false;
-  }
-
-
-  private DockerClient getDockerClient(DockerHostMachine hostMachine)
-      throws CloudezzDeployException {
-    Preconditions.checkNotNull(hostMachine,
-        "Docker host machine information has to be set on App image config");
-
-    DockerClient dockerClient = new DockerClient(hostMachine.getDockerDaemonURL());
-    if (!dockerClient.isDockerHostAvailable())
-      throw new CloudezzDeployException(
-          "Could not reach docker host machine to deploy the containers ");
-
-    return dockerClient;
   }
 
 }

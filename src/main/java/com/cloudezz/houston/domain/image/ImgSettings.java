@@ -1,16 +1,21 @@
 package com.cloudezz.houston.domain.image;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -70,64 +75,45 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "form",
-    "ports"
-})
+@XmlType(name = "", propOrder = {"form","ports"})
 @XmlRootElement(name = "img-settings")
 public class ImgSettings {
 
-    @XmlElement(required = true)
-    protected EnvForm form;
-    @XmlElement(required = true)
-    protected Ports ports;
+  @XmlElement(required = true,name="form")
+  protected EnvForm form;
 
-    /**
-     * Gets the value of the form property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ImgSettings.Form }
-     *     
-     */
-    public EnvForm getForm() {
-        return form;
-    }
+  @XmlElement(required = true)
+  @XmlElementWrapper(name = "ports")
+  private List<Port> ports;
 
-    /**
-     * Sets the value of the form property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ImgSettings.Form }
-     *     
-     */
-    public void setForm(EnvForm value) {
-        this.form = value;
-    }
 
-    /**
-     * Gets the value of the ports property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ImgSettings.Ports }
-     *     
-     */
-    public Ports getPorts() {
-        return ports;
-    }
+  public List<Port> getPorts() {
+    return ports;
+  }
 
-    /**
-     * Sets the value of the ports property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ImgSettings.Ports }
-     *     
-     */
-    public void setPorts(Ports value) {
-        this.ports = value;
-    }
+  public void setPorts(List<Port> ports) {
+    this.ports = ports;
+  }
+
+  /**
+   * Gets the value of the form property.
+   * 
+   * @return possible object is {@link ImgSettings.Form }
+   * 
+   */
+  public EnvForm getForm() {
+    return form;
+  }
+
+  /**
+   * Sets the value of the form property.
+   * 
+   * @param value allowed object is {@link ImgSettings.Form }
+   * 
+   */
+  public void setForm(EnvForm value) {
+    this.form = value;
+  }
+
+
 }
-

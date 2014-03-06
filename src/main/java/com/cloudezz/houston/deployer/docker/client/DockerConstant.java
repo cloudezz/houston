@@ -20,9 +20,13 @@ public class DockerConstant {
 
   public static final String DEFAULT_USER = "root";
   
-  public static final String DEFAULT_SSH_PORT = "22";
+  public static final String DEFAULT_SSH_PORT = "22/tcp";
   
-  public static final String DEFAULT_WEB_SHELL_PORT = "4022";
+  public static final String SSH_SERVICE_NAME = "SSH";
+  
+  public static final String WEB_SHELL_SERVICE_NAME = "Web Shell";
+  
+  public static final String DEFAULT_WEB_SHELL_PORT = "4022/tcp";
 
 
 
