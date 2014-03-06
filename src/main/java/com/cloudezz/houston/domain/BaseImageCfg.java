@@ -15,6 +15,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,46 +41,44 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected String imageName;
 
   @Column(name = "host_name")
-  protected String hostName="";
-
-  protected String user="";
+  protected String hostName = "";
 
   @Column(name = "domain_name")
-  protected String domainName="";
+  protected String domainName = "";
 
-  protected Long memory=0L;
+  protected Long memory = 0L;
 
   @Column(name = "memory_swap")
-  protected Long memorySwap=0L;
+  protected Long memorySwap = 0L;
 
   @Column(name = "cpu_shares")
-  protected Integer cpuShares=0;
+  protected Integer cpuShares = 0;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping")
+  @Column(name = "volume_mapping", nullable = true)
   @CollectionTable(name = "T_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping")
+  @Column(name = "env_mapping", nullable = true)
   @CollectionTable(name = "T_ENVIRONMENT_VARIABLE_MAPPING", joinColumns = @JoinColumn(
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
 
-  protected Boolean daemon=new Boolean(true);
+  protected Boolean daemon = new Boolean(true);
 
-  protected Boolean tty=new Boolean(true);
-  
+  protected Boolean tty = new Boolean(true);
+
   @Column(name = "running")
-  protected Boolean running=new Boolean(false);
+  protected Boolean running = new Boolean(false);
 
   @Transient
   @JsonIgnore
   protected HostConfig hostConfig;
-  
-  
+
+
   public abstract List<String> getDns();
 
   public abstract void setDns(List<String> dns);
@@ -146,16 +145,11 @@ public abstract class BaseImageCfg extends BaseEntity {
    * @param hostName the hostName to set
    */
   public void setHostName(String hostName) {
-    this.hostName = hostName;
-  }
-
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
+    if (hostName == null) {
+      this.hostName = getId();
+    } else {
+      this.hostName = hostName;
+    }
   }
 
   public String getDomainName() {
@@ -163,9 +157,12 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
   public void setDomainName(String domainName) {
-    this.domainName = domainName;
+    if (domainName == null) {
+      this.domainName = getId();
+    } else {
+      this.domainName = domainName;
+    }
   }
-
 
 
   /**

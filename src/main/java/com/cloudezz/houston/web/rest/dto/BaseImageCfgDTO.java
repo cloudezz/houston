@@ -17,8 +17,6 @@ public class BaseImageCfgDTO {
 
   protected String hostName;
 
-  protected String user;
-
   protected String domainName;
 
   protected Long memory=0L;
@@ -70,14 +68,6 @@ public class BaseImageCfgDTO {
 
   public void setHostName(String hostName) {
     this.hostName = hostName;
-  }
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
   }
 
   public String getDomainName() {

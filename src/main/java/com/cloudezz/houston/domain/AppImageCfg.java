@@ -34,25 +34,24 @@ public class AppImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 6647698228363181877L;
 
-  @Column(name="git_url")
+  @Column(name = "git_url")
   private String gitURL;
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_APP_IMAGE_DNS", joinColumns = @JoinColumn(
-      name = "app_img_dns_id"))
+  @CollectionTable(name = "T_APP_IMAGE_DNS", joinColumns = @JoinColumn(name = "app_img_dns_id"))
   protected List<String> dns = new LinkedList<String>();
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_APP_IMAGE_PORTS", joinColumns = @JoinColumn(
-      name = "app_img_port_id"))
+  @CollectionTable(name = "T_APP_IMAGE_PORTS", joinColumns = @JoinColumn(name = "app_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
 
   @Id
   @Column(name = "app_name")
   private String appName;
-  
-  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="applicationImageConfig")
-  private List<ServiceImageCfg> serviceImages = new LinkedList<ServiceImageCfg>();
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+      mappedBy = "applicationImageConfig")
+  private List<ServiceImageCfg> serviceImages;
 
 
   @Override
@@ -133,6 +132,9 @@ public class AppImageCfg extends BaseImageCfg {
    */
   public void addServiceImages(ServiceImageCfg serviceImage) throws CloudezzDeployException {
     Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
+    if (serviceImages == null) {
+      serviceImages = new LinkedList<ServiceImageCfg>();
+    }
     this.serviceImages.add(serviceImage);
   }
 

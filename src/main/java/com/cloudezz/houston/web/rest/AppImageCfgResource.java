@@ -26,7 +26,6 @@ import com.cloudezz.houston.deployer.Deployer;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.cloudezz.houston.domain.EnvForm;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
@@ -66,6 +65,8 @@ public class AppImageCfgResource {
       DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
       appImageCfg.setDockerHostMachine(dockerHostMachine);
     }
+    
+    // to be removed 
     appImageCfg.setDockerImageName("cloudezz/tomcat7");
     
     appimagecfgRepository.save(appImageCfg);
@@ -85,7 +86,7 @@ public class AppImageCfgResource {
     cfg.setMemory(appimagecfgDto.getMemory());
     cfg.setMemorySwap(appimagecfgDto.getMemorySwap());
     cfg.setPorts(appimagecfgDto.getPorts());
-    cfg.setUser(appimagecfgDto.getUser());
+
     return cfg;
   }
 

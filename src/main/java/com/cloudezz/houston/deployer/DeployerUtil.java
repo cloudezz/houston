@@ -65,7 +65,6 @@ public class DeployerUtil {
     config.setHostName(cloudezzImageConfig.getHostName());
     config.setDomainName(cloudezzImageConfig.getDomainName());
     config.setDns(cloudezzImageConfig.getDnsAsArray());
-    config.setUser(cloudezzImageConfig.getUser());
 
     String[] ports = cloudezzImageConfig.getPortsAsArray();
     if (ports != null && ports.length > 0) {

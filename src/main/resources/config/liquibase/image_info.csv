@@ -6,9 +6,9 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,env_form_block
 	<form-element type=""input"" name=""main-js""
 		display-name=""Main JS"" />
 	<form-element type=""input"" name=""port"" display-name=""Tomcat Port"" />
-	<form-element type=""password"" name=""sshRootPassword""
+	<form-element type=""password"" name=""ROOT_SSH_PASSWD""
 		display-name=""SSH Root Password"" />
-	<form-element type=""checkbox"" name=""webShell""
+	<form-element type=""checkbox"" name=""WEB_SHELL""
 		display-name=""Shell Web Access "" />
 		
 </form>"
@@ -19,9 +19,9 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,env_form_block
 <form-element type=""file-upload"" name=""uploadWar""
 display-name=""Upload WAR"" />
 <form-element type=""input"" name=""port"" display-name=""Tomcat Port"" />
-<form-element type=""password"" name=""sshRootPassword""
+<form-element type=""password"" name=""ROOT_SSH_PASSWD""
 display-name=""SSH Root Password"" />
-<form-element type=""checkbox"" name=""webShell""
+<form-element type=""checkbox"" name=""WEB_SHELL""
 display-name=""Shell Web Access "" />
 
 </form>"
@@ -34,9 +34,9 @@ display-name=""Mysql Username"" />
 <form-element type=""input"" name=""mysqlPassword""
 display-name=""Mysql Password"" />
 <form-element type=""input"" name=""port"" display-name=""Mysql Port"" />
-<form-element type=""password"" name=""sshRootPassword""
+<form-element type=""password"" name=""ROOT_SSH_PASSWD""
 display-name=""SSH Root Password"" />
-<form-element type=""checkbox"" name=""webShell""
+<form-element type=""checkbox"" name=""WEB_SHELL""
 display-name=""Shell Web Access "" />
 
 </form>"

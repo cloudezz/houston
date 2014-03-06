@@ -16,4 +16,6 @@ public class DockerConstant {
   
   public static final String GIT_URL = "gitURL";
   
+  public static final String DEFAULT_USER = "cloudezz";
+  
 }
