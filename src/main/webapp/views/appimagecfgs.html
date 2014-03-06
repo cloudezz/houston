@@ -15,7 +15,7 @@
 				<div class="row" >
 					<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
 						<div class="thumbnail">
-							<a ng-click=setService(svcImg.id)> <img class="thumbnail"
+							<a ng-click=setService(svcImg.id,svcImg.imageName)> <img class="thumbnail"
 								ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">

@@ -233,8 +233,9 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         
         var wizard;
         
-		$scope.setService = function(serviceId) {
+		$scope.setService = function(serviceId,serviceName) {
 			 $scope.service = serviceId;
+			 $scope.serviceImg = serviceName;
 		}
 		
 		
@@ -267,13 +268,13 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
 
 	       		
 	       		wizard.on("submit", function(wizard) { 
-	       			var fileSelected;
 	       			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
         				var item = $scope.currentForm.formElement[i];  
         				if(item.type=='file-upload'){        					
         					$scope.formElementHolder[item.name]=$rootScope.fileSelected;
         				}
         			}
+	       			$scope.appImageCfgDTO.imageName=$scope.serviceImg;
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 	       			console.log($scope.appimagecfg);
 	       			
