@@ -16,15 +16,15 @@
 			<column name="name" type="VARCHAR(255)" />
 			<column name="containerId" type="VARCHAR(255)" />
 			<column name="cpu_shares" type="INT(10)" />
-			<column name="daemon" type="TINYINT(3)" />
+			<column name="daemon" type="TINYINT" />
 			<column name="domain_name" type="VARCHAR(255)" />
 			<column name="host_name" type="VARCHAR(255)" />
 			<column name="image_name" type="VARCHAR(255)" />
 			<column name="memory" type="BIGINT(19)" />
 			<column name="memory_swap" type="BIGINT(19)" />
-			<column name="tty" type="TINYINT(3)" />
+			<column name="tty" type="TINYINT" />
 			<column name="docker_host" type="VARCHAR(255)" />
-			<column name="running" type="TINYINT(3)" />
+			<column name="running" type="TINYINT" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Thanneer (generated)" id="1394014274096-3">
@@ -60,7 +60,7 @@
 			<column name="host_name" type="VARCHAR(255)" />
 			<column name="cloud_provider" type="VARCHAR(255)" />
 			<column name="docker_port" type="VARCHAR(255)" />
-			<column name="https" type="TINYINT(3)">
+			<column name="https" type="TINYINT">
 				<constraints nullable="false" />
 			</column>
 			<column name="password" type="VARCHAR(255)" />
@@ -89,7 +89,7 @@
 			<column name="name" type="VARCHAR(255)">
 				<constraints nullable="false" />
 			</column>
-			<column name="service_image" type="TINYINT(3)" />
+			<column name="service_image" type="TINYINT" />
 			<column name="build_pack_git_url" type="VARCHAR(255)" />
 			<column name="logo_url" type="VARCHAR(255)" />
 			<column name="img_settings_block" type="VARCHAR(5000)" />
@@ -140,17 +140,17 @@
 			<column name="name" type="VARCHAR(255)" />
 			<column name="containerId" type="VARCHAR(255)" />
 			<column name="cpu_shares" type="INT(10)" />
-			<column name="daemon" type="TINYINT(3)" />
+			<column name="daemon" type="TINYINT" />
 			<column name="domain_name" type="VARCHAR(255)" />
 			<column name="host_name" type="VARCHAR(255)" />
 			<column name="image_name" type="VARCHAR(255)" />
 			<column name="memory" type="BIGINT(19)" />
 			<column name="memory_swap" type="BIGINT(19)" />
-			<column name="tty" type="TINYINT(3)" />
+			<column name="tty" type="TINYINT" />
 			<column name="link_name" type="VARCHAR(255)" />
 			<column name="docker_host" type="VARCHAR(255)" />
 			<column name="app_config_id" type="VARCHAR(255)" />
-			<column name="running" type="TINYINT(3)" />
+			<column name="running" type="TINYINT" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Thanneer (generated)" id="1394014274096-13">
@@ -209,47 +209,47 @@
 		<addPrimaryKey catalogName="houston" columnNames="app_name"
 			constraintName="PRIMARY" tableName="t_app_image_config" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-19">
+	<changeSet author="Thanneer (generated)" id="1394014274096-19" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="authority_name"
 			constraintName="PRIMARY" tableName="t_authority" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-20">
+	<changeSet author="Thanneer (generated)" id="1394014274096-20" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="ip_address"
 			constraintName="PRIMARY" tableName="t_docker_host_machine" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-21">
+	<changeSet author="Thanneer (generated)" id="1394014274096-21" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="env_mapping_id, env_name"
 			constraintName="PRIMARY" tableName="t_environment_variable_mapping" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-22">
+	<changeSet author="Thanneer (generated)" id="1394014274096-22" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="id"
 			constraintName="PRIMARY" tableName="t_image_info" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-23">
+	<changeSet author="Thanneer (generated)" id="1394014274096-23" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="event_id, name"
 			constraintName="PRIMARY" tableName="t_persistent_audit_event_data" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-24">
+	<changeSet author="Thanneer (generated)" id="1394014274096-24" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="series"
 			constraintName="PRIMARY" tableName="t_persistent_token" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-25">
+	<changeSet author="Thanneer (generated)" id="1394014274096-25" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="service_name"
 			constraintName="PRIMARY" tableName="t_service_image_config" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-26">
+	<changeSet author="Thanneer (generated)" id="1394014274096-26" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="email"
 			constraintName="PRIMARY" tableName="t_user" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-27">
+	<changeSet author="Thanneer (generated)" id="1394014274096-27" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="email, authority_name"
 			constraintName="PRIMARY" tableName="t_user_authority" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-28">
+	<changeSet author="Thanneer (generated)" id="1394014274096-28" failOnError="false">
 		<addPrimaryKey catalogName="houston" columnNames="vol_mapping_id, host_volume"
 			constraintName="PRIMARY" tableName="t_volume_mapping" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-29">
+	<changeSet author="Thanneer (generated)" id="1394014274096-29" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="vol_mapping_id"
 			baseTableCatalogName="houston" baseTableName="t_volume_mapping"
 			constraintName="FK_2qixwgjtegef3f2sx5oqp3ixk" deferrable="false"
@@ -257,7 +257,7 @@
 			referencedColumnNames="service_name" referencedTableCatalogName="houston"
 			referencedTableName="t_service_image_config" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-30">
+	<changeSet author="Thanneer (generated)" id="1394014274096-30" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="app_config_id"
 			baseTableCatalogName="houston" baseTableName="t_service_image_config"
 			constraintName="FK_4wxpst8fkiuu78ve9rqxh9b9o" deferrable="false"
@@ -265,7 +265,7 @@
 			referencedColumnNames="app_name" referencedTableCatalogName="houston"
 			referencedTableName="t_app_image_config" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-31">
+	<changeSet author="Thanneer (generated)" id="1394014274096-31" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="user_email"
 			baseTableCatalogName="houston" baseTableName="t_persistent_token"
 			constraintName="FK_5m1pi4gcgh17b7b4hh1mb5xc9" deferrable="false"
@@ -273,7 +273,7 @@
 			referencedColumnNames="email" referencedTableCatalogName="houston"
 			referencedTableName="t_user" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-32">
+	<changeSet author="Thanneer (generated)" id="1394014274096-32" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="authority_name"
 			baseTableCatalogName="houston" baseTableName="t_user_authority"
 			constraintName="FK_9dkl26rn1bl6vbc9r2oi1qi7s" deferrable="false"
@@ -281,7 +281,7 @@
 			referencedColumnNames="authority_name" referencedTableCatalogName="houston"
 			referencedTableName="t_authority" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-33">
+	<changeSet author="Thanneer (generated)" id="1394014274096-33" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="docker_host"
 			baseTableCatalogName="houston" baseTableName="t_service_image_config"
 			constraintName="FK_fgr8d6e2h80ipl6no92tbx1c8" deferrable="false"
@@ -289,7 +289,7 @@
 			referencedColumnNames="ip_address" referencedTableCatalogName="houston"
 			referencedTableName="t_docker_host_machine" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-34">
+	<changeSet author="Thanneer (generated)" id="1394014274096-34" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="email"
 			baseTableCatalogName="houston" baseTableName="t_user_authority"
 			constraintName="FK_fr51fcyulxn31ijiotp4fx7i5" deferrable="false"
@@ -297,7 +297,7 @@
 			referencedColumnNames="email" referencedTableCatalogName="houston"
 			referencedTableName="t_user" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-35">
+	<changeSet author="Thanneer (generated)" id="1394014274096-35" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="env_mapping_id"
 			baseTableCatalogName="houston" baseTableName="t_environment_variable_mapping"
 			constraintName="FK_rpcbgjvnd4heetcqssxj3cudh" deferrable="false"
@@ -305,7 +305,7 @@
 			referencedColumnNames="app_name" referencedTableCatalogName="houston"
 			referencedTableName="t_app_image_config" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-36">
+	<changeSet author="Thanneer (generated)" id="1394014274096-36" failOnError="false">
 		<addForeignKeyConstraint baseColumnNames="docker_host"
 			baseTableCatalogName="houston" baseTableName="t_app_image_config"
 			constraintName="FK_sdoc2oaasrjy9i2jv4gft7oyk" deferrable="false"
@@ -313,18 +313,18 @@
 			referencedColumnNames="ip_address" referencedTableCatalogName="houston"
 			referencedTableName="t_docker_host_machine" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-37">
+	<changeSet author="Thanneer (generated)" id="1394014274096-37" failOnError="false">
 		<addUniqueConstraint catalogName="houston"
 			columnNames="email" constraintName="email" deferrable="false"
 			disabled="false" initiallyDeferred="false" tableName="t_user" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-38">
+	<changeSet author="Thanneer (generated)" id="1394014274096-38" failOnError="false">
 		<addUniqueConstraint catalogName="houston"
 			columnNames="email, authority_name" constraintName="idx_user_authority"
 			deferrable="false" disabled="false" initiallyDeferred="false"
 			tableName="t_user_authority" />
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-39">
+	<changeSet author="Thanneer (generated)" id="1394014274096-39" failOnError="false">
 		<createIndex catalogName="houston" indexName="idx_persistent_audit_event"
 			tableName="t_persistent_audit_event" unique="false">
 			<column name="name" />
@@ -332,7 +332,7 @@
 			<column name="event_date" />
 		</createIndex>
 	</changeSet>
-	<changeSet author="Thanneer (generated)" id="1394014274096-40">
+	<changeSet author="Thanneer (generated)" id="1394014274096-40" failOnError="false">
 		<createIndex catalogName="houston" indexName="idx_persistent_audit_event_data"
 			tableName="t_persistent_audit_event_data" unique="false">
 			<column name="event_id" />
