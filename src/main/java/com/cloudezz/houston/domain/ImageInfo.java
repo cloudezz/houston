@@ -11,9 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import com.cloudezz.houston.domain.image.EnvForm;
-import com.cloudezz.houston.domain.image.ImgSettings;
-import com.cloudezz.houston.domain.image.Port;
+import com.cloudezz.houston.domain.ImgSettings.Form;
+import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -112,7 +111,7 @@ public class ImageInfo extends BaseEntity {
   }
 
   @JsonIgnore
-  public EnvForm getEnvForm() throws JAXBException {
+  public Form getEnvForm() throws JAXBException {
     if (getImgSettingsBlock() == null)
       throw new IllegalStateException("The settings block is not set yet");
 
@@ -131,7 +130,7 @@ public class ImageInfo extends BaseEntity {
     Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader(getImgSettingsBlock());
     ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
-    return imgSettings.getPorts();
+    return imgSettings.getPortConfig().getPort();
   }
 
   // public static void main(String args[]) throws JsonProcessingException {

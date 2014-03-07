@@ -8,9 +8,9 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
-	<ports>
+	<port-config>
 		<port name="node_web" display-name="Node JS Web" default-value="3000" />
-	</ports>
+	</port-config>
 </img-settings>"
 81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,http://www.digicert.com/images/tomcat-logo.png,"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
@@ -23,9 +23,9 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 </form>
 
-<ports>
+<port-config>
 	<port name="tomcat_web" display-name="Tomcat Web" default-value="8080"/>  
-</ports>
+</port-config>
 
 </img-settings>"
 91004,cloudezz/mysql,MySQL,1,NULL,http://www.sqlparser.com/images/database-logos/mysql_187_118.png,"<?xml version="1.0" encoding="UTF-8"?>
@@ -39,7 +39,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
-	<ports>
+	<port-config>
 		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
-	</ports>
+	</port-config>
 </img-settings>"

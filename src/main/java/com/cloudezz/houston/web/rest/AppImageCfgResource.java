@@ -52,7 +52,7 @@ public class AppImageCfgResource {
 
   @Autowired
   private Deployer deployer;
-  
+
   @Autowired
   private ImageService imageService;
 
@@ -71,9 +71,6 @@ public class AppImageCfgResource {
       DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
       appImageCfg.setDockerHostMachine(dockerHostMachine);
     }
-
-    // to be removed
-    appImageCfg.setDockerImageName("cloudezz/tomcat7");
 
     appimagecfgRepository.save(appImageCfg);
   }

@@ -19,8 +19,9 @@ import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
-import com.cloudezz.houston.domain.image.Port;
+import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
 import com.cloudezz.houston.repository.ImageInfoRepository;
+import com.google.common.base.Preconditions;
 
 @Service
 public class ImageService {
@@ -29,10 +30,14 @@ public class ImageService {
   private ImageInfoRepository imageInfoRepository;
 
   public ExposedService getExposedService(AppImageCfg appImageCfg) throws CloudezzException {
+    
+    Preconditions.checkNotNull(appImageCfg, "App Image cfg arg cannot be null");
+    
     if (appImageCfg.getContainerId() == null && !appImageCfg.isRunning()) {
       throw new CloudezzException(
           "Cannot get exposed service information from a instance that is not running");
     }
+    
     ExposedService exposedService = new ExposedService();
     try {
       ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getDockerImageName());

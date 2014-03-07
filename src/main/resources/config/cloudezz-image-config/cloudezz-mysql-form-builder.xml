@@ -13,7 +13,7 @@
 		<form-element type="checkbox" name="WEB_SHELL"
 			display-name="Shell Web Access" optional="true" />
 	</form>
-	<ports>
+	<port-config>
 		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
-	</ports>
+	</port-config>
 </img-settings>

@@ -2,14 +2,18 @@
 
 <img-settings>
 	<form name="cloudezz/tomcat7">
-		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
-		<form-element type="input" name="main-js" display-name="Main JS" optional="true" />
+		<form-element type="input" name="gitURL" display-name="Git URL"
+			optional="true" />
+		<form-element type="input" name="main-js" display-name="Main JS"
+			optional="true" />
 		<form-element type="password" name="ROOT_SSH_PASSWD"
 			display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL"
 			display-name="Shell Web Access " optional="true" />
 	</form>
-	<ports>
+
+	<port-config>
 		<port name="node_web" display-name="Node JS Web" default-value="3000" />
-	</ports>
+	</port-config>
+
 </img-settings>

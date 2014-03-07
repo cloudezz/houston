@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudezz.houston.domain.ImageInfo;
-import com.cloudezz.houston.domain.image.EnvForm;
+import com.cloudezz.houston.domain.ImgSettings.Form;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.security.AuthoritiesConstants;
@@ -63,7 +63,7 @@ public class ImageInfoResource {
 
 	@RequestMapping(value = "/rest/imageInfos/form/{id}", method = RequestMethod.GET, produces = "application/json")
 	@RolesAllowed(AuthoritiesConstants.USER)
-	public EnvForm getEnvForm(@PathVariable(value = "id") String id)
+	public Form getEnvForm(@PathVariable(value = "id") String id)
 			throws JAXBException {
 		ImageInfo imageInfo = imageInfoRepository.findOne(id);
 		if (imageInfo == null) {
