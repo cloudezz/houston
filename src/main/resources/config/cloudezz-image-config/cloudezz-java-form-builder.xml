@@ -3,18 +3,12 @@
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL"
 			optional="true" />
-		<!-- <form-element type="file-upload" name="uploadWar"
-			display-name="Upload WAR" optional="false" /> -->
-		<form-element type="input" name="WAR_URL" display-name="War URL"
-			optional="true" />	
 		<form-element type="password" name="ROOT_SSH_PASSWD"
 			display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL"
 			display-name="Shell Web Access" optional="true" />
 	</form>
-
-	<port-config>
-		<port name="tomcat_web" display-name="Tomcat Web" default-value="8080" />
-	</port-config>
-
+	
+	<port-config/>
+	
 </img-settings>

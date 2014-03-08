@@ -15,12 +15,11 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,http://www.digicert.com/images/tomcat-logo.png,"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/tomcat7">
-
 	<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
-	<form-element type="file-upload" name="uploadWar" display-name="Upload WAR" optional="false" />
-	<form-element type="input" name="port" display-name="Tomcat Port" optional="true" />
+<!-- <form-element type="file-upload" name="uploadWar" display-name="Upload WAR" optional="false" /> -->
+	<form-element type="input" name="WAR_URL" display-name="War URL" optional="true" />	
 	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
-	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access" optional="true" />
 </form>
 
 <port-config>
@@ -28,6 +27,16 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 </port-config>
 
 </img-settings>"
+37359,cloudezz/java7,"Java",0,NULL,http://www.internetnews.com/imagesvr_ce/3458/java-logo.jpeg,"<?xml version="1.0" encoding="UTF-8"?>
+<img-settings>
+	<form name="cloudezz/tomcat7">
+		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access" optional="true" />
+	</form>
+	<port-config/>
+</img-settings>
+"
 91004,cloudezz/mysql,MySQL,1,NULL,http://www.sqlparser.com/images/database-logos/mysql_187_118.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
