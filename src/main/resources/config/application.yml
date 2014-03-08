@@ -14,15 +14,15 @@ async:
     queueCapacity: 10000
 
 spring:
-    mail:
-        host: localhost
-        port: 25
-        user:
-        password:
-        protocol: smtp
-        tls: false
-        auth: false
-
-    messageSource:
+ mail:
+     host: smtp.mailgun.org
+     port: 465
+     user: postmaster@errzero.com
+     password: 66i36fpc8r37
+     protocol: smtp
+     tls: true
+     auth: true
+    
+ messageSource:
         cacheSeconds: 1
 
