@@ -3,6 +3,8 @@ package com.cloudezz.houston.deployer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
@@ -16,6 +18,8 @@ import com.google.common.collect.Lists;
 
 @Component
 public class DeployerImpl implements Deployer {
+
+  private final Logger log = LoggerFactory.getLogger(DeployerImpl.class);
 
   @Override
   public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException {
@@ -86,8 +90,13 @@ public class DeployerImpl implements Deployer {
   }
 
   @Override
-  public boolean deleteInstance(AppImageCfg appImageConfig) throws CloudezzDeployException {
-
+  public boolean delete(AppImageCfg appImageConfig) throws CloudezzDeployException {
+    // first stop if running
+    try {
+      stop(appImageConfig);
+    } catch (CloudezzDeployException e) {
+      log.error("Error stopping container before delete , may be the container wasn't running", e);
+    }
     DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
     List<String> containerIdFailList = new ArrayList<String>();
     List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(appImageConfig.getServiceImages());
@@ -109,9 +118,5 @@ public class DeployerImpl implements Deployer {
     }
   }
 
-  @Override
-  public boolean delete(AppImageCfg appImageConfig) {
-    return false;
-  }
 
 }

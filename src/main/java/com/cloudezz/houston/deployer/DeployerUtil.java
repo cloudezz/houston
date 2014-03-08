@@ -157,6 +157,19 @@ public class DeployerUtil {
     return dockerClient.stopContainer(cloudezzImageConfig.getContainerId());
 
   }
+  
+  public static boolean killContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
+      throws CloudezzDeployException {
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
+
+    // if no container then no need to stop jus return done
+    if (cloudezzImageConfig.getContainerId() == null)
+      return true;
+
+    return dockerClient.kill(cloudezzImageConfig.getContainerId());
+
+  }
 
   /**
    * Start the container once the container is created or if already created then jus start it .
@@ -319,7 +332,7 @@ public class DeployerUtil {
   public static boolean deleteContainer(DockerClient dockerClient, BaseImageCfg baseImageConfig)
       throws CloudezzDeployException {
     try {
-      return dockerClient.removeContainer(baseImageConfig.getContainerId());
+      return dockerClient.removeContainer(baseImageConfig.getContainerId(),true);
     } catch (DockerClientException e) {
       throw new CloudezzDeployException(e);
     }

@@ -42,22 +42,12 @@ public interface Deployer {
 
   /**
    * Delete only the containers contained inside the app image config and service images that were
-   * created during deploy. The config is not deleted if the config has to be delete then call
-   * {@link Deployer} .delete(ApplicationImageConfig appImageConfig) method.
-   * 
-   * @param appImageConfig
-   * @return
-   */
-  public boolean deleteInstance(AppImageCfg appImageConfig)
-      throws CloudezzDeployException;
-
-  /**
-   * If the instance is running then they are stopped and the containers are deleted then the config
-   * is deleted from account
+   * created during deploy. The config is not deleted .
    * 
    * @param appImageConfig
    * @return
    */
   public boolean delete(AppImageCfg appImageConfig) throws CloudezzDeployException;
+
 
 }

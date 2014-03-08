@@ -200,6 +200,16 @@ public class AppImageCfgResource {
   @Timed
   public void delete(@PathVariable String id, HttpServletResponse response) {
     log.debug("REST request to delete AppImageCfg : {}", id);
+    try {
+      AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
+      if (appImgCfg == null) {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }
+      deployer.delete(appImgCfg);
+    } catch (CloudezzDeployException e) {
+      log.error("Failed during delete app cfg" , e);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
     appimagecfgRepository.delete(id);
   }
 

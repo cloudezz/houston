@@ -452,9 +452,16 @@ public class DockerClient {
 
   }
 
-  public void kill(String containerId) throws DockerClientException {
-    restTemplate.postForLocation(dockerDeamonUrl + "/containers/{containerId}/kill", null,
-        containerId);
+  public boolean kill(String containerId) throws DockerClientException {
+    ResponseEntity<?> response =
+        restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/kill", null, null,
+            containerId);
+    HttpStatus status = response.getStatusCode();
+    if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void restart(String containerId, int timeout) throws DockerClientException {
