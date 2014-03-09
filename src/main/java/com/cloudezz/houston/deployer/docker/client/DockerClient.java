@@ -440,27 +440,36 @@ public class DockerClient {
   }
 
   public boolean stopContainer(String containerId, int timeout) throws DockerClientException {
-    ResponseEntity<?> response =
-        restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/stop?t={timeout}",
-            null, null, containerId, timeout);
-    HttpStatus status = response.getStatusCode();
-    if (status.value() == DockerConstant.STATUS_NO_ERROR) {
-      return true;
-    } else {
-      return false;
+    try {
+      ResponseEntity<?> response =
+          restTemplate.postForEntity(
+              dockerDeamonUrl + "/containers/{containerId}/stop?t={timeout}", null, null,
+              containerId, timeout);
+      HttpStatus status = response.getStatusCode();
+      if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (Exception e) {
+      throw new DockerClientException(e);
     }
 
   }
 
   public boolean kill(String containerId) throws DockerClientException {
-    ResponseEntity<?> response =
-        restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/kill", null, null,
-            containerId);
-    HttpStatus status = response.getStatusCode();
-    if (status.value() == DockerConstant.STATUS_NO_ERROR) {
-      return true;
-    } else {
-      return false;
+    try {
+      ResponseEntity<?> response =
+          restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/kill", null,
+              null, containerId);
+      HttpStatus status = response.getStatusCode();
+      if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (Exception e) {
+      throw new DockerClientException(e);
     }
   }
 
