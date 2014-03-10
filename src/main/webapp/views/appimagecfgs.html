@@ -4,28 +4,29 @@
 		data-title="Application Config">
 		<div class="wizard-card" data-cardname="card1" id="card1">
 			<h3 hidden="true">App Name</h3>
-			<div class="wizard-input-section "   >
-				<label>App Name</label> <input id="appName" type="text" class="form-control"
-					name="appName" ng-model="appImageCfgDTO.appName" ng-minlength=1
-					ng-maxlength=50 required />
+			<div class="wizard-input-section ">
+				<label>App Name</label> <input id="appName" type="text"
+					class="form-control" name="appName"
+					ng-model="appImageCfgDTO.appName" ng-minlength=1 ng-maxlength=50
+					required />
 			</div>
 
 			<div class="wizard-input-section">
 
-				<div class="row" >
+				<div class="row">
 					<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
 						<div class="thumbnail">
-							<a ng-click=setService(svcImg.id,svcImg.imageName)> <img class="thumbnail"
-								ng-src="{{svcImg.logoURL}}" alt="">
+							<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
+								class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
 							<div class="caption" style="padding: 2px">
 								<p>{{svcImg.name}}</p>
 							</div>
 						</div>
 					</div>
-					
-					
-<!-- 					<div class=" col-xs-4">
+
+
+					<!-- 					<div class=" col-xs-4">
 						<div class="thumbnail">
 							<a ng-click=setService('nodejs')> <img class="thumbnail"
 								src="http://placehold.it/170x140" alt="">
@@ -68,7 +69,7 @@
 				<label>CPU Shares</label> <input type="text" class="form-control"
 					name="cpuShares" ng-model="appImageCfgDTO.cpuShares" ng-minlength=1
 					ng-maxlength=50 required />
-			</div>			
+			</div>
 		</div>
 
 		<div class="wizard-card" data-cardname="card3">
@@ -99,8 +100,8 @@
 
 		<div class="wizard-success">
 			<div class="alert alert-success">
-				<span class="create-server-name">{{appImageCfgDTO.appName}}</span> was
-				created <strong>successfully.</strong>
+				<span class="create-server-name">{{appImageCfgDTO.appName}}</span>
+				was created <strong>successfully.</strong>
 			</div>
 
 			<a class="btn create-another-server">Configure another Image</a> <span
@@ -137,16 +138,30 @@
 							class="btn btn-danger">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
-						<button ng-if="!appimagecfg.running" type="start" ng-click="start(appimagecfg.id)"
-							class="btn">
+						<button ng-if="!appimagecfg.running" type="start"
+							ng-click="start(appimagecfg.id)" class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Start
 						</button>
-						
-						<button ng-if="appimagecfg.running" type="start" ng-click="stop(appimagecfg.id)"
-							class="btn">
+
+						<button ng-if="appimagecfg.running" type="start"
+							ng-click="stop(appimagecfg.id)" class="btn">
 							<span class="glyphicon glyphicon-play-circle"></span> Stop
 						</button>
 
+					</td>
+					<td class="dropdown pointer" ng-if="appimagecfg.running"><a
+						class="dropdown-toggle" data-toggle="dropdown"> <span>
+								<span class="glyphicon glyphicon-tower"></span> <span
+								class="hidden-tablet">Services</span> <b class="caret"></b>
+						</span>
+					</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="(key, value) in appServices.serviceToURL"
+								ng-click="openService(value)"><a href="#"><span
+									class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{key}}</span></a>
+							</li>
+
+						</ul>
 					</td>
 				</tr>
 			</tbody>
@@ -159,7 +174,7 @@
 		ng-click="openWizard()">
 		<span class="glyphicon glyphicon-flash"></span> New AppImageCfg
 	</button>
-	
+
 	<script type="text/ng-template" id="deleteConfirm.html">
 		<div id="confirmDeleteApp">	
 			<div class="modal-header">
@@ -174,6 +189,6 @@
 			</div>
 		</div>
 	</script>
-	
-	
+
+
 </div>
