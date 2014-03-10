@@ -3,7 +3,7 @@
         "title": "Cloudezz Houston",
         "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.",
         "menu": {
-         	"appimagecfg" : "Create Application",
+         	"appimagecfg" : "View Applications",
             "home": "Home",
             "blog": "Blog", 
             "account": {

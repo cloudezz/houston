@@ -65,6 +65,10 @@ houstonApp
                         }]
                     }
                 })
+                .when('/appImgConfigWizard', {
+                    templateUrl: 'views/appimagecfgsWizard.html',
+                    controller: 'AppImgConfigWizardController'
+                })
                 .when('/serviceimagecfg', {
                     templateUrl: 'views/serviceimagecfgs.html',
                     controller: 'ServiceImageCfgController',

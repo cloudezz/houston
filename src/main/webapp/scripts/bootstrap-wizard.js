@@ -394,7 +394,7 @@
                                     '</div>',
                                 '</div>',
                             '</div>',
-                            '<form>',
+                           
                                 '<div class="wizard-cards">',
                                     '<div class="wizard-card-container">',
                                     '</div>',
@@ -408,7 +408,7 @@
                                         '</div>',
                                     '</div>',
                                 '</div>',
-                            '</form>',
+                            
                         '</div>',
                     
                     '</div>',
