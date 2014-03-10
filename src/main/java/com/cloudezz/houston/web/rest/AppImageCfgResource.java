@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +112,7 @@ public class AppImageCfgResource {
         } catch (CloudezzException e) {
           log.error(e.getMessage());
         }
-        appimagecfgRepository.save(appImageCfg);
+        appImageCfg = appimagecfgRepository.save(appImageCfg);
       }
 
     } catch (CloudezzDeployException e) {
@@ -125,7 +124,6 @@ public class AppImageCfgResource {
 
   @RequestMapping(value = "/rest/appimagecfgs/stop/{id}", method = RequestMethod.POST)
   @Timed
-  @Transactional
   public boolean stop(@PathVariable String id, HttpServletResponse response) {
     AppImageCfg appImageCfg = appimagecfgRepository.findOne(id);
     if (appImageCfg == null) {

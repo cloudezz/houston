@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
@@ -46,10 +47,14 @@ public class AppImageCfg extends BaseImageCfg {
   @Column(name = "app_name")
   private String appName;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      mappedBy = "applicationImageConfig")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
   private List<ServiceImageCfg> serviceImages;
 
+ 
+  @OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+  @JoinColumn(name="exposed_service_id",insertable=true,
+      updatable=true,nullable=true,unique=true)
+  protected ExposedService exposedService;
 
   @Override
   public String getId() {
@@ -101,6 +106,14 @@ public class AppImageCfg extends BaseImageCfg {
     return ports.toArray(new String[ports.size()]);
   }
 
+
+  public ExposedService getExposedService() {
+    return exposedService;
+  }
+
+  public void setExposedService(ExposedService exposedService) {
+    this.exposedService = exposedService;
+  }
 
   /**
    * @return the serviceImages

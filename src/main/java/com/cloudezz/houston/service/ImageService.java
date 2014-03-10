@@ -47,7 +47,7 @@ public class ImageService {
       List<Port> ports = imageInfo.getPortsExposed();
 //      need to create proper pojo for img settings to get port
       exposedService.setContainerId(appImageCfg.getContainerId());
-      exposedService.setAppImageCfg(appImageCfg);
+      exposedService.setName(appImageCfg.getAppName());
       DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
       DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
       ContainerInspectResponse containerInspectResponse =

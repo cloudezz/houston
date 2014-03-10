@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -28,26 +30,31 @@ public class ServiceImageCfg extends BaseImageCfg {
 
   private static final long serialVersionUID = 1857747836263604938L;
 
-  @Column(name="link_name")
+  @Column(name = "link_name")
   private String linkName;
 
   @Id
-  @Column(name="service_name")
+  @Column(name = "service_name")
   private String serviceName;
-  
+
   @ElementCollection(targetClass = String.class)
   @CollectionTable(name = "T_SERVICE_IMAGE_DNS", joinColumns = @JoinColumn(
       name = "service_img_dns_id"))
   protected List<String> dns = new LinkedList<String>();
 
   @ElementCollection(targetClass = String.class)
-  @CollectionTable(name = "T_SERVICE_IMAGE_PORTS",joinColumns = @JoinColumn(
+  @CollectionTable(name = "T_SERVICE_IMAGE_PORTS", joinColumns = @JoinColumn(
       name = "service_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
-  
+
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "app_config_id",nullable=false)
+  @JoinColumn(name = "app_config_id", nullable = false)
   private AppImageCfg applicationImageConfig;
+
+  @OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+  @JoinColumn(name="exposed_service_id",insertable=true,
+      updatable=true,nullable=true,unique=true)
+  protected ExposedService exposedService;
 
   @Override
   public String getId() {
@@ -114,7 +121,7 @@ public class ServiceImageCfg extends BaseImageCfg {
     this.ports = ports;
   }
 
-  
+
   public String[] getDnsAsArray() {
     return dns.toArray(new String[dns.size()]);
   }
@@ -124,7 +131,7 @@ public class ServiceImageCfg extends BaseImageCfg {
     return ports.toArray(new String[ports.size()]);
   }
 
-  
+
   /**
    * @return the applicationImageConfig
    */
@@ -137,6 +144,14 @@ public class ServiceImageCfg extends BaseImageCfg {
    */
   public void setApplicationImageConfig(AppImageCfg applicationImageConfig) {
     this.applicationImageConfig = applicationImageConfig;
+  }
+
+  public ExposedService getExposedService() {
+    return exposedService;
+  }
+
+  public void setExposedService(ExposedService exposedService) {
+    this.exposedService = exposedService;
   }
 
 
