@@ -219,6 +219,7 @@ function QueryStringToJSON(queryStr) {
 }
 
 
+
 houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' ,'$compile', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
     function ($rootScope,$scope, $modal,$compile, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
@@ -400,17 +401,59 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         };
 
         $scope.delete = function (id) {
-            AppImageCfg.delete({id: id},
-                function () {
-                    $scope.appimagecfgs = AppImageCfg.query();
-                });
+        	
+        	var modalInstance = $modal.open({
+				templateUrl : 'deleteConfirm.html',
+				controller : DeleteModalInstanceCtrl,
+				scope : $scope,
+				resolve : {
+					AppImageCfg : function() {
+						return AppImageCfg;
+					},
+					
+					id: function () {
+						return id;
+					}
+				}
+			});
+	
+			modalInstance.result.then(function(selectedItem) {
+				$scope.selected = selectedItem;
+			}, function() {
+				$log.info('Modal dismissed at: ' + new Date());
+			});
         };
-
-// $scope.clear = function () {
-// $scope.appimagecfg = {id: "", sampleTextAttribute: "", sampleDateAttribute:
-// ""};
-// };
     }]);
+
+
+
+
+/**
+ * Controller for the delete modal dialog confirmation window
+ * 
+ * @param $scope
+ * @param $modal
+ * @param $modalInstance
+ * @param deal
+ */
+function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppImageCfg, id){
+		
+	$scope.ok = function() {
+		
+		AppImageCfg.delete({id: id},
+                function () {
+                    $scope.$parent.appimagecfgs = AppImageCfg.query();
+                });
+		
+		
+		$modalInstance.close();
+	};
+
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+}
+
 
 
 
