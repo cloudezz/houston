@@ -306,8 +306,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				});
 			}
 		}
-		
-        $scope.openWizard = function () {
 
 		$scope.setSubService = function(serviceId,serviceName) {
 			 $scope.subService = serviceId;
@@ -518,7 +516,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		     var $el = $(htmlCont).appendTo(comp);
         			 $compile($el)($scope);       			
         		};
-        }
         
         $scope.create = function (callback) {
             AppImageCfg.save($scope.appImageCfgDTO,
