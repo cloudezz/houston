@@ -9,4 +9,9 @@ public class RepositoryUtils {
     return id;
   }
   
+  
+  public static String generateBigId() {
+    String id = RandomStringUtils.randomNumeric(12);
+    return id;
+  }
 }

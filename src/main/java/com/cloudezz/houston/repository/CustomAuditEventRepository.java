@@ -46,9 +46,10 @@ public class CustomAuditEventRepository {
             @Override
             public void add(AuditEvent event) {
                 PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
+                persistentAuditEvent.setId(RepositoryUtils.generateBigId());
                 persistentAuditEvent.setPrincipal(event.getPrincipal());
                 persistentAuditEvent.setAuditEventType(event.getType());
-                persistentAuditEvent.setAuditEventDate(new LocalDateTime(event.getTimestamp()));
+                persistentAuditEvent.setAuditEventDate(new LocalDateTime(event.getTimestamp()).toDate());
                 persistentAuditEvent.setData(auditEventConverter.convertDataToStrings(event.getData()));
 
                 persistenceAuditEventRepository.save(persistentAuditEvent);

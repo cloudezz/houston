@@ -1,14 +1,21 @@
 package com.cloudezz.houston.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Persist AuditEvent managed by the Spring Boot actuator
@@ -18,12 +25,11 @@ import java.util.Map;
 @Entity
 @Table(name = "T_PERSISTENT_AUDIT_EVENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class PersistentAuditEvent  extends BaseEntity {
+public class PersistentAuditEvent extends BaseEntity {
 
   private static final long serialVersionUID = 55138762249008026L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
     private String id;
 
@@ -32,8 +38,7 @@ public class PersistentAuditEvent  extends BaseEntity {
     private String principal;
 
     @Column(name = "event_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-    private LocalDateTime auditEventDate;
+    private Date auditEventDate;
 
     @Column(name = "event_type")
     private String auditEventType;
@@ -61,11 +66,11 @@ public class PersistentAuditEvent  extends BaseEntity {
         this.principal = principal;
     }
 
-    public LocalDateTime getAuditEventDate() {
+    public Date getAuditEventDate() {
         return auditEventDate;
     }
 
-    public void setAuditEventDate(LocalDateTime auditEventDate) {
+    public void setAuditEventDate(Date auditEventDate) {
         this.auditEventDate = auditEventDate;
     }
 

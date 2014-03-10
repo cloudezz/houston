@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -41,10 +42,10 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "logo_url")
   private String logoURL;
 
-  @Column(name = "service_image")
+  @Column(name = "service_image",nullable = false, columnDefinition = "TINYINT")
   private boolean serviceImage;
 
-  @Column(name = "img_settings_block")
+  @Column(name = "img_settings_block",columnDefinition="VARCHAR(6000)")
   private String imgSettingsBlock;
 
   @Override

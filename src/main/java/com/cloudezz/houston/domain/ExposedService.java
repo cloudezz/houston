@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -22,27 +20,20 @@ public class ExposedService extends BaseEntity {
   private static final long serialVersionUID = -5956780711994167850L;
 
   @Id
-  @Column(name="container_id")
+  @Column(name = "container_id")
   private String containerId;
-  
-  @Column(name="is_service_image")
+
+  @Column(name = "is_service_image",nullable = false, columnDefinition = "TINYINT")
   private boolean serviceImage;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "service_name")
   @Column(name = "service_url", nullable = true)
-  @CollectionTable(name = "T_EXPOSED_SERVICE_NAME_URL_MAPPING", joinColumns = @JoinColumn(name = "container_id"))
+  @CollectionTable(name = "T_EXPOSED_SERVICE_NAME_URL_MAPPING", joinColumns = @JoinColumn(
+      name = "container_id"))
   private Map<String, String> serviceToURL = new LinkedHashMap<String, String>();
 
-  @OneToOne
-  @PrimaryKeyJoinColumn
-  private AppImageCfg appImageCfg;
-  
-  @OneToOne
-  @PrimaryKeyJoinColumn
-  private ServiceImageCfg serviceImageCfg;
-  
-  
+
   public String getContainerId() {
     return containerId;
   }
@@ -69,23 +60,6 @@ public class ExposedService extends BaseEntity {
     containerId = id;
   }
 
-  public AppImageCfg getAppImageCfg() {
-    return appImageCfg;
-  }
-
-  public void setAppImageCfg(AppImageCfg appImageCfg) {
-    this.appImageCfg = appImageCfg;
-    this.serviceImage=false;
-  }
-
-  public ServiceImageCfg getServiceImageCfg() {
-    return serviceImageCfg;
-  }
-
-  public void setServiceImageCfg(ServiceImageCfg serviceImageCfg) {
-    this.serviceImageCfg = serviceImageCfg;
-    this.serviceImage=true;
-  }
 
   public boolean isServiceImage() {
     return serviceImage;

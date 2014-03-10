@@ -42,6 +42,7 @@ public class DockerHostMachine extends BaseEntity {
   private String password;
 
   // docker rest api on http or https
+  @Column(nullable = false, columnDefinition = "TINYINT")
   private boolean https = false;
 
 
