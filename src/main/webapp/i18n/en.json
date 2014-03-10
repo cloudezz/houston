@@ -5,6 +5,7 @@
         "menu": {
          	"appimagecfg" : "Create Application",
             "home": "Home",
+            "blog": "Blog", 
             "account": {
                 "main": "Account",
                 "settings": "Settings",

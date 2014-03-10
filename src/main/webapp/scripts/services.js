@@ -160,8 +160,14 @@ houstonApp.factory('AppImageService', ['$http',
 			},
 			saveFormValues:function(formData){
 				$http.post('app/rest/saveForm',formData);
-			}
+			},
 			
+			listServices : function (appName, callback) {
+				var url = "app/rest/appimagecfgs/"+appName+"/service"
+				$http.get(url).success(function (data) {
+					callback(data);
+				});
+			}
          }
      }]);
 
