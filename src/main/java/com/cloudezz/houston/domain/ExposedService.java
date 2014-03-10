@@ -3,12 +3,46 @@ package com.cloudezz.houston.domain;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ExposedService {
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "T_EXPOSED_SERVICE")
+public class ExposedService extends BaseEntity {
+
+  private static final long serialVersionUID = -5956780711994167850L;
+
+  @Id
+  @Column(name="container_id")
   private String containerId;
+  
+  @Column(name="is_service_image")
+  private boolean serviceImage;
 
-  private Map<String, String> serviceToURL= new LinkedHashMap<String,String>();
+  @ElementCollection(fetch = FetchType.EAGER)
+  @MapKeyColumn(name = "service_name")
+  @Column(name = "service_url", nullable = true)
+  @CollectionTable(name = "T_EXPOSED_SERVICE_NAME_URL_MAPPING", joinColumns = @JoinColumn(name = "container_id"))
+  private Map<String, String> serviceToURL = new LinkedHashMap<String, String>();
 
+  @OneToOne
+  @PrimaryKeyJoinColumn
+  private AppImageCfg appImageCfg;
+  
+  @OneToOne
+  @PrimaryKeyJoinColumn
+  private ServiceImageCfg serviceImageCfg;
+  
+  
   public String getContainerId() {
     return containerId;
   }
@@ -21,8 +55,44 @@ public class ExposedService {
     return serviceToURL;
   }
 
-  public void addServiceToURL(String serviceName , String url) {
+  public void addServiceToURL(String serviceName, String url) {
     this.serviceToURL.put(serviceName, url);
+  }
+
+  @Override
+  public String getId() {
+    return containerId;
+  }
+
+  @Override
+  public void setId(String id) {
+    containerId = id;
+  }
+
+  public AppImageCfg getAppImageCfg() {
+    return appImageCfg;
+  }
+
+  public void setAppImageCfg(AppImageCfg appImageCfg) {
+    this.appImageCfg = appImageCfg;
+    this.serviceImage=false;
+  }
+
+  public ServiceImageCfg getServiceImageCfg() {
+    return serviceImageCfg;
+  }
+
+  public void setServiceImageCfg(ServiceImageCfg serviceImageCfg) {
+    this.serviceImageCfg = serviceImageCfg;
+    this.serviceImage=true;
+  }
+
+  public boolean isServiceImage() {
+    return serviceImage;
+  }
+
+  public void setServiceImage(boolean serviceImage) {
+    this.serviceImage = serviceImage;
   }
 
 }

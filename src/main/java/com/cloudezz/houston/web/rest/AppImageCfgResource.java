@@ -105,6 +105,13 @@ public class AppImageCfgResource {
       success = deployer.start(appImageCfg);
       if (success) {
         appImageCfg.setRunning(true);
+        // set the exposed service after start of the image
+        try {
+          ExposedService exposedService = imageService.getExposedService(appImageCfg);
+          appImageCfg.setExposedService(exposedService);
+        } catch (CloudezzException e) {
+          log.error(e.getMessage());
+        }
         appimagecfgRepository.save(appImageCfg);
       }
 
@@ -207,7 +214,7 @@ public class AppImageCfgResource {
       }
       deployer.delete(appImgCfg);
     } catch (CloudezzDeployException e) {
-      log.error("Failed during delete app cfg" , e);
+      log.error("Failed during delete app cfg", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
     appimagecfgRepository.delete(id);

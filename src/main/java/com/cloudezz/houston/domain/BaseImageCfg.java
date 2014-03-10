@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
@@ -72,6 +75,10 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   @Column(name = "running")
   protected Boolean running = new Boolean(false);
+
+  @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  protected ExposedService exposedService;
 
   @Transient
   @JsonIgnore
@@ -303,7 +310,13 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.hostConfig = hostConfig;
   }
 
+  public ExposedService getExposedService() {
+    return exposedService;
+  }
 
+  public void setExposedService(ExposedService exposedService) {
+    this.exposedService = exposedService;
+  }
 
   /**
    * @return the volumeMapping
