@@ -128,7 +128,6 @@
 			<tbody>
 				<tr ng-repeat="appimagecfg in appimagecfgs">
 					<td>{{appimagecfg.appName}}</td>
-					<td>{{appimagecfg.sampleDateAttribute}}</td>
 					<td>
 						<button type="submit" ng-click="update(appimagecfg.id)"
 							class="btn">
@@ -160,4 +159,21 @@
 		ng-click="openWizard()">
 		<span class="glyphicon glyphicon-flash"></span> New AppImageCfg
 	</button>
+	
+	<script type="text/ng-template" id="deleteConfirm.html">
+		<div id="confirmDeleteApp">	
+			<div class="modal-header">
+				<h4>Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete selected App Image ?
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="ok()">Ok</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+			</div>
+		</div>
+	</script>
+	
+	
 </div>
