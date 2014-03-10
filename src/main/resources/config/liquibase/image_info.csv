@@ -1,5 +1,5 @@
 id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
-07887,cloudezz/nodejs,"Node JS",0,NULL,http://neilk.net/projects/letterpwn/nodejs.png,"<?xml version="1.0" encoding="UTF-8"?>
+07887,cloudezz/nodejs,"Node JS",0,NULL,/images/logos/nodejs.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/tomcat7">
@@ -12,7 +12,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<port name="node_web" display-name="Node JS Web" default-value="3000" />
 	</port-config>
 </img-settings>"
-81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,http://www.digicert.com/images/tomcat-logo.png,"<?xml version="1.0" encoding="UTF-8"?>
+81277,cloudezz/tomcat7,"Tomcat 7",0,NULL,/images/logos/tomcat.png,"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/tomcat7">
 	<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
@@ -27,7 +27,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 </port-config>
 
 </img-settings>"
-37359,cloudezz/java7,"Java",0,NULL,http://www.internetnews.com/imagesvr_ce/3458/java-logo.jpeg,"<?xml version="1.0" encoding="UTF-8"?>
+37359,cloudezz/java7,"Java",0,NULL,/images/logos/java.png,"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
@@ -37,7 +37,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<port-config/>
 </img-settings>"
 
-57320,cloudezz/rabbitmq,Rabbitmq,1,NULL,https://dv95pc38vkxqb.cloudfront.net/production/previews/803/1354505058/small.png,"<?xml version="1.0" encoding="UTF-8"?>
+57320,cloudezz/rabbitmq,Rabbitmq,1,NULL,/images/logos/rabbitmq.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/rabbitmq">
@@ -51,7 +51,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	</port-config>
 </img-settings>"
 
-73683,cloudezz/redis,Redis,1,NULL,http://reach1to1.com/files/2012/02/redis1.png,"<?xml version="1.0" encoding="UTF-8"?>
+73683,cloudezz/redis,Redis,1,NULL,/images/logos/redis.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/redis">
@@ -62,7 +62,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<port-config/>
 </img-settings>"
 
-91004,cloudezz/mysql,MySQL,1,NULL,http://www.sqlparser.com/images/database-logos/mysql_187_118.png,"<?xml version="1.0" encoding="UTF-8"?>
+91004,cloudezz/mysql,MySQL,1,NULL,/images/logos/mysql.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/mysql">
