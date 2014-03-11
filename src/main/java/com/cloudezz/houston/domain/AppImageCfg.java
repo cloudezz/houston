@@ -50,10 +50,10 @@ public class AppImageCfg extends BaseImageCfg {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
   private List<ServiceImageCfg> serviceImages;
 
- 
-  @OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-  @JoinColumn(name="exposed_service_id",insertable=true,
-      updatable=true,nullable=true,unique=true)
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
+      unique = true)
   protected ExposedService exposedService;
 
   @Override

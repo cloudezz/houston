@@ -224,15 +224,15 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
 
         $scope.appimagecfgs = AppImageCfg.query();		
        
-        $scope.startStop ="Start";
+        console.log($scope.appimagecfgs);
         
-        $scope.started = false;
-
         $scope.start = function (appimagecfgId) {
         	AppImageService.start(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
         			alert("Machine Started");
-        			$scope.started = true
+        			AppImageCfg.query(function (data) {
+        				  $scope.appimagecfgs  = data;
+        			});
         		}
         		else {
         			alert("Machine was not started :: Error is - " + data.error);
@@ -244,7 +244,9 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         	AppImageService.stop(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
         			alert("Machine Stopped");
-        			$scope.started = false;
+        			AppImageCfg.query(function (data) {
+      				  $scope.appimagecfgs  = data;
+      			});
         		}
         		else {
         			alert("Machine was not started :: Error is - " + data.error);
@@ -252,6 +254,11 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
         	});
         };
         
+
+		$scope.openService = function (url) {
+			  var win=$window.open(url, '_blank');
+//			  win.focus();
+		}
         
         $scope.update = function (id) {
             $scope.appimagecfg = AppImageCfg.get({id: id});
@@ -274,16 +281,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         $scope.appImageCfgDTO = {};
         
         var wizard;
-//        $scope.appServices = {
-//        		   "containerId": "7c3164d0eb68d829e3632b5a25bcc0e512127b717ebcd5324cb0e2242267b676",
-//        		   "serviceToURL":
-//        		   {
-//        		       "SSH": "ssh://root@127.0.0.1:49199",
-//        		       "Web Shell": "http://127.0.0.1:49200",
-//        		       "Tomcat Web": "http://127.0.0.1:49201"
-//        		   }
-//        		}
-        $scope.appServices = {};
         
         var serviceWizard;
         
@@ -293,19 +290,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		}
 		
 
-		$scope.openService = function (url) {
-			  var win=$window.open(url, '_blank');
-			  win.focus();
-		}
 		
-		$scope.populateServices = function() {
-			for(var i=0; i< $scope.appimagecfgs.length; i++) {
-				var appName = $scope.appimagecfgs[i].appName;
-				AppImageService.listServices(appName, function(data) {
-					 $scope.appServices[appName] = data
-				});
-			}
-		}
 
 		$scope.setSubService = function(serviceId,serviceName) {
 			 $scope.subService = serviceId;
