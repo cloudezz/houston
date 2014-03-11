@@ -310,7 +310,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				serviceWizard._submitting = false;
 				serviceWizard.showSubmitCard("success");
 				serviceWizard.updateProgressBar(0);	 
-				serviceWizard.close()
 			};
 			
 		$scope.openServiceWizard = function () {
