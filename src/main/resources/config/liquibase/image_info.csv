@@ -77,3 +77,44 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
 	</port-config>
 </img-settings>"
+
+68926,cloudezz/ubuntu12-04,Ubuntu Precise,1,NULL,/images/logos/ubuntu-12-04.png,"<?xml version="1.0" encoding="UTF-8"?>
+
+<img-settings>
+	<form name="cloudezz/ubuntu12-04">
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<port-config/>
+</img-settings>"
+
+189898,cloudezz/ubuntu12-10,Ubuntu Quantal,1,NULL,/images/logos/ubuntu-12-10.png,"<?xml version="1.0" encoding="UTF-8"?>
+
+<img-settings>
+	<form name="cloudezz/ubuntu12-10">
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<port-config/>
+</img-settings>"
+
+26826,cloudezz/ubuntu13-04,Ubuntu Raring,1,NULL,/images/logos/ubuntu-13-04.png,"<?xml version="1.0" encoding="UTF-8"?>
+
+<img-settings>
+	<form name="cloudezz/ubuntu13-04">
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<port-config/>
+</img-settings>"
+
+16776,cloudezz/ubuntu13-10,Ubuntu Saucy,1,NULL,/images/logos/ubuntu-13-10.png,"<?xml version="1.0" encoding="UTF-8"?>
+
+<img-settings>
+	<form name="cloudezz/ubuntu13-10">
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<port-config/>
+</img-settings>"
+
