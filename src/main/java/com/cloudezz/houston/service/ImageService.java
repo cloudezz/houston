@@ -5,39 +5,55 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
+import com.cloudezz.houston.deployer.docker.client.DockerClientException;
 import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
+import com.cloudezz.houston.deployer.docker.model.Image;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
+import com.cloudezz.houston.domain.PersistentToken;
+import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
+import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.ImageInfoRepository;
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 
 @Service
 public class ImageService {
 
+  private final Logger log = LoggerFactory.getLogger(ImageService.class);
+
   @Autowired
   private ImageInfoRepository imageInfoRepository;
 
+  @Autowired
+  private DockerHostMachineRepository dockHostMachineRepository;
+
+
   public ExposedService getExposedService(AppImageCfg appImageCfg) throws CloudezzException {
-    
+
     Preconditions.checkNotNull(appImageCfg, "App Image cfg arg cannot be null");
-    
+
     if (appImageCfg.getContainerId() == null && !appImageCfg.isRunning()) {
       throw new CloudezzException(
           "Cannot get exposed service information from a instance that is not running");
     }
-    
+
     ExposedService exposedService = new ExposedService();
     try {
       ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getDockerImageName());
@@ -45,7 +61,7 @@ public class ImageService {
         throw new CloudezzException("Image info not available");
       }
       List<Port> ports = imageInfo.getPortsExposed();
-//      need to create proper pojo for img settings to get port
+      // need to create proper pojo for img settings to get port
       exposedService.setContainerId(appImageCfg.getContainerId());
       exposedService.setName(appImageCfg.getAppName());
       DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
@@ -94,4 +110,35 @@ public class ImageService {
       exposedService.addServiceToURL(DockerConstant.WEB_SHELL_SERVICE_NAME, url);
     }
   }
+
+  /**
+   * This cron job pulls all the images registered in cloudezz database to the all the registered
+   * docker host machine . The images are pulled from central docker repo.
+   */
+//@Scheduled(cron = "0 0 0 * * ?")  // every midnight for production
+  @Scheduled(cron = "0 0/15 * * * ?") // every 15 mins for testing and dev only
+  @Timed
+  public void pullImagesToDockerHost() {
+    log.debug("Started the cron job that pulls images in all docker images");
+    List<ImageInfo> images = imageInfoRepository.findAll();
+    if (images == null || images.size() == 0)
+      return;
+
+    List<DockerHostMachine> dockerHostMachines = dockHostMachineRepository.findAll();
+    for (DockerHostMachine dockerHostMachine : dockerHostMachines) {
+      DockerClient dockerClient = new DockerClient(dockerHostMachine.getDockerDaemonURL());
+      for (ImageInfo image : images) {
+        try {
+          dockerClient.pull(image.getImageName());
+        } catch (DockerClientException e) {
+          log.error(
+              "Error while pulling images from docker host "
+                  + dockerHostMachine.getDockerDaemonURL(), e);
+        }
+      }
+
+    }
+  }
+
+
 }
