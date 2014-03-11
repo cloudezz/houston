@@ -444,11 +444,11 @@
 
 	    this.args = {
 	        submitUrl: "",
-	        width: 750,
+	        width: 950,
 	        showCancel: false,
 	        showClose: true,
 	        progressBarCurrent: false,
-	        increaseHeight: 0,
+	        increaseHeight: 150,
 	        buttons: {
 	            cancelText: "Cancel",
 	            nextText: "Next",
@@ -568,8 +568,8 @@
 				event.data.setCard(index);
 			});
 
-		var title = this.markup.children("h1").first();
-		if (title.length) {this.setTitle(title.text());}
+		var title = this.markup.data('title');
+		if (title.length) {this.setTitle(title);}
 
 		this.on("submit", this._defaultSubmit);
 	};
