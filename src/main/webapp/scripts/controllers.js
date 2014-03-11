@@ -284,14 +284,14 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         
         var serviceWizard;
         
+        $scope.$on('$viewContentLoaded', function(){
+        	$scope.openWizard();
+        	});
+        
 		$scope.setService = function(serviceId,serviceName) {
 			 $scope.service = serviceId;
 			 $scope.serviceImg = serviceName;
 		}
-		
-
-		
-
 		$scope.setSubService = function(serviceId,serviceName) {
 			 $scope.subService = serviceId;
 			 $scope.subServiceImg = serviceName;
