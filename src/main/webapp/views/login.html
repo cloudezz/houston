@@ -1,5 +1,6 @@
 <div class="bs-docs-section">
-	<div class="row" style="margin-top: 30px; margin-bottom: 30px; margin-left:50px;">
+	<div class="row"
+		style="margin-top: 30px; margin-bottom: 30px; margin-left: 50px;">
 		<div class="col-lg-4"></div>
 		<div class="col-lg-6">
 			<img src="images/cloudezz-logo-272x120.png">
@@ -13,6 +14,10 @@
 				translate="login.messages.error.authentication">
 				<strong>Authentication failed!</strong> Please check your
 				credentials and try again.
+			</div>
+			<div class="alert alert-danger" ng-show="accountInActiveError"
+				translate="login.messages.error.inactive">
+				<strong>Authentication failed!</strong> User Account Inactive.
 			</div>
 		</div>
 	</div>

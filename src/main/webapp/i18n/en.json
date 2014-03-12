@@ -59,8 +59,9 @@
             "button": "Authenticate"
         },
         "messages": {
-            "error": {
-                "authentication": "<strong>Authentication failed!</strong> Please check your credentials and try again."
+           "error": {
+                "authentication": "<strong>Authentication failed! &nbsp</strong> Please check your credentials and try again.",
+                "inactive" : "<strong>Authentication failed! &nbsp</strong> User Account Inactive."
             }
         }
     },
