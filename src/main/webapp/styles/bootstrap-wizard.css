@@ -137,6 +137,11 @@ li.wizard-nav-item.active>a {
 	overflow: auto;
 }
 
+.nwizard-card-container {
+	margin-left: 15%;
+	overflow: auto;
+}
+
 /* WIZARD CARDS */
 .wizard-error,.wizard-failure,.wizard-success,.wizard-loading,.wizard-card
 	{

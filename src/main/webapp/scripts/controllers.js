@@ -388,8 +388,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 			$scope.sshpwd="";
         	var options = {
-    				contentWidth : 800,
-    				contentHeight : 400,
     				keyboard : false,
     				isModal:false,
     				backdrop : false,
@@ -441,6 +439,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		
 				wizard.on("reset", function(wizard) {
 					wizard.setSubtitle("");
+					$('.wizard-cards').find('input:text').val('');
 				});
 
 				wizard.el.find(".wizard-success .im-done").click(function() {

@@ -400,7 +400,6 @@
 				'</ul>',
 				'</div>',
 				'<div class="wizard-progress-container">',
-				,
 				'<div class="progress progress-striped">',
 				'<div class="bar"></div>',
 				'</div>',
@@ -408,7 +407,7 @@
 				'</div>',
 
 				'<div class="wizard-cards">',
-				'<div class="wizard-card-container">',
+				'<div class="nwizard-card-container">',
 				'</div>',
 				'<div class="wizard-modal-footer">',
 				'<div class="wizard-buttons-container">',
@@ -423,9 +422,16 @@
 		var nwizard_template_no_modal = [
 				'<div class="wizard-no-modal" role="dialog">',
 
-				'<div class="wizard-modal-header modal-header">',
+				'<div class="wizard-modal-header nmodal-header">',
 				'<h3 class="wizard-title"></h3>',
 				'<span class="wizard-subtitle"></span>',
+				'<div class="wizard-buttons-container">',
+				'<button class="btn wizard-cancel" type="button">Cancel</button>',
+				'<div class="btn-group-single pull-right">',
+				'<button class="btn wizard-back" type="button">Back</button>',
+				'<button class="btn btn-primary wizard-next" type="button">Next</button>',
+				'</div>',
+				'</div>',
 				'</div>',
 
 				'<div class="pull-left wizard-steps">',
@@ -442,25 +448,18 @@
 				'</div>',
 
 				'<div class="wizard-cards">',
-				'<div class="wizard-card-container">',
+				'<div class="nwizard-card-container">',
 				'</div>',
 				'<div class="wizard-modal-footer">',
-				'<div class="wizard-buttons-container">',
-				'<button class="btn wizard-cancel wizard-close" type="button">Cancel</button>',
-				'<div class="btn-group-single pull-right">',
-				'<button class="btn wizard-back" type="button">Back</button>',
-				'<button class="btn btn-primary wizard-next" type="button">Next</button>',
-				'</div>', '</div>', '</div>', '</div>',
-
-				'</div>' ];
+				,'</div>', '</div>', '</div>'];
 
 		this.args = {
 			submitUrl : "",
-			width : 950,
+			width : 1200,
 			showCancel : false,
 			showClose : true,
 			progressBarCurrent : false,
-			increaseHeight : 200,
+			increaseHeight : 700,
 			buttons : {
 				cancelText : "Cancel",
 				nextText : "Next",
@@ -486,15 +485,15 @@
 		this.submitCards = this.markup
 				.find(".wizard-error,.wizard-failure,.wizard-success,.wizard-loading");
 		this.el = $(nwizard_template.join("\n"));
-		this.el.find(".wizard-card-container").append(
+		this.el.find(".nwizard-card-container").append(
 				this.markup.find(".wizard-card")).append(this.submitCards);
 		$(this.args.container).append(this.el);
 
 		this.closeButton = this.el.find("button.wizard-close");
-		this.footer = this.el.find(".wizard-modal-footer");
-		this.cancelButton = this.footer.find(".wizard-cancel");
-		this.backButton = this.footer.find(".wizard-back");
-		this.nextButton = this.footer.find(".wizard-next");
+		this.header = this.el.find(".wizard-modal-header");
+		this.cancelButton = this.header.find(".wizard-cancel");
+		this.backButton = this.header.find(".wizard-back");
+		this.nextButton = this.header.find(".wizard-next");
 		this.progress = this.el.find(".progress");
 		this._cards = [];
 		this.cards = {};
@@ -510,6 +509,10 @@
 
 		this.nextButton.click(this, this._handleNextClick);
 		this.backButton.click(this, this._handleBackClick);
+		
+		if(!this.args.isModal){
+			this.cancelButton.click(this, this._handleCancelButtonClick);
+		}
 
 		this.cancelButton.text(this.args.buttons.cancelText);
 		this.backButton.text(this.args.buttons.backText);
@@ -1138,6 +1141,11 @@
 		_handleBackClick : function(event) {
 			var nwizard = event.data;
 			nwizard._onBackClick.call(nwizard);
+		},
+		
+		_handleCancelButtonClick : function(event) {
+			var nwizard = event.data;
+			nwizard.reset();
 		},
 
 		/*
