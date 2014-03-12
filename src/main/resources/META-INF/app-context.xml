@@ -21,6 +21,9 @@
 				<value>
 					classpath:META-INF/config.properties
 				</value>
+				<value>
+					classpath:harmony/HAProxyConfigurator.properties
+				</value>
 			</list>
 		</property>
 	</bean>
