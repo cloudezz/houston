@@ -102,20 +102,26 @@ public class DeployerImpl implements Deployer {
     List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(appImageConfig.getServiceImages());
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
 
+      if (serviceImageConfig.getContainerId() != null) {
+        boolean done = DeployerUtil.deleteContainer(dockerClient, serviceImageConfig);
 
-      boolean done = DeployerUtil.deleteContainer(dockerClient, serviceImageConfig);
+        if (!done)
+          containerIdFailList.add(serviceImageConfig.getContainerId());
+      }
 
-      if (!done)
-        containerIdFailList.add(serviceImageConfig.getContainerId());
     }
 
     // finally stop app image
-    boolean success = DeployerUtil.deleteContainer(dockerClient, appImageConfig);
-    if (containerIdFailList.size() > 0 || !success) {
-      throw new DockerImageStopException("Few container's delete failed");
-    } else {
-      return true;
+    if (appImageConfig.getContainerId() != null) {
+      boolean success = DeployerUtil.deleteContainer(dockerClient, appImageConfig);
+      if (containerIdFailList.size() > 0 || !success) {
+        throw new DockerImageStopException("Few container's delete failed");
+      } else {
+        return true;
+      }
     }
+    return true;
+
   }
 
 
