@@ -55,5 +55,10 @@
 
 .dropdown-menu >  a {
 	    color: #008CBA;
- 
+}
+
+.alert-danger{
+	background-color: #FBE3E4;
+    border-color: #FBC2C4;
+    color: #E64D3B;
 }

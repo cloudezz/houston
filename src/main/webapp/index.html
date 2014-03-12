@@ -48,30 +48,10 @@
 							class="glyphicon glyphicon-home"></span> <span
 							translate="global.menu.signup">Signup</span>
 					</a></li>
-					<li ng-show="page == '/signup'"><a href="#/login"> <span class="glyphicon glyphicon-home"></span>
-							<span translate="global.menu.login">Login</span>
+					<li ng-show="page == '/signup'"><a href="#/login"> <span
+							class="glyphicon glyphicon-home"></span> <span
+							translate="global.menu.login">Login</span>
 					</a></li>
-					<li ng-show="authenticated == true"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#"> <span> <span
-								class="glyphicon glyphicon-user"></span> <span
-								class="hidden-tablet" translate="global.menu.account.main">
-									Account </span> <b class="caret"></b>
-						</span>
-					</a>
-						<ul class="dropdown-menu" ng-controller="MenuController">
-							<li ng-switch-when="true"><a href="#/settings"><span
-									class="glyphicon glyphicon-wrench"></span> &nbsp;<span
-									translate="global.menu.account.settings">Settings</span></a></li>
-							<li ng-switch-when="true"><a href="#/password"><span
-									class="glyphicon glyphicon-lock"></span> &nbsp;<span
-									translate="global.menu.account.password">Password</span></a></li>
-							<li ng-switch-when="true"><a href="#/sessions"><span
-									class="glyphicon glyphicon-cloud"></span> &nbsp;<span
-									translate="global.menu.account.sessions">Sessions</span></a></li>
-							<li ng-switch-when="true"><a href="#/logout"><span
-									class="glyphicon glyphicon-log-out"></span> &nbsp;<span
-									translate="global.menu.account.logout">Log out</span></a></li>
-						</ul></li>
 
 					<li ng-switch-when="true" ng-show="hasRole(&apos;ROLE_ADMIN&apos;)"
 						class="dropdown pointer" ng-controller="AdminController"><a
@@ -98,6 +78,28 @@
 									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
 									translate="global.menu.appimagecfg">Image Config</span></a></li>
 						</ul></li>
+					<li ng-show="authenticated == true"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#"> <span> <span
+								class="glyphicon glyphicon-user"></span> <span
+								class="hidden-tablet" translate="global.menu.account.main">
+									Account </span> <b class="caret"></b>
+						</span>
+					</a>
+						<ul class="dropdown-menu" ng-controller="MenuController">
+							<li ng-switch-when="true"><a href="#/settings"><span
+									class="glyphicon glyphicon-wrench"></span> &nbsp;<span
+									translate="global.menu.account.settings">Settings</span></a></li>
+							<li ng-switch-when="true"><a href="#/password"><span
+									class="glyphicon glyphicon-lock"></span> &nbsp;<span
+									translate="global.menu.account.password">Password</span></a></li>
+							<li ng-switch-when="true"><a href="#/sessions"><span
+									class="glyphicon glyphicon-cloud"></span> &nbsp;<span
+									translate="global.menu.account.sessions">Sessions</span></a></li>
+							<li ng-switch-when="true"><a href="#/logout"><span
+									class="glyphicon glyphicon-log-out"></span> &nbsp;<span
+									translate="global.menu.account.logout">Log out</span></a></li>
+						</ul></li>
+
 
 				</ul>
 
