@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.velocity.app.VelocityEngine;
@@ -34,7 +35,9 @@ import com.bbytes.avis.NotificationType;
 import com.bbytes.avis.data.EmailData;
 import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
+import com.cloudezz.houston.domain.UserSignUpActivationKey;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
+import com.cloudezz.houston.repository.UserSignUpActivationKeyRepository;
 import com.cloudezz.houston.service.UserService;
 import com.cloudezz.houston.web.rest.dto.UserDTO;
 import com.codahale.metrics.annotation.Timed;
@@ -63,6 +66,9 @@ public class SignUpResource {
 
   @Inject
   private PersistentTokenRepository persistentTokenRepository;
+  
+  @Inject
+  private UserSignUpActivationKeyRepository userSignUpActivationKeyRepository;
 
   @Autowired
   private VelocityEngine velocityEngine;
@@ -73,26 +79,27 @@ public class SignUpResource {
 
 
 
-  @RequestMapping(value = "/rest/signup", method = RequestMethod.PUT)
+  @RequestMapping(value = "/rest/signup", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Timed
   public void signUp(@RequestBody UserDTO userDTO, HttpServletRequest request) {
     User user = userService.registerUser(userDTO.getEmail());
     PersistentToken token = new PersistentToken();
-    token.setSeries(generateSeriesData());
-    token.setUser(user);
-    token.setTokenValue(generateTokenData());
-    token.setTokenDate(new LocalDate());
-    token.setIpAddress(request.getRemoteAddr());
-    token.setUserAgent(request.getHeader("User-Agent"));
-    try {
-      persistentTokenRepository.saveAndFlush(token);
-    } catch (DataAccessException e) {
-      log.error("Failed to save persistent token ", e);
-    }
+//    token.setSeries(generateSeriesData());
+//    token.setUser(user);
+//    token.setTokenValue(generateTokenData());
+//    token.setTokenDate(new LocalDate());
+//    token.setIpAddress(request.getRemoteAddr());
+//    token.setUserAgent(request.getHeader("User-Agent"));
+//    try {
+//      persistentTokenRepository.saveAndFlush(token);
+//    } catch (DataAccessException e) {
+//      log.error("Failed to save persistent token ", e);
+//    }
+    
     // Send Email Using Avis
     try {
-      sendNotificationToCustomer();
+      sendNotificationToCustomer(user);
     } catch (AvisClientException e) {
       log.error(e.getMessage());
     }
@@ -112,9 +119,7 @@ public class SignUpResource {
   }
 
 
-  private void sendNotificationToCustomer() throws AvisClientException {
-
-    User user = userService.getUserWithAuthorities();
+  private void sendNotificationToCustomer(User user) throws AvisClientException {
 
     EmailData data = new EmailData();
     data.setHtmlEmail(true);
@@ -135,8 +140,18 @@ public class SignUpResource {
     data.setText(body);
     data.setSentDate(new Date());
 
+    String activationKey = UUID.randomUUID().toString();
+    UserSignUpActivationKey userSignUpActivationKey = new UserSignUpActivationKey();
+    userSignUpActivationKey.setId(user.getEmail());
+    userSignUpActivationKey.setActivationKey(activationKey);
+    userSignUpActivationKey =  userSignUpActivationKeyRepository.save(userSignUpActivationKey);
+    
+    if(userSignUpActivationKey==null)
+      throw new PersistenceException("Could not persist the activation key to database during user signup");
+      
+    
     NotificationRequest request = new NotificationRequest();
-    request.setId(UUID.randomUUID().toString());
+    request.setId(userSignUpActivationKey.getActivationKey());
     request.setNotificationType(NotificationType.EMAIL);
     request.setQueueName(queueName);
     NotificationData<String, Serializable> requestData = new NotificationData<>();

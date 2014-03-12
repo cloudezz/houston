@@ -96,7 +96,14 @@ houstonApp.factory('AuthenticationSharedService', ['$rootScope', '$http', 'authS
                         param.success(data, status, headers, config);
                     }
                 }).error(function (data, status, headers, config) {
-                    $rootScope.authenticationError = true;
+                	if(data.message == "Account inactive"){
+                		 $rootScope.accountInActiveError =true;
+                		 $rootScope.authenticationError = false;
+                	}else{
+                		 $rootScope.authenticationError = true;
+                		 $rootScope.accountInActiveError =false;
+                	}
+                	
                     if(param.error){
                         param.error(data, status, headers, config);
                     }
@@ -104,6 +111,7 @@ houstonApp.factory('AuthenticationSharedService', ['$rootScope', '$http', 'authS
             },
             logout: function () {
                 $rootScope.authenticationError = false;
+                $rootScope.accountInActiveError =false;
                 $http.get('app/logout')
                     .success(function (data, status, headers, config) {
                         authService.loginCancelled();
