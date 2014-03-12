@@ -344,6 +344,14 @@
 			<artifactId>hsqldb</artifactId>
 		</dependency>
 
+
+		<!-- cloudezz internal dependencies -->
+		<dependency>
+			<groupId>com.cloudezz</groupId>
+			<artifactId>harmony</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>com.jayway.awaitility</groupId>
