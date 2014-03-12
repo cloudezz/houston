@@ -155,13 +155,14 @@ houstonApp.controller('LogsController', ['$scope', 'resolvedLogs', 'LogsService'
 /**
  * Signup controller that will send the request to rest services
  */
-houstonApp.controller('SignUpController', ['$location', 'SignUpService',
-   function ($location, SignUpService) {
-		$scope.signUp = function (email) {
-			SignUpService.signUp({email:email}, function(data){
+houstonApp.controller('SignUpController', ['$scope', '$location', 'SignUpService',
+   function ($scope, $location, SignUpService) {
+	$scope.username = "";
+		$scope.signUp = function () {
+			SignUpService.signUp({email:$scope.username}, function(data){
 				
 			});
-		}
+		};
 	}]);
 	
 

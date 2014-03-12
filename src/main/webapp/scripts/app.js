@@ -13,6 +13,10 @@ houstonApp
                     templateUrl: 'views/login.html',
                     controller: 'LoginController'
                 })
+                .when('/signup', {
+                    templateUrl: 'views/signup.html',
+                    controller: 'SignUpController'
+                })
                 .when('/settings', {
                     templateUrl: 'views/settings.html',
                     controller: 'SettingsController'
@@ -107,6 +111,7 @@ houstonApp
         }])
         .run(['$rootScope', '$location', 'AuthenticationSharedService', 'Account',
             function($rootScope, $location, AuthenticationSharedService, Account) {
+
             $rootScope.hasRole = function(role) {
                 if ($rootScope.account === undefined) {
                     return false;
@@ -125,6 +130,7 @@ houstonApp
 
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
                 // Check if the status of the user. Is it authenticated or not?
+                $rootScope.page = $location.path();
                 AuthenticationSharedService.authenticate().then(function(response) {
                     if (response.data == '') {
                         $rootScope.$broadcast('event:auth-loginRequired');
@@ -145,7 +151,7 @@ houstonApp
             // Call when the 401 response is returned by the client
             $rootScope.$on('event:auth-loginRequired', function(rejection) {
                 $rootScope.authenticated = false;
-                if ($location.path() !== "/" && $location.path() !== "") {
+                if ($location.path() !== "/" && $location.path() !== "" && $location.path() != "/signup") {
                     $location.path('/login').replace();
                 }
             });

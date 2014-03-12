@@ -5,7 +5,9 @@
         "menu": {
          	"appimagecfg" : "View Applications",
             "home": "Home",
-            "blog": "Blog", 
+            "blog": "Blog",
+            "login": "Login",
+            "signup": "Signup",
             "account": {
                 "main": "Account",
                 "settings": "Settings",
