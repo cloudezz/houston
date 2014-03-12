@@ -78,6 +78,18 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	</port-config>
 </img-settings>"
 
+44311,cloudezz/haproxy,HAProxy,1,NULL,/images/logos/haproxy.png,"<?xml version="1.0" encoding="UTF-8"?>
+
+<img-settings>
+	<form name="cloudezz/haproxy">
+		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+	</form>
+	<port-config>
+		<port name="haproxy_port" display-name="HAProxy Access" default-value="443"/>
+	</port-config>
+</img-settings>"
+
 68926,cloudezz/ubuntu12-04,Ubuntu Precise,1,NULL,/images/logos/ubuntu-12-04.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
