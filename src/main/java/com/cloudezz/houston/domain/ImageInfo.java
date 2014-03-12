@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

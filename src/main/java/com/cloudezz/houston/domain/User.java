@@ -45,6 +45,9 @@ public class User extends BaseEntity {
   @Size(min = 0, max = 50)
   @Column(name = "account_id")
   private String accountId;
+  
+  @Column(name = "active", nullable = false, columnDefinition = "TINYINT")
+  private boolean active;
 
   @Email
   @Size(min = 0, max = 100)
@@ -117,6 +120,14 @@ public class User extends BaseEntity {
 
   public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
     this.persistentTokens = persistentTokens;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
   @Override
