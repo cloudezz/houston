@@ -110,3 +110,10 @@ table#appconfigTable th {
 	text-align: center;
 	color: #008CBA;
 }
+
+
+.alert-success {
+    background-color: #0088CC;
+    border-color: #0088CC;
+    color: #FFFFFF;
+}
