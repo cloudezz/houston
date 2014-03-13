@@ -425,7 +425,7 @@
 				'<div class="modal-header wizard-header">',
 				'<div style="position: relative; height: 80px;">',
 				'<div class="wizard-title-div">',
-				'<h3 class="wizard-title">Application Config</h3></div>',
+				'<h3 class="wizard-title" style="font-weight:normal"></h3></div>',
 				'<div style="padding-left:300px" class="wizard-buttons-container">',
 
 				'<div class="btn-group-single pull-right">',
