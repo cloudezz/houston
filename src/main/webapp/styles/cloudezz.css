@@ -113,7 +113,17 @@ table#appconfigTable th {
 
 
 .alert-success {
-    background-color: #0088CC;
-    border-color: #0088CC;
+    background-color: #1ABC9C;
+    border-color: #1ABC9C;
     color: #FFFFFF;
+}
+
+.well {
+    background-color: #FAFAFA;
+    border: 1px solid #E8E8E8;
+    border-radius: 0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
 }
