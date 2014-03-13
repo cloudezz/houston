@@ -158,9 +158,11 @@ houstonApp.controller('LogsController', ['$scope', 'resolvedLogs', 'LogsService'
 houstonApp.controller('SignUpController', ['$scope', '$location', 'SignUpService',
    function ($scope, $location, SignUpService) {
 	$scope.username = "";
+	$scope.success = false;
 		$scope.signUp = function () {
 			SignUpService.signUp($scope.username, function(data){
 				console.log("Email Sent");
+				$scope.success = true;
 			});
 		};
 	}]);
