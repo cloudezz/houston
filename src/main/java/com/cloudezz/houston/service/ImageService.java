@@ -118,9 +118,8 @@ public class ImageService {
    * This cron job pulls all the images registered in cloudezz database to the all the registered
    * docker host machine . The images are pulled from central docker repo.
    */
-  // @Scheduled(cron = "0 0 0 * * ?") // every midnight for production
-  @Scheduled(cron = "0 0/15 * * * ?")
-  // every 15 mins for testing and dev only
+  // cron to run every midnight to pull image to all docker host
+  @Scheduled(cron = "0 0 0 * * ?")
   @Timed
   public void pullImagesToDockerHost() {
     log.debug("Started the cron job that pulls images in all docker images");
