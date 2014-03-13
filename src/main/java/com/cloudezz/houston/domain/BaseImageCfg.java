@@ -17,9 +17,11 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -373,5 +375,12 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   public void setStartTime(LocalDateTime startTime) {
     this.startTime = startTime;
+  }
+
+  @JsonGetter
+  public Period runningSince() {
+    if (startTime == null)
+      startTime = LocalDateTime.now();
+    return Period.fieldDifference(startTime, LocalDateTime.now());
   }
 }
