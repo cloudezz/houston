@@ -25,6 +25,10 @@ houstonApp
                     templateUrl: 'views/password.html',
                     controller: 'PasswordController'
                 })
+                .when('/setpassword/:accountId', {
+                    templateUrl: 'views/setpwd.html',
+                    controller: 'SetPasswordController'
+                })
                 .when('/sessions', {
                     templateUrl: 'views/sessions.html',
                     controller: 'SessionsController',
@@ -131,21 +135,24 @@ houstonApp
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
                 // Check if the status of the user. Is it authenticated or not?
                 $rootScope.page = $location.path();
-                AuthenticationSharedService.authenticate().then(function(response) {
-                    if (response.data == '') {
-                        $rootScope.$broadcast('event:auth-loginRequired');
-                    } else {
-                        $rootScope.authenticated = true;
-                        $rootScope.login = response.data;
-                        $rootScope.account = Account.get();
-
-                        // If the login page has been requested and the user is already logged in
-                        // the user is redirected to the home page
-                        if ($location.path() === "/login") {
-                            $location.path('/').replace();
-                        }
-                    }
-                });
+        		var currentPage = $location.path();
+                if(currentPage.indexOf('/setpassword/') != 0) {
+	                AuthenticationSharedService.authenticate().then(function(response) {
+	                    if (response.data == '') {
+	                        $rootScope.$broadcast('event:auth-loginRequired');
+	                    } else {
+	                        $rootScope.authenticated = true;
+	                        $rootScope.login = response.data;
+	                        $rootScope.account = Account.get();
+	
+	                        // If the login page has been requested and the user is already logged in
+	                        // the user is redirected to the home page
+	                        if ($location.path() === "/login") {
+	                            $location.path('/').replace();
+	                        }
+	                    }
+	                });
+                }
             });
 
             // Call when the 401 response is returned by the client

@@ -41,6 +41,22 @@ public class UserResource {
     return user;
   }
 
+  /**
+   * GET /rest/users/:login -> get the "login" user.
+   */
+  @RequestMapping(value = "/rest/users/{accountId}", method = RequestMethod.GET,
+      produces = "application/json")
+  @Timed
+  public User getUserByAccountId(@PathVariable String accountId, HttpServletResponse response) {
+    log.debug("REST request to get User : {}", accountId);
+    User user = userRepository.findByAccountId(accountId);
+    if (user == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+    return user;
+  }
+  
+  
   @RequestMapping(value = "/rest/users", method = RequestMethod.POST,
       produces = "application/json")
   @Timed

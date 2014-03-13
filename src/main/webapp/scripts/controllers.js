@@ -76,7 +76,7 @@ houstonApp.controller('PasswordController', ['$scope', 'Password',
                 $scope.doNotMatch = "ERROR";
             } else {
                 $scope.doNotMatch = null;
-                Password.save($scope.password,
+                Password.changePwd($scope.password,
                     function (value, responseHeaders) {
                         $scope.error = null;
                         $scope.success = 'OK';
@@ -680,3 +680,33 @@ houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'Im
       };
 
   }]);
+
+houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route', '$routeParams', 'Password',
+     function ($scope,$location, $route, $routeParams, Password) {
+		 $scope.accountId =  $routeParams.accountId
+         $scope.success = null;
+         $scope.error = null;
+         $scope.doNotMatch = null;
+         $scope.changePassword = function () {
+             if ($scope.password != $scope.confirmPassword) {
+                 $scope.doNotMatch = "ERROR";
+             } else {
+                 $scope.doNotMatch = null;
+                 Password.setPwd($scope.accountId, $scope.password,
+                     function (value, responseHeaders) {
+                         $scope.error = null;
+                         $scope.success = 'OK';
+                         $location.path('/appimagecfg');
+                     },
+                     function (httpResponse) {
+                         $scope.success = null;
+                         $scope.error = "ERROR";
+                     });
+             }
+         };
+     }]);
+
+//houstonApp.controller('SetPasswordController', ['$scope',
+//                                              function ($scope  ) {
+//	
+//}]);

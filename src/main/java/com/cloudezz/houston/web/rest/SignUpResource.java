@@ -19,7 +19,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
-import org.joda.time.ReadablePartial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,8 +162,8 @@ public class SignUpResource {
       user.setPersistentTokens(persistentTokens);
       userRepository.saveAndFlush(user);
       // delete the activation key
-      userSignUpActivationKeyRepository.delete(actKey);
-      response.sendRedirect("/#/appimagecfg");
+//      userSignUpActivationKeyRepository.delete(actKey);
+      response.sendRedirect("/#/setpassword/"+accountId);
       return true;
 
     } else {

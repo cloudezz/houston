@@ -83,6 +83,16 @@ public class UserService {
         log.debug("Changed password for User: {}", currentUser);
     }
 
+    
+    public void changePassword(String email, String password) {
+      User currentUser = userRepository.findOne(email);
+      String encryptedPassword = passwordEncoder.encode(password);
+      currentUser.setPassword(encryptedPassword);
+      userRepository.save(currentUser);
+      log.debug("Changed password for User: {}", currentUser);
+  }
+    
+    
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());

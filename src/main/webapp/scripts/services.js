@@ -8,10 +8,33 @@ houstonApp.factory('Account', ['$resource',
         });
     }]);
 
-houstonApp.factory('Password', ['$resource',
-    function ($resource) {
-        return $resource('app/rest/account/change_password', {}, {
-        });
+
+//houstonApp.factory('Password', ['$resource',
+//    function ($resource) {
+//        return $resource('app/rest/account/change_password', {}, {
+//        });
+//    }]);
+
+houstonApp.factory('Password', ['$resource', '$http',
+    function ($resource , $http) {
+        return {
+
+        	changePwd : function(password, callback) {
+        		$http.post('app/rest/account/change_password', password).success(function (data, status){
+               	 callback(data, status);
+                }).error(function (data, status){
+               	 callback(data, status);
+                });
+        	},
+        	
+        	setPwd : function(id, password, callback) {
+        		$http.post('app/rest/account/set_password/'+id, password).success(function (data, status){
+               	 callback(data, status);
+                }).error(function (data, status){
+               	 callback(data, status);
+                });
+        	},
+        }; 
     }]);
 
 houstonApp.factory('Sessions', ['$resource',
