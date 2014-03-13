@@ -220,23 +220,42 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' ,'$compile', '$window', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
-    function ($rootScope,$scope, $modal,$compile,$window, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
+houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
+    function ($rootScope,$scope, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = AppImageCfg.query();		
        
         console.log($scope.appimagecfgs);
         
+        $scope.starting = false;
+        
         $scope.start = function (appimagecfgId) {
+        	$scope.starting = true;
+        	var percent = 0;
+        	progress();
+        	function progress(){
+            	$timeout(function(){
+            		percent = percent + 10;
+            		$("#progressBar").css("width", percent+"%");
+            		if(percent < 80){
+            			progress();
+            		}
+            	}, 100);
+        	};
+        	
         	AppImageService.start(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
-        			alert("Machine Started");
+        			$scope.starting = false;
+        			$("#progressBar").css("width", "100%");
+        			//alert("Machine Started");
         			AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
         			});
         		}
         		else {
-        			alert("Machine was not started :: Error is - " + data.error);
+        			$scope.starting = false;
+        			$("#progressBar").css("width", "0%");
+        			//alert("Machine was not started :: Error is - " + data.error);
         		}
         	});
         };

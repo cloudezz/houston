@@ -492,7 +492,7 @@
 		$(this.args.container).append(this.el);
 
 		this.closeButton = this.el.find("button.wizard-close");
-		this.header = this.el.find(".wizard-modal-header");
+		this.header = this.el.find(".wizard-header");
 		this.cancelButton = this.header.find(".wizard-cancel");
 		this.backButton = this.header.find(".wizard-back");
 		this.nextButton = this.header.find(".wizard-next");

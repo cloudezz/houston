@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Service image info object that hold information related to service like mysql or redis and would
  * be always attached to a application image . These images objects represent how the image will be
@@ -47,6 +49,7 @@ public class ServiceImageCfg extends BaseImageCfg {
       name = "service_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
 
+  @JsonIgnore 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "app_config_id", nullable = false)
   private AppImageCfg applicationImageConfig;
@@ -135,6 +138,7 @@ public class ServiceImageCfg extends BaseImageCfg {
   /**
    * @return the applicationImageConfig
    */
+  @JsonIgnore 
   public AppImageCfg getApplicationImageConfig() {
     return applicationImageConfig;
   }

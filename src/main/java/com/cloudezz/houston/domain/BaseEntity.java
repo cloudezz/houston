@@ -2,7 +2,15 @@ package com.cloudezz.houston.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Base entity for holding information that is available across the entities
@@ -17,6 +25,15 @@ public abstract class BaseEntity implements Serializable {
 
   protected String name;
 
+  @JsonIgnore
+  @Column(name = "creation_time")
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+  protected LocalDateTime creationTime;
+
+  @JsonIgnore
+  @Column(name = "modification_time")
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+  protected LocalDateTime modificationTime;
 
   /**
    * @return the name
@@ -38,9 +55,36 @@ public abstract class BaseEntity implements Serializable {
    * @return
    */
   public abstract String getId();
-  
+
   public abstract void setId(String id);
 
+
+  public LocalDateTime getCreationTime() {
+    return creationTime;
+  }
+
+  public void setCreationTime(LocalDateTime creationTime) {
+    this.creationTime = creationTime;
+  }
+
+  public LocalDateTime getModificationTime() {
+    return modificationTime;
+  }
+
+  public void setModificationTime(LocalDateTime modificationTime) {
+    this.modificationTime = modificationTime;
+  }
+
+
+  @PrePersist
+  protected void autoSetCreationTime() {
+    this.creationTime = this.modificationTime = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  void autoSetModificationTime() {
+    this.modificationTime = LocalDateTime.now();
+  }
 
   /*
    * (non-Javadoc)

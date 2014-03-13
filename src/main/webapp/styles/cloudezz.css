@@ -62,3 +62,12 @@
     border-color: #FBC2C4;
     color: #E64D3B;
 }
+table#appconfigTable{
+	font-size : 14px;
+	text-align : center;
+}
+table#appconfigTable th{
+	font-weight : normal;
+	font-size : 18px;
+	text-align : center;
+}

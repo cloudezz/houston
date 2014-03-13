@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +30,12 @@ import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.FileMeta;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.service.ImageService;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
+import com.cloudezz.houston.web.rest.dto.ServiceImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -62,34 +65,60 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST,
       produces = "application/json", consumes = "application/json")
   @Timed
+  @Transactional
   public void create(@RequestBody AppImageCfgDTO appimagecfgDto) {
     log.debug("REST request to save AppImageCfg : {}", appimagecfgDto);
 
-    AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
+    try {
+      AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
 
-    if (appImageCfg.getDockerHostMachine() == null) {
-      DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
-      appImageCfg.setDockerHostMachine(dockerHostMachine);
+      if (appImageCfg.getDockerHostMachine() == null) {
+        DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
+        appImageCfg.setDockerHostMachine(dockerHostMachine);
+
+        appImageCfg= appimagecfgRepository.saveAndFlush(appImageCfg);
+      }
+    } catch (Exception e) {
+      log.error(e.getMessage(),e);
     }
-
-    appimagecfgRepository.save(appImageCfg);
+    
   }
 
 
-  private AppImageCfg createAppImageCfg(AppImageCfgDTO appimagecfgDto) {
-    AppImageCfg cfg = new AppImageCfg();
-    cfg.setAppName(appimagecfgDto.getAppName());
-    cfg.setCpuShares(appimagecfgDto.getCpuShares());
-    cfg.setDaemon(appimagecfgDto.getDaemon());
-    cfg.setDockerImageName(appimagecfgDto.getImageName());
-    cfg.setDomainName(appimagecfgDto.getDomainName());
-    cfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
-    cfg.setHostName(appimagecfgDto.getHostName());
-    cfg.setMemory(appimagecfgDto.getMemory());
-    cfg.setMemorySwap(appimagecfgDto.getMemorySwap());
-    cfg.setPorts(appimagecfgDto.getPorts());
+  private AppImageCfg createAppImageCfg(AppImageCfgDTO appimagecfgDto)
+      throws CloudezzDeployException {
+    AppImageCfg appCfg = new AppImageCfg();
+    appCfg.setAppName(appimagecfgDto.getAppName());
+    appCfg.setCpuShares(appimagecfgDto.getCpuShares());
+    appCfg.setDaemon(appimagecfgDto.getDaemon());
+    appCfg.setDockerImageName(appimagecfgDto.getImageName());
+    appCfg.setDomainName(appimagecfgDto.getDomainName());
+    appCfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
+    appCfg.setHostName(appimagecfgDto.getHostName());
+    appCfg.setMemory(appimagecfgDto.getMemory());
+    appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
+    appCfg.setPorts(appimagecfgDto.getPorts());
 
-    return cfg;
+    if (appimagecfgDto.getServiceImages() != null) {
+      for (ServiceImageCfgDTO serviceImageCfgDTO : appimagecfgDto.getServiceImages()) {
+        ServiceImageCfg serviceImageCfg = new ServiceImageCfg();
+        serviceImageCfg.setServiceName(serviceImageCfgDTO.getAppName());
+        serviceImageCfg.setCpuShares(serviceImageCfgDTO.getCpuShares());
+        serviceImageCfg.setDaemon(serviceImageCfgDTO.getDaemon());
+        serviceImageCfg.setDockerImageName(serviceImageCfgDTO.getImageName());
+        serviceImageCfg.setDomainName(serviceImageCfgDTO.getDomainName());
+        serviceImageCfg.setEnvironmentMapping(serviceImageCfgDTO.getEnvironmentMapping());
+        serviceImageCfg.setHostName(serviceImageCfgDTO.getHostName());
+        serviceImageCfg.setMemory(serviceImageCfgDTO.getMemory());
+        serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
+        serviceImageCfg.setPorts(appimagecfgDto.getPorts());
+        serviceImageCfg.setApplicationImageConfig(appCfg);
+        // add the service images to the main app cfg
+        appCfg.addServiceImages(serviceImageCfg);
+      }
+    }
+
+    return appCfg;
   }
 
 
