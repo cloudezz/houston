@@ -104,14 +104,7 @@ public class ImageService {
       }
       url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
       exposedService.addServiceToURL(DockerConstant.WEB_SHELL_SERVICE_NAME, url);
-    } else if (dockerPort.equals(DockerConstant.DEFAULT_SERVER_METRICS_PORT)) {
-      String url = "http://";
-      if (dockerHostMachine.isHttps()) {
-        url = "https://";
-      }
-      url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
-      exposedService.addServiceToURL(DockerConstant.SERVER_METRICS_SERVICE_NAME, url);
-    }
+    } 
   }
 
   /**
