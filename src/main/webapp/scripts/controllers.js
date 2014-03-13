@@ -222,8 +222,8 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
-    function ($rootScope,$scope, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
+houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$location', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
+    function ($rootScope,$scope, $location, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
 
         $scope.appimagecfgs = AppImageCfg.query();		
        
@@ -279,7 +279,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$modal' 
 
 		$scope.openService = function (url) {
 			  var win=$window.open(url, '_blank');
-//			  win.focus();
+			  win.focus();
 		}
         
         $scope.update = function (id) {
