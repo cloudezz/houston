@@ -26,8 +26,8 @@ houstonApp.controller('LoginController', ['$scope', '$location', 'Authentication
         $scope.rememberMe = true;
         $scope.login = function () {
             AuthenticationSharedService.login({
-                username: $scope.username,
-                password: $scope.password,
+                username: $("#username").val(),
+                password: $("#password").val(),
                 rememberMe: $scope.rememberMe,
                 success: function () {
                     $location.path('/appimagecfg');

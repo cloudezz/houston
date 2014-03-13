@@ -422,14 +422,16 @@
 		var nwizard_template_no_modal = [
 				'<div class="wizard-no-modal" role="dialog">',
 
-				'<div class="wizard-modal-header nmodal-header">',
-				'<h3 class="wizard-title"></h3>',
-				'<span class="wizard-subtitle"></span>',
-				'<div class="wizard-buttons-container">',
-				'<button class="btn wizard-cancel" type="button">Cancel</button>',
+				'<div class="modal-header wizard-header">',
+				'<div style="position: relative; height: 80px;">',
+				'<div class="wizard-title-div">',
+				'<h3 class="wizard-title" style="font-weight:normal"></h3></div>',
+				'<div style="padding-left:300px" class="wizard-buttons-container">',
+
 				'<div class="btn-group-single pull-right">',
-				'<button class="btn wizard-back" type="button">Back</button>',
-				'<button class="btn btn-primary wizard-next" type="button">Next</button>',
+				'<button class="btn wizard-back disabled" type="button">Back</button>',
+				'<button class="btn wizard-next btn-primary" type="button">Next</button>',
+				'</div>',
 				'</div>',
 				'</div>',
 				'</div>',

@@ -179,6 +179,13 @@ li.wizard-nav-item.active>a {
 	padding: 20px;
 }
 
+.wizard-title-div{
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding-top:28px;
+}
+
 .wizard-cancel {
 	margin-left: 12px;
 }
