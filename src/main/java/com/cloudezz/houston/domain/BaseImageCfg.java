@@ -15,6 +15,9 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
+
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -74,6 +77,10 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   @Column(name = "running", nullable = false, columnDefinition = "TINYINT")
   protected Boolean running = new Boolean(false);
+
+  @Column(name = "start_time")
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+  private LocalDateTime startTime;
 
   @Transient
   @JsonIgnore
@@ -243,6 +250,8 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   public void setRunning(Boolean running) {
     this.running = running;
+    if (running)
+      this.startTime = LocalDateTime.now();
   }
 
   /**
@@ -356,5 +365,13 @@ public abstract class BaseImageCfg extends BaseEntity {
     }
 
     return hostConfig;
+  }
+
+  public LocalDateTime getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(LocalDateTime startTime) {
+    this.startTime = startTime;
   }
 }
