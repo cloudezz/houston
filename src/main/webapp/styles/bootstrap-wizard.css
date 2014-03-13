@@ -86,6 +86,7 @@ li.wizard-nav-item>a {
 
 li.wizard-nav-item.active>a {
 	background-color: #08C;
+	color:white;
 }
 
 .wizard-nav-list>li>a {
