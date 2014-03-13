@@ -159,8 +159,8 @@ houstonApp.controller('SignUpController', ['$scope', '$location', 'SignUpService
    function ($scope, $location, SignUpService) {
 	$scope.username = "";
 		$scope.signUp = function () {
-			SignUpService.signUp({email:$scope.username}, function(data){
-				
+			SignUpService.signUp($scope.username, function(data){
+				console.log("Email Sent");
 			});
 		};
 	}]);

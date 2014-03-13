@@ -24,6 +24,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +38,7 @@ import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.domain.UserSignUpActivationKey;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
+import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserSignUpActivationKeyRepository;
 import com.cloudezz.houston.service.UserService;
 import com.cloudezz.houston.web.rest.dto.UserDTO;
@@ -82,9 +84,14 @@ public class SignUpResource {
   @RequestMapping(value = "/rest/signup", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Timed
-  public void signUp(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-    User user = userService.registerUser(userDTO.getEmail());
-    PersistentToken token = new PersistentToken();
+  public void signUp(@RequestParam(value="email") String email, HttpServletRequest request) {
+    
+    if(email == null || email.isEmpty()){
+      log.error("Email Id is Empty");
+      return;
+    }
+    User user = userService.registerUser(email);
+//    PersistentToken token = new PersistentToken();
 //    token.setSeries(generateSeriesData());
 //    token.setUser(user);
 //    token.setTokenValue(generateTokenData());
@@ -128,27 +135,31 @@ public class SignUpResource {
     data.setFrom("noreply@cloudezz.com");
     // https://localhost:8090/account/accept/$accountId/$token
 
-    Map<String, Object> properties = new HashMap<String, Object>();
-    String url =
-        "https://localhost:8090/account/accept/" + user.getAccountId() + "/"
-            + user.getPersistentTokens().iterator().next().getTokenValue();
-    properties.put("url", url);
+   
 
-    String body =
-        VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "templates/signup-email.vm",
-            "UTF-8", properties);
-    data.setText(body);
-    data.setSentDate(new Date());
-
-    String activationKey = UUID.randomUUID().toString();
+    String activationKey = RepositoryUtils.generateBigId();
     UserSignUpActivationKey userSignUpActivationKey = new UserSignUpActivationKey();
     userSignUpActivationKey.setId(user.getEmail());
     userSignUpActivationKey.setActivationKey(activationKey);
+    userSignUpActivationKey.setSignUpDate(LocalDate.now());
     userSignUpActivationKey =  userSignUpActivationKeyRepository.save(userSignUpActivationKey);
     
     if(userSignUpActivationKey==null)
       throw new PersistenceException("Could not persist the activation key to database during user signup");
       
+    
+    
+    Map<String, Object> properties = new HashMap<String, Object>();
+    String url =
+        "https://localhost:8090/account/accept/" + user.getAccountId()+"?k="+activationKey;
+    properties.put("url", url);
+    
+    String body =
+        VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "templates/signup-email.vm",
+            "UTF-8", properties);
+    data.setText(body);
+    data.setSentDate(new Date());
+    
     
     NotificationRequest request = new NotificationRequest();
     request.setId(userSignUpActivationKey.getActivationKey());

@@ -48,11 +48,19 @@ houstonApp.factory('LogsService', ['$resource',
         });
     }]);
 
-houstonApp.factory('SignUpService', ['$resource',
-   function ($resource) {
-       return $resource('app/rest/signup', {}, {
-           'signUp': { method: 'POST'}
-       });
+
+houstonApp.factory('SignUpService', ['$http',
+   function ($http) {
+       return  {
+    	   signUp : function (email, callback) {
+    		   var url = 'app/rest/signup?email='+email;
+    		   $http.post(url).success(function (data, status){
+              	 callback(data, status);
+               }).error(function (data, status){
+              	 callback(data, status);
+               });
+    	   }
+       };
    }]);
 
 houstonApp.factory('AuditsService', ['$http',

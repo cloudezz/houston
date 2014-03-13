@@ -6,6 +6,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -28,6 +31,13 @@ public class UserSignUpActivationKey extends BaseEntity {
   @NotNull
   @Column(name = "activation_key")
   private String activationKey;
+  
+  
+  @JsonIgnore
+  @Column(name = "signup_date")
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+  private LocalDate signUpDate;
+  
 
 
   public String getActivationKey() {
@@ -75,6 +85,14 @@ public class UserSignUpActivationKey extends BaseEntity {
   public String toString() {
     return "UserSignUpActivationKey{" + "emailId='" + emailId + '\'' + ", activationKey='"
         + activationKey + '\'' + "}";
+  }
+
+  public LocalDate getSignUpDate() {
+    return signUpDate;
+  }
+
+  public void setSignUpDate(LocalDate signUpDate) {
+    this.signUpDate = signUpDate;
   }
 
   
