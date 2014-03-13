@@ -4,14 +4,14 @@ import org.apache.commons.lang.RandomStringUtils;
 
 public class RepositoryUtils {
 
-  public static String generateId() {
-    String id = RandomStringUtils.randomNumeric(5);
+  public static String generateSmallId() {
+    String id = RandomStringUtils.randomNumeric(7);
     return id;
   }
   
   
   public static String generateBigId() {
-    String id = RandomStringUtils.randomNumeric(12);
+    String id = RandomStringUtils.randomNumeric(15);
     return id;
   }
 }

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,8 +36,8 @@ public class UserSignUpActivationKey extends BaseEntity {
   
   @JsonIgnore
   @Column(name = "signup_date")
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-  private LocalDate signUpDate;
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+  private LocalDateTime signUpDate;
   
 
 
@@ -87,11 +88,11 @@ public class UserSignUpActivationKey extends BaseEntity {
         + activationKey + '\'' + "}";
   }
 
-  public LocalDate getSignUpDate() {
+  public LocalDateTime getSignUpDate() {
     return signUpDate;
   }
 
-  public void setSignUpDate(LocalDate signUpDate) {
+  public void setSignUpDate(LocalDateTime signUpDate) {
     this.signUpDate = signUpDate;
   }
 

@@ -44,7 +44,7 @@ public class ImageInfoResource {
 	@Timed
 	public void create(@RequestBody ImageInfo imageInfo) {
 		if (imageInfo.getId() == null) {
-			imageInfo.setId(RepositoryUtils.generateId());
+			imageInfo.setId(RepositoryUtils.generateSmallId());
 		}
 		imageInfoRepository.save(imageInfo);
 	}

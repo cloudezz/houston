@@ -1,27 +1,35 @@
 <table width="670" cellspacing="0" cellpadding="0" border="0" bgcolor="" align="center">
   <tbody>
 	<tr>
-		<td bgcolor="#830908">
-				<img src="http://localhost:8090/images/logo.png" border="0" vspace="5" width="250" height="61" hspace="5">
+		<td bgcolor="#000000">
+				<img src="http://localhost:8090/images/cloudezz-logo-272x120.png" border="0" vspace="5" width="250" height="61" hspace="5">
 		</td>
 	</tr>
 	<tr>
-	
-	Thanks for signing up with Cloudezz! You must follow this link to activate your account:
+	<br/>
+	Thanks for signing up with Cloudezz! 
+	<br/>
+	<br/>
+	You must follow this link to activate your account:
 	
 	$url
 
-Have fun, and don't hesitate to contact us with your feedback.
+	<br/>
+	<br/>
 
+Have fun, and don't hesitate to contact us with your feedback.
+<br/>
 The Cloudezz Team
+<br/>
 https://cloudezz.com
 
 	</tr>
 
 	<tr>
-		<td align="center"> 
+		<td align="center">
+		<br/> 
 Cloudezz is the cloud platform for rapid deployment and scaling of web applications. Get up and running in minutes, then deploy instantly via Git.
-
+<br/>
 To learn more about Cloudezz and all its features, check out: https://cloudezz.com</td>
 	</tr>
   </tbody>

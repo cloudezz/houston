@@ -1,7 +1,8 @@
 package com.cloudezz.houston.service;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -13,10 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cloudezz.houston.domain.Authority;
 import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
+import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
+import com.cloudezz.houston.security.AuthoritiesConstants;
 import com.cloudezz.houston.security.SecurityUtils;
 
 /**
@@ -43,11 +47,20 @@ public class UserService {
      * @param email
      * @return
      */
+    @Transactional
     public User registerUser(String email) {
         User currentUser = new User();
+        currentUser.setLogin(email);
         currentUser.setEmail(email);
-        currentUser.setAccountId(UUID.randomUUID().toString());
+        currentUser.setAccountId(RepositoryUtils.generateSmallId());
         
+        Set<Authority> authorities = new HashSet<>();
+        Authority authority = new Authority();
+        authority.setAuthorityName(AuthoritiesConstants.USER);
+        authorities.add(authority);
+        
+        currentUser.setAuthorities(authorities);
+        userRepository.saveAndFlush(currentUser);
         log.debug("Created new  User: {}", currentUser);
         return currentUser;
     }

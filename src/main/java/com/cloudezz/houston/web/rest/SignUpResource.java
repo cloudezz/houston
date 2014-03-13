@@ -1,18 +1,25 @@
 package com.cloudezz.houston.web.rest;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
+import org.joda.time.ReadablePartial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +28,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,9 +46,9 @@ import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.domain.UserSignUpActivationKey;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
 import com.cloudezz.houston.repository.RepositoryUtils;
+import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.repository.UserSignUpActivationKeyRepository;
 import com.cloudezz.houston.service.UserService;
-import com.cloudezz.houston.web.rest.dto.UserDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -68,7 +75,7 @@ public class SignUpResource {
 
   @Inject
   private PersistentTokenRepository persistentTokenRepository;
-  
+
   @Inject
   private UserSignUpActivationKeyRepository userSignUpActivationKeyRepository;
 
@@ -79,37 +86,91 @@ public class SignUpResource {
 
   private static final int DEFAULT_TOKEN_LENGTH = 16;
 
-
+  @Inject
+  private UserRepository userRepository;
 
   @RequestMapping(value = "/rest/signup", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Timed
-  public void signUp(@RequestParam(value="email") String email, HttpServletRequest request) {
-    
-    if(email == null || email.isEmpty()){
+  public void signUp(@RequestParam(value = "email") String email, HttpServletRequest request) {
+
+    if (email == null || email.isEmpty()) {
       log.error("Email Id is Empty");
       return;
     }
     User user = userService.registerUser(email);
-//    PersistentToken token = new PersistentToken();
-//    token.setSeries(generateSeriesData());
-//    token.setUser(user);
-//    token.setTokenValue(generateTokenData());
-//    token.setTokenDate(new LocalDate());
-//    token.setIpAddress(request.getRemoteAddr());
-//    token.setUserAgent(request.getHeader("User-Agent"));
-//    try {
-//      persistentTokenRepository.saveAndFlush(token);
-//    } catch (DataAccessException e) {
-//      log.error("Failed to save persistent token ", e);
-//    }
-    
+    // PersistentToken token = new PersistentToken();
+    // token.setSeries(generateSeriesData());
+    // token.setUser(user);
+    // token.setTokenValue(generateTokenData());
+    // token.setTokenDate(new LocalDate());
+    // token.setIpAddress(request.getRemoteAddr());
+    // token.setUserAgent(request.getHeader("User-Agent"));
+    // try {
+    // persistentTokenRepository.saveAndFlush(token);
+    // } catch (DataAccessException e) {
+    // log.error("Failed to save persistent token ", e);
+    // }
+
     // Send Email Using Avis
     try {
       sendNotificationToCustomer(user);
     } catch (AvisClientException e) {
       log.error(e.getMessage());
     }
+  }
+
+
+  @RequestMapping(value = "/signup/accept/{accountId}/{key}", method = RequestMethod.GET)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Timed
+  public boolean acceptRegistration(@PathVariable(value = "accountId") String accountId, @PathVariable(
+      value = "key") String key, HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    User user = userRepository.findByAccountId(accountId);
+    if (user == null) {
+      log.error(String.format("No User identified by id %s", accountId));
+      return false;
+    }
+    UserSignUpActivationKey actKey = userSignUpActivationKeyRepository.findOne(user.getEmail());
+    if (actKey == null) {
+      log.error(String.format("No Activation key identified by email %s and account %s",
+          user.getEmail(), accountId));
+      return false;
+    }
+    // if the click is within a day then activate the user
+   
+    LocalDateTime now =  LocalDateTime.now();
+    Period p = Period.fieldDifference(now, actKey.getSignUpDate());
+    //less that one day
+    long actPeriodInMillis = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
+    if (p.getMillis()<= actPeriodInMillis) {
+
+      PersistentToken token = new PersistentToken();
+      token.setSeries(generateSeriesData());
+      token.setUser(user);
+      token.setTokenValue(generateTokenData());
+      token.setTokenDate(new LocalDate());
+      token.setIpAddress(request.getRemoteAddr());
+      token.setUserAgent(request.getHeader("User-Agent"));
+      try {
+        persistentTokenRepository.saveAndFlush(token);
+      } catch (DataAccessException e) {
+        log.error("Failed to save persistent token ", e);
+      }
+      Set<PersistentToken> persistentTokens = new HashSet<>();
+      persistentTokens.add(token);
+      user.setPersistentTokens(persistentTokens);
+      userRepository.saveAndFlush(user);
+      // delete the activation key
+      userSignUpActivationKeyRepository.delete(actKey);
+      response.sendRedirect("/#/appimagecfg");
+      return true;
+
+    } else {
+      response.sendRedirect("/#/signup");
+    }
+    return true;
   }
 
 
@@ -135,32 +196,31 @@ public class SignUpResource {
     data.setFrom("noreply@cloudezz.com");
     // https://localhost:8090/account/accept/$accountId/$token
 
-   
-
     String activationKey = RepositoryUtils.generateBigId();
     UserSignUpActivationKey userSignUpActivationKey = new UserSignUpActivationKey();
     userSignUpActivationKey.setId(user.getEmail());
     userSignUpActivationKey.setActivationKey(activationKey);
-    userSignUpActivationKey.setSignUpDate(LocalDate.now());
-    userSignUpActivationKey =  userSignUpActivationKeyRepository.save(userSignUpActivationKey);
-    
-    if(userSignUpActivationKey==null)
-      throw new PersistenceException("Could not persist the activation key to database during user signup");
-      
-    
-    
+    userSignUpActivationKey.setSignUpDate(LocalDateTime.now());
+    userSignUpActivationKey = userSignUpActivationKeyRepository.save(userSignUpActivationKey);
+
+    if (userSignUpActivationKey == null)
+      throw new PersistenceException(
+          "Could not persist the activation key to database during user signup");
+
+
+
     Map<String, Object> properties = new HashMap<String, Object>();
     String url =
-        "https://localhost:8090/account/accept/" + user.getAccountId()+"?k="+activationKey;
+        "http://localhost:8090/app/signup/accept/" + user.getAccountId() + "/" + activationKey;
     properties.put("url", url);
-    
+
     String body =
         VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "templates/signup-email.vm",
             "UTF-8", properties);
     data.setText(body);
     data.setSentDate(new Date());
-    
-    
+
+
     NotificationRequest request = new NotificationRequest();
     request.setId(userSignUpActivationKey.getActivationKey());
     request.setNotificationType(NotificationType.EMAIL);
