@@ -11,6 +11,8 @@ public class DockerConstant {
   public static final int STATUS_SERVER_ERROR = 500;
 
   public static final String ENV_TCP_FORWARD = "TCP_FORWARD";
+  
+  public static final String ENV_SERVER_METRICS = "SERVER_METRICS";
 
   public static final String ENV_SSH_ROOT_PASSWORD = "SSH_ROOT_PASSWORD";
 
@@ -26,8 +28,10 @@ public class DockerConstant {
   
   public static final String WEB_SHELL_SERVICE_NAME = "Web Shell";
   
+  public static final String SERVER_METRICS_SERVICE_NAME = "Server Metrics";
+  
   public static final String DEFAULT_WEB_SHELL_PORT = "4022/tcp";
-
-
+  
+  public static final String DEFAULT_SERVER_METRICS_PORT = "4055/tcp";
 
 }

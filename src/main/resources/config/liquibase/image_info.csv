@@ -7,6 +7,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="input" name="main-js" display-name="Main JS" optional="true" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config>
 		<port name="node_web" display-name="Node JS Web" default-value="3000" />
@@ -20,6 +21,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form-element type="input" name="WAR_URL" display-name="War URL" optional="true" />	
 	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access" optional="true" />
+	<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 </form>
 
 <port-config>
@@ -33,6 +35,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access" optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"
@@ -45,6 +48,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="password" name="RABBITMQ_PASSWORD" display-name="RabbitMQ Password" optional="false" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config>
 		<port name="rabbitmq_admin_web" display-name="Admin Web" default-value="15672" />
@@ -58,6 +62,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="password" name="REDIS_PASSWORD" display-name="Redis Password" optional="false" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"
@@ -72,6 +77,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 		<form-element type="input" name="port" display-name="Mysql Port" optional="true" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config>
 		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
@@ -84,6 +90,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form name="cloudezz/haproxy">
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config>
 		<port name="haproxy_port" display-name="HAProxy Access" default-value="443"/>
@@ -96,6 +103,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form name="cloudezz/ubuntu12-04">
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"
@@ -106,6 +114,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form name="cloudezz/ubuntu12-10">
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"
@@ -116,6 +125,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form name="cloudezz/ubuntu13-04">
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"
@@ -126,6 +136,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<form name="cloudezz/ubuntu13-10">
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
+		<form-element type="checkbox" name="SERVER_METRICS" display-name="Enable Server Metrics " optional="true" />
 	</form>
 	<port-config/>
 </img-settings>"

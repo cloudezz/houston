@@ -381,6 +381,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   public Period runningSince() {
     if (startTime == null)
       startTime = LocalDateTime.now();
+    
     return Period.fieldDifference(startTime, LocalDateTime.now());
   }
 }

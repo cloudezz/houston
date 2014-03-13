@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,10 @@ import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
-import com.cloudezz.houston.deployer.docker.model.Image;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
-import com.cloudezz.houston.domain.PersistentToken;
-import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.ImageInfoRepository;
@@ -108,6 +104,13 @@ public class ImageService {
       }
       url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
       exposedService.addServiceToURL(DockerConstant.WEB_SHELL_SERVICE_NAME, url);
+    } else if (dockerPort.equals(DockerConstant.DEFAULT_SERVER_METRICS_PORT)) {
+      String url = "http://";
+      if (dockerHostMachine.isHttps()) {
+        url = "https://";
+      }
+      url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
+      exposedService.addServiceToURL(DockerConstant.SERVER_METRICS_SERVICE_NAME, url);
     }
   }
 
@@ -115,8 +118,9 @@ public class ImageService {
    * This cron job pulls all the images registered in cloudezz database to the all the registered
    * docker host machine . The images are pulled from central docker repo.
    */
-//@Scheduled(cron = "0 0 0 * * ?")  // every midnight for production
-  @Scheduled(cron = "0 0/15 * * * ?") // every 15 mins for testing and dev only
+  // @Scheduled(cron = "0 0 0 * * ?") // every midnight for production
+  @Scheduled(cron = "0 0/15 * * * ?")
+  // every 15 mins for testing and dev only
   @Timed
   public void pullImagesToDockerHost() {
     log.debug("Started the cron job that pulls images in all docker images");
