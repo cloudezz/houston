@@ -287,11 +287,35 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
             $('#saveAppImageCfgModal').modal('show');
         };
 
+//        $scope.delete = function (id) {
+//            AppImageCfg.delete({id: id},
+//                function () {
+//                    $scope.appimagecfgs = AppImageCfg.query();
+//                });
+//        };
+        
         $scope.delete = function (id) {
-            AppImageCfg.delete({id: id},
-                function () {
-                    $scope.appimagecfgs = AppImageCfg.query();
-                });
+        	
+        	var modalInstance = $modal.open({
+				templateUrl : 'deleteConfirm.html',
+				controller : DeleteModalInstanceCtrl,
+				scope : $scope,
+				resolve : {
+					AppImageCfg : function() {
+						return AppImageCfg;
+					}, 
+					
+					id: function () {
+						return id;
+					}
+				}
+			});
+	
+			modalInstance.result.then(function(selectedItem) {
+				$scope.selected = selectedItem;
+			}, function() {
+				$log.info('Modal dismissed at: ' + new Date());
+			});
         };
     }]);
 
