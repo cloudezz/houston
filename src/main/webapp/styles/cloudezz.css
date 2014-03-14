@@ -51,13 +51,12 @@
 	border-bottom-color: #555;
 }
 
-.dropdown-menu>li {
-	background-color: #F8F8F8 !important;
-	color: #E7E7E7;
+.navbar-default .dropdown-menu > li > a, .navbar-default .dropdown-menu > li > a:focus {
+	color: #008CBA;
 }
 
-.dropdown-menu>a {
-	color: #008CBA;
+.dropdown-menu>li {
+	background-color: #F8F8F8 !important;
 }
 
 .alert-danger {
@@ -126,4 +125,8 @@ table#appconfigTable th {
     margin-bottom: 20px;
     min-height: 20px;
     padding: 19px;
+}
+
+.dropdown-menu {
+	 color:#606060;
 }
