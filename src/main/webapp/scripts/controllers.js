@@ -233,6 +233,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         
         $scope.start = function (appimagecfgId) {
         	$scope.starting = true;
+        	$scope.progressText ="Starting";
         	var percent = 0;
         	progress();
         	function progress(){
@@ -248,6 +249,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	AppImageService.start(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
         			$scope.starting = false;
+        			$scope.progressText ="";
         			$("#progressBar").css("width", "100%");
         			//alert("Machine Started");
         			AppImageCfg.query(function (data) {
@@ -256,6 +258,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         		}
         		else {
         			$scope.starting = false;
+        			$scope.progressText ="";
         			$("#progressBar").css("width", "0%");
         			//alert("Machine was not started :: Error is - " + data.error);
         		}
@@ -265,6 +268,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         $scope.stop = function (appimagecfgId) {
         	
         	$scope.starting = true;
+        	$scope.progressText ="Stopping";
         	var percent = 0;
         	progress();
         	function progress(){
@@ -281,15 +285,17 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	AppImageService.stop(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
         			$scope.starting = false;
+        			$scope.progressText ="";
         			$("#progressBar").css("width", "100%");
         			
-        			alert("Machine Stopped");
+//        			alert("Machine Stopped");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
         		}
         		else {
         			$scope.starting = false;
+        			$scope.progressText ="";
         			$("#progressBar").css("width", "0%");
 //        			alert("Machine was not started :: Error is - " + data.error);
         		}
