@@ -160,6 +160,14 @@ houstonApp.factory('ImageInfo', ['$resource',
      });
  }]);
 
+houstonApp.factory('ServiceImageInfo', ['$resource',
+                                 function ($resource) {
+                                     return $resource('app/ /rest/imageinfos/type/service', {}, {
+                                         'query': { method: 'GET', isArray: true},
+                                         'get': { method: 'GET'}
+                                     });
+                                 }]);
+
 
 houstonApp.factory('AppImageCfg', ['$resource',
    function ($resource) {

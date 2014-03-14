@@ -397,9 +397,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.openServiceWizard = function () {
 			$scope.serviceDTO = new Object(); 
 			
-			$scope.serviceImages = {};
+			$scope.subServiceImages = {};
         	ImageInfo.query(function(data) {
-        		$scope.serviceImages = data;
+        		$scope.subServiceImages = data;
         	});
           
 			$scope.sshpwd="";			
