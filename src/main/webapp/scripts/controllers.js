@@ -346,8 +346,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         };
     }]);
 
-houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','AppImageService',
-	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,AppImageService){
+houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService',
+	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService){
 		
 		$scope.service;
         
@@ -398,7 +398,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.serviceDTO = new Object(); 
 			
 			$scope.subServiceImages = {};
-        	ImageInfo.query(function(data) {
+			ServiceImageInfo.query(function(data) {
         		$scope.subServiceImages = data;
         	});
           
