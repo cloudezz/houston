@@ -251,7 +251,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			$scope.starting = false;
         			$scope.progressText ="";
         			$("#progressBar").css("width", "100%");
-        			//alert("Machine Started");
+        			// alert("Machine Started");
         			AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
         			});
@@ -260,7 +260,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			$scope.starting = false;
         			$scope.progressText ="";
         			$("#progressBar").css("width", "0%");
-        			//alert("Machine was not started :: Error is - " + data.error);
+        			// alert("Machine was not started :: Error is - " +
+					// data.error);
         		}
         	});
         };
@@ -297,7 +298,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			$scope.starting = false;
         			$scope.progressText ="";
         			$("#progressBar").css("width", "0%");
-//        			alert("Machine was not started :: Error is - " + data.error);
+// alert("Machine was not started :: Error is - " + data.error);
         		}
         	});
         };
@@ -313,12 +314,12 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
             $('#saveAppImageCfgModal').modal('show');
         };
 
-//        $scope.delete = function (id) {
-//            AppImageCfg.delete({id: id},
-//                function () {
-//                    $scope.appimagecfgs = AppImageCfg.query();
-//                });
-//        };
+// $scope.delete = function (id) {
+// AppImageCfg.delete({id: id},
+// function () {
+// $scope.appimagecfgs = AppImageCfg.query();
+// });
+// };
         
         $scope.delete = function (id) {
         	
@@ -465,7 +466,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         	ImageInfo.query(function(data) {
         		$scope.serviceImages = data;
         	});
-        	
 
 			$scope.sshpwd="";
         	var options = {
@@ -477,11 +477,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		if(!wizard) {
         			wizard = $("#appImageConfigWzd").nwizard(options);
         		}
-        		
-        		// TODO: query ImageInfo and populate all on the load of the
-				// Wizard
-        		
-        		
 	       		wizard.show();
 	       		
 	       		wizard.on("submit", function(wizard) { 
@@ -542,19 +537,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         				createForm(data,formId,holdername);
         			});
         		};
-        		$scope.formSave = function(){
-        			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
-        				var item = $scope.currentForm.formElement[i];  
-        				if(item.type=='file-upload'){
-        					item.value=$("#"+item.name+"").val();
-        				}
-        				else{
-        				item.value=$scope.formElementHolder[item.name];
-        				}
-        				$scope.currentForm.formElement[i]=item;
-        			}
-        			AppImageService.saveFormValues($scope.currentForm);
-            	};
         		function createForm(data,formId){                                        
         			var comp = $("#"+formId+""); 
         			comp.empty();
@@ -580,75 +562,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		     var $el = $(htmlCont).appendTo(comp);
         			 $compile($el)($scope);       			
         		};
-        
-        $scope.create = function (callback) {
-            AppImageCfg.save($scope.appImageCfgDTO,
-                function () {
-                    $scope.appimagecfgs = AppImageCfg.query();
-// $('#saveAppImageCfgModal').modal('hide');
-                    callback();
-                });
-        };
-
-        $scope.start = function (appimagecfgId) {
-        	AppImageService.start(appimagecfgId, function (data, status) {
-        		if(status == 200 ) {
-        			alert("Machine Started");
-        			$scope.started = true
-        		}
-        		else {
-        			alert("Machine was not started :: Error is - " + data.error);
-        		}
-        	});
-        };
-        
-        $scope.stop = function (appimagecfgId) {
-        	AppImageService.stop(appimagecfgId, function (data, status) {
-        		if(status == 200 ) {
-        			alert("Machine Stopped");
-        			$scope.started = false;
-        		}
-        		else {
-        			alert("Machine was not started :: Error is - " + data.error);
-        		}
-        	});
-        };
-        
-        
-        $scope.update = function (id) {
-            $scope.appimagecfg = AppImageCfg.get({id: id});
-            $('#saveAppImageCfgModal').modal('show');
-        };
-
-        $scope.delete = function (id) {
-        	
-        	var modalInstance = $modal.open({
-				templateUrl : 'deleteConfirm.html',
-				controller : DeleteModalInstanceCtrl,
-				scope : $scope,
-				resolve : {
-					AppImageCfg : function() {
-						return AppImageCfg;
-					},
-					
-					id: function () {
-						return id;
-					}
-				}
-			});
-	
-			modalInstance.result.then(function(selectedItem) {
-				$scope.selected = selectedItem;
-			}, function() {
-				$log.info('Modal dismissed at: ' + new Date());
-			});
-        };
-        
     }]);
-
-
-
-
 /**
  * Controller for the delete modal dialog confirmation window
  * 

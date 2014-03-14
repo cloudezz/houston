@@ -401,7 +401,7 @@
 				'</div>',
 				'<div class="wizard-progress-container">',
 				'<div class="progress progress-striped">',
-				'<div class="bar"></div>',
+				'<div class="progress-bar"></div>',
 				'</div>',
 				'</div>',
 				'</div>',
@@ -440,14 +440,14 @@
 				'<div class="wizard-nav-container">',
 				'<ul class="nav nav-list" style="padding-bottom:30px;">',
 				'</ul>',
-				'</div>',
-				'<div class="wizard-progress-container">',
-				,
+				'<div class="nwizard-progress-container">',
 				'<div class="progress progress-striped">',
-				'<div class="bar"></div>',
+				'<div class="progress-bar"></div>',
 				'</div>',
 				'</div>',
 				'</div>',
+				'</div>',
+				
 
 				'<div class="wizard-cards">',
 				'<div class="nwizard-card-container">',
@@ -903,7 +903,7 @@
 
 		updateProgressBar : function(percent) {
 			this.log("updating progress to " + percent + "%");
-			this.progress.find(".bar").css({
+			this.progress.find(".progress-bar").css({
 				width : percent + "%"
 			});
 			this.percentComplete = percent;

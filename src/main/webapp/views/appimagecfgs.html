@@ -62,63 +62,6 @@
 			</tbody>
 		</table>
 	</div>
-
-
-	<!-- 	<div style="position: absolute; top: 100px;width:100%">
-		<div class="table-responsive">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>App Name</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="appimagecfg in appimagecfgs">
-						<td>{{appimagecfg.appName}}</td>
-						<td>
-							<button type="submit" ng-click="update(appimagecfg.id)"
-								class="btn">
-								<span class="glyphicon glyphicon-pencil"></span> Edit
-							</button>
-							<button type="submit" ng-click="delete(appimagecfg.id)"
-								class="btn btn-danger">
-								<span class="glyphicon glyphicon-remove-circle"></span> Delete
-							</button>
-							<button ng-if="!appimagecfg.running" type="start"
-								ng-click="start(appimagecfg.id)" class="btn">
-								<span class="glyphicon glyphicon-play-circle"></span> Start
-							</button>
-
-							<button ng-if="appimagecfg.running" type="start"
-								ng-click="stop(appimagecfg.id)" class="btn">
-								<span class="glyphicon glyphicon-play-circle"></span> Stop
-							</button>
-
-						</td>
-						<td class="dropdown pointer" ng-if="appimagecfg.running"><a
-							class="dropdown-toggle" data-toggle="dropdown"> <span>
-									<span class="glyphicon glyphicon-tower"></span> <span
-									class="hidden-tablet">Services</span> <b class="caret"></b>
-							</span>
-						</a>
-							<ul class="dropdown-menu">
-								<li ng-repeat="(key, value) in appimagecfg.exposedService.serviceToURL"
-									ng-click="openService(value)"><a href="#"><span
-										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{key}}</span></a>
-								</li>
-
-							</ul></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<a href="#/appImgConfigWizard"><span
-			class="glyphicon glyphicon-flash"></span> &nbsp;<span> New
-				AppImageCfg</span></a>
-	</div> -->
-
 	<script type="text/ng-template" id="deleteConfirm.html">
 		<div id="confirmDeleteApp">	
 			<div class="modal-header">
