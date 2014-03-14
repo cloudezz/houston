@@ -16,7 +16,7 @@ async:
 spring:
  mail:
      host: smtp.mailgun.org
-     port: 465
+     port: 587
      user: postmaster@errzero.com
      password: 66i36fpc8r37
      protocol: smtp
