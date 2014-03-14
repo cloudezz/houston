@@ -263,15 +263,35 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         };
         
         $scope.stop = function (appimagecfgId) {
+        	
+        	$scope.starting = true;
+        	var percent = 0;
+        	progress();
+        	function progress(){
+            	$timeout(function(){
+            		percent = percent + 10;
+            		$("#progressBar").css("width", percent+"%");
+            		if(percent < 80){
+            			progress();
+            		}
+            	}, 100);
+        	};
+        	
+        	
         	AppImageService.stop(appimagecfgId, function (data, status) {
         		if(status == 200 ) {
+        			$scope.starting = false;
+        			$("#progressBar").css("width", "100%");
+        			
         			alert("Machine Stopped");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
         		}
         		else {
-        			alert("Machine was not started :: Error is - " + data.error);
+        			$scope.starting = false;
+        			$("#progressBar").css("width", "0%");
+//        			alert("Machine was not started :: Error is - " + data.error);
         		}
         	});
         };
