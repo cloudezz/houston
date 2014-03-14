@@ -13,7 +13,7 @@
 			<div class="wizard-input-section">
 				<div class="row">
 					<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
-						<div class="thumbnail">
+						<div class="thumbnail" id="service{{svcImg.id}}">
 							<a ng-click=setSubService(svcImg.id,svcImg.imageName)> <img
 								class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
@@ -94,7 +94,7 @@
 				<div class="wizard-input-section">
 					<div class="row">
 						<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
-							<div class="thumbnail">
+							<div class="thumbnail" id="app{{svcImg.id}}">
 								<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
 									class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 								</a>

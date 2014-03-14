@@ -355,10 +355,19 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         	});
         
 		$scope.setService = function(serviceId,serviceName) {
+        if($scope.service!=null){
+        	 $("#app"+$scope.service+"").removeClass('active');
+             }
+           $("#app"+serviceId+"").addClass('active');			
 			 $scope.service = serviceId;
-			 $scope.serviceImg = serviceName;
+			 $scope.serviceImg = serviceName; 
 		}
 		$scope.setSubService = function(serviceId,serviceName) {
+			 if($scope.subService!=null){
+	        	 $("#service"+$scope.subService+"").removeClass('active');
+	             }
+	           $("#service"+serviceId+"").addClass('active');			
+
 			 $scope.subService = serviceId;
 			 $scope.subServiceImg = serviceName;
 		}
@@ -771,7 +780,7 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
          };
      }]);
 
-//houstonApp.controller('SetPasswordController', ['$scope',
-//                                              function ($scope  ) {
+// houstonApp.controller('SetPasswordController', ['$scope',
+// function ($scope ) {
 //	
-//}]);
+// }]);
