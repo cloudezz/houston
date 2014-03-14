@@ -283,7 +283,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			$scope.starting = false;
         			$("#progressBar").css("width", "100%");
         			
-        			alert("Machine Stopped");
+//        			alert("Machine Stopped");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
