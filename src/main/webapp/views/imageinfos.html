@@ -1,6 +1,17 @@
 <div>
 
-	<h3>Image Configuration</h3>
+			<div style="margin-bottom: 10px; margin-top: 30px;">
+			<a href="javascript:;" class="btn btn-xxl" data-toggle="modal" data-target="#saveImageInfoModal"><span
+				class="glyphicon glyphicon-flash">
+					</span>New Image Config</a> <input class="col-lg-4 pull-right search-box"
+				placeholder="Search" type="text" ng-model="search">
+		</div>
+		
+<!-- 	<button class="btn btn-primary btn-lg"
+		style="font-size: 12px; float: right;" data-toggle="modal"
+		data-target="#saveImageInfoModal">
+		<span class="glyphicon glyphicon-flash"></span> New Image Config
+	</button> -->
 
 	<div class="modal fade" id="saveImageInfoModal" tabindex="-1"
 		role="dialog" aria-labelledby="myImageInfoLabel" aria-hidden="true">
@@ -57,28 +68,31 @@
 		</div>
 	</div>
 
-	<div class="table-responsive">
-		<table class="table table-striped">
+	<div>
+		<table class="table-hover table-bordered" style="width:100%; margin-bottom:10px;">
 			<thead>
-				<tr>
+				<tr style="height:40px">
 					<th>Image ID</th>
 					<th>Image Name</th>
 					<th>Logo</th>
+				<!-- 	<th>sampleDateAttribute</th> -->
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="imageinfo in imageinfos">
+				<tr ng-repeat="imageinfo in imageinfos | filter:search">
 					<td>{{imageinfo.imageName}}</td>
 					<td>{{imageinfo.name}}</td>
-					<td><img class="thumbnail" ng-src="{{ imageinfo.logoURL}}"
+					<td style="width : 300px;">
+					<img class="thumbnail" ng-src="{{ imageinfo.logoURL}}" style="margin : 10px 10px 10px 70px"
 						alt=""></td>
-					<td>{{imageinfo.sampleDateAttribute}}</td>
+					<!-- <td>{{imageinfo.sampleDateAttribute}}</td> -->
 					<td>
-						<button type="submit" ng-click="update(imageinfo.id)" class="btn">
+						<button type="submit" ng-click="update(imageinfo.id)" class="btn btn-sm" style="width: 100px;">
 							<span class="glyphicon glyphicon-pencil"></span> Edit
 						</button>
-						<button type="submit" ng-click="delete(imageinfo.id)"
-							class="btn btn-danger">
+						<button type="submit" ng-click="delete(imageinfo.id)" style="width: 100px;"
+							class="btn btn-sm btn-delete">
 							<span class="glyphicon glyphicon-remove-circle"></span> Delete
 						</button>
 					</td>
@@ -86,10 +100,4 @@
 			</tbody>
 		</table>
 	</div>
-
-	<button class="btn btn-primary btn-lg"
-		style="font-size: 12px; float: right;" data-toggle="modal"
-		data-target="#saveImageInfoModal">
-		<span class="glyphicon glyphicon-flash"></span> New Image Config
-	</button>
 </div>

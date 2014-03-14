@@ -9,14 +9,14 @@
         <strong>An error has occured!</strong> The session could not be invalidated.
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
+    <div style="margin-top:20px">
+        <table class="table table-hover table-bordered">
             <thead>
                 <tr>
                     <th translate="sessions.table.ipaddress">IP Address</th>
                     <th translate="sessions.table.useragent">User agent</th>
                     <th translate="sessions.table.date">Date</th>
-                    <th></th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,7 +26,7 @@
                     <td>{{session.formattedTokenDate}}</td>
                     <td>
                         <button type="submit"
-                                class="btn btn-primary"
+                                class="btn btn-sm btn-primary"
                                 ng-click="invalidate(session.series)" translate="sessions.table.button">
                                  Invalidate
                         </button>
