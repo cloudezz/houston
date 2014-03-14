@@ -33,14 +33,14 @@
 								style="width: 0%"></div>
 						</div></td>
 					<td style="width: 265px;">
-						<button class="btn btn-xs btn-success"
+						<button class="btn btn-xs btn-start"
 							ng-if="!appimagecfg.running" value="btn btn-primary"
 							style="width: 80px;" ng-click="start(appimagecfg.id)"
 							type="button" name="color">Start</button>
-						<button class="btn btn-xs btn-primary" ng-if="appimagecfg.running"
+						<button class="btn btn-xs btn-stop" ng-if="appimagecfg.running"
 							value="btn btn-primary" style="width: 80px;"
 							ng-click="stop(appimagecfg.id)" type="button" name="color">Stop</button>
-						<button class="btn btn-xs btn-danger" value="btn btn-primary"
+						<button class="btn btn-xs btn-delete" value="btn btn-primary"
 							style="width: 80px;" ng-click="delete(appimagecfg.id)"
 							type="button" name="color">Delete</button>
 					</td>

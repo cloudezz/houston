@@ -72,6 +72,29 @@
     color: #FFFFFF;
 }
 
+.btn-success {
+    background-color: #1ABC9C;
+    border-color: #3C9A5F;
+    color: #FFFFFF;
+}
+
+.btn-start {
+    background-color: #1ABC9C;
+    color: #FFFFFF;
+}
+
+.btn-delete {
+    background-color: #FF807A;
+    color: #FFFFFF;
+}
+
+.btn-stop {
+    background-color: #FFB74B;
+    color: #FFFFFF;
+}
+
+
+
 table#appconfigTable {
 	font-size: 14px;
 	text-align: center;
