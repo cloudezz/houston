@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +70,9 @@ public class SignUpResource {
 
   @Autowired
   private AvisClient avis;
+  
+  @Autowired
+  private JavaMailSender mailSender;
 
   @Value("${queue.email.request}")
   private String queueName;
@@ -229,6 +236,40 @@ public class SignUpResource {
     request.setData(requestData);
 
     log.debug(String.format("Email Request send to the queue %s", queueName));
-    avis.sendNotification(request);
+    try {
+      avis.sendNotification(request);
+    }
+    catch(Exception e) {
+      log.error("Exception in Sending Email via Avis. Sending directly.");
+      sendHtmlEmail(data);
+    }
   }
+  
+  private void sendHtmlEmail(final EmailData emailData) {
+      MimeMessagePreparator preparator = new MimeMessagePreparator() {
+          public void prepare(MimeMessage mimeMessage) throws Exception {
+              MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+              message.setTo(emailData.getTo());
+              if (emailData.getFrom() != null) {
+                  message.setFrom(emailData.getFrom());
+              }
+              if (emailData.getCc() != null && emailData.getCc().length > 0) {
+                  message.setCc(emailData.getCc());
+              }
+              if (emailData.getBcc() != null && emailData.getBcc().length > 0) {
+                  message.setBcc(emailData.getBcc());
+              }
+              message.setSentDate(new Date());
+              message.setSubject(emailData.getSubject());
+              mimeMessage.setContent(emailData.getText(), "text/html");
+          }
+      };
+      try {
+        mailSender.send(preparator);
+      }catch (Exception e) {
+        log.error("Exception in Sending Email. Cant send email");
+        e.printStackTrace();
+      }
+  }
+  
 }

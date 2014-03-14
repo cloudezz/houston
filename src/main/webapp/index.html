@@ -40,10 +40,10 @@
 				<ul class="nav navbar-nav navbar-right">
 
 
-					<li><a href="#"> <span class="glyphicon glyphicon-home"></span>
-							<span translate="global.menu.home">Home</span>
+					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span class="glyphicon glyphicon-align-justify"></span>
+							<span translate="global.menu.apps">Apps</span>
 					</a></li>
-					<li><a href="#"> <span class="glyphicon glyphicon-home"></span>
+					<li ng-switch-when="false"><a href="#"> <span class="glyphicon glyphicon-home"></span>
 							<span translate="global.menu.blog">Blog </span>
 					</a></li>
 					<li ng-show="page == '/login'"><a href="#/signup"> <span
@@ -51,7 +51,7 @@
 							translate="global.menu.signup">Signup</span>
 					</a></li>
 					<li ng-show="page == '/signup'"><a href="#/login"> <span
-							class="glyphicon glyphicon-home"></span> <span
+							class="glyphicon glyphicon-log-in"></span> <span
 							translate="global.menu.login">Login</span>
 					</a></li>
 
@@ -68,7 +68,7 @@
 									class="glyphicon glyphicon-dashboard"></span> &nbsp;<span
 									translate="global.menu.account.metrics">Metrics</span></a></li>
 							<li><a href="#/audits"><span
-									class="glyphicon glyphicon-bell"></span> &nbsp;<span
+									class="glyphicon glyphicon-list-alt"></span> &nbsp;<span
 									translate="global.menu.account.audits">Audits</span></a></li>
 							<li><a href="#/logs"><span
 									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
@@ -89,10 +89,10 @@
 					</a>
 						<ul class="dropdown-menu" ng-controller="MenuController">
 							<li ng-switch-when="true"><a href="#/settings"><span
-									class="glyphicon glyphicon-wrench"></span> &nbsp;<span
+									class="glyphicon glyphicon-cog"></span> &nbsp;<span
 									translate="global.menu.account.settings">Settings</span></a></li>
 							<li ng-switch-when="true"><a href="#/password"><span
-									class="glyphicon glyphicon-lock"></span> &nbsp;<span
+									class="glyphicon glyphicon-asterisk"></span> &nbsp;<span
 									translate="global.menu.account.password">Password</span></a></li>
 							<li ng-switch-when="true"><a href="#/sessions"><span
 									class="glyphicon glyphicon-cloud"></span> &nbsp;<span
