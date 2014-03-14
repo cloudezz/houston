@@ -62,15 +62,14 @@
 	background-color: #F8F8F8 !important;
 }
 
-.dropdown-menu > li > a {
+.dropdown-menu>li>a {
 	background-color: #FFFFFF;
-    float: left;
-    padding: 12px 15px;
-    width: 100%;
-    text-align:left;
-    cursor:pointer;
+	float: left;
+	padding: 12px 15px;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
 }
-
 
 .alert-danger {
 	background-color: #FBE3E4;
@@ -185,4 +184,14 @@ table th {
 
 .progress {
 	margin-bottom: 0px;
+}
+
+.thumbnail:hover { /*  background-color: #0f7b9c; */
+	background-color: #CECECE;
+	cursor: pointer;
+}
+
+.thumbnail:focus,.thumbnail.active {
+	background-color: #999999;
+	cursor: pointer;
 }
