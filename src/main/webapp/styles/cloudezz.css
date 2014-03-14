@@ -66,6 +66,12 @@
 	color: #E64D3B;
 }
 
+.btn-danger {
+    background-color: #F04124;
+    border-color: #EA2F10;
+    color: #FFFFFF;
+}
+
 table#appconfigTable {
 	font-size: 14px;
 	text-align: center;
@@ -92,6 +98,12 @@ table#appconfigTable th {
 	width: 15em;
 	height: 3em;
 	padding: 9px 28px;
+}
+
+.btn-danger {
+    background-color: #FF807A;
+    border-color: #EA2F10;
+    color: #FFFFFF;
 }
 
 .search-box {

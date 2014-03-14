@@ -57,7 +57,7 @@ public abstract class BaseEntity implements Serializable {
 
   public abstract void setId(String id);
 
-
+  @JsonIgnore
   public LocalDateTime getCreationTime() {
     return creationTime;
   }
@@ -66,6 +66,7 @@ public abstract class BaseEntity implements Serializable {
     this.creationTime = creationTime;
   }
 
+  @JsonIgnore
   public LocalDateTime getModificationTime() {
     return modificationTime;
   }

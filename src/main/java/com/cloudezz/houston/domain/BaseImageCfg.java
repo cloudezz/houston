@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -17,7 +18,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
@@ -142,6 +142,27 @@ public abstract class BaseImageCfg extends BaseEntity {
    */
   public void setDockerImageName(String dockerImageName) {
     this.imageName = dockerImageName;
+  }
+
+  /**
+   * @return the dockerImageName
+   */
+  @JsonGetter
+  public String getImageType() {
+    if (!imageName.contains("/"))
+      return imageName;
+
+    String imageType = "";
+    String imageRepoName = "";
+    StringTokenizer stringTokenizer = new StringTokenizer(imageName, "/");
+    if (stringTokenizer.countTokens() == 2) {
+      imageRepoName = stringTokenizer.nextToken();
+      imageType = stringTokenizer.nextToken();
+    } else {
+      return imageName;
+    }
+
+    return imageType;
   }
 
   /**
@@ -369,19 +390,20 @@ public abstract class BaseImageCfg extends BaseEntity {
     return hostConfig;
   }
 
+  @JsonIgnore
   public LocalDateTime getStartTime() {
     return startTime;
   }
 
-  public void setStartTime(LocalDateTime startTime) {
-    this.startTime = startTime;
+  @JsonGetter
+  public String getFormattedStartTime() {
+    if (startTime == null)
+      return null;
+
+    return startTime.toString("yyyy-MM-dd'T'HH:mm:ssZ");
   }
 
-  @JsonGetter
-  public Period runningSince() {
-    if (startTime == null)
-      startTime = LocalDateTime.now();
-    
-    return Period.fieldDifference(startTime, LocalDateTime.now());
+  public void setStartTime(LocalDateTime startTime) {
+    this.startTime = startTime;
   }
 }
