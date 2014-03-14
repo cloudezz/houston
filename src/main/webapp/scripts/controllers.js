@@ -562,15 +562,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		     var $el = $(htmlCont).appendTo(comp);
         			 $compile($el)($scope);       			
         		};
-        
-        $scope.create = function (callback) {
-            AppImageCfg.save($scope.appImageCfgDTO,
-                function () {
-                    $scope.appimagecfgs = AppImageCfg.query();
-                    callback();
-                });
-        };
-        
     }]);
 /**
  * Controller for the delete modal dialog confirmation window
