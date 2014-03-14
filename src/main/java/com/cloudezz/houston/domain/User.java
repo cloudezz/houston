@@ -1,9 +1,12 @@
 package com.cloudezz.houston.domain;
 
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -65,6 +68,9 @@ public class User extends BaseEntity {
   @JsonIgnore
   @OneToMany(mappedBy = "user")
   private Set<PersistentToken> persistentTokens;
+  
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+  private List<AppImageCfg> appImageCfgs;
 
   public String getLogin() {
     return login;
@@ -175,6 +181,14 @@ public class User extends BaseEntity {
 
   public void setAccountId(String accountId) {
     this.accountId = accountId;
+  }
+
+  public List<AppImageCfg> getAppImageCfgs() {
+    return appImageCfgs;
+  }
+
+  public void setAppImageCfgs(List<AppImageCfg> appImageCfgs) {
+    this.appImageCfgs = appImageCfgs;
   }
 
 }

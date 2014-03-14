@@ -31,8 +31,11 @@ import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.repository.UserRepository;
+import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.cloudezz.houston.web.rest.dto.ServiceImageCfgDTO;
@@ -49,6 +52,9 @@ public class AppImageCfgResource {
 
   @Inject
   private AppImageCfgRepository appimagecfgRepository;
+
+  @Inject
+  private UserRepository userRepository;
 
   @Inject
   private DockerHostMachineRepository dockerHostMachineRepository;
@@ -71,17 +77,22 @@ public class AppImageCfgResource {
 
     try {
       AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
+      
+      // set owner
+      String email = SecurityUtils.getCurrentLogin();
+      User currentUser = userRepository.getOne(email);
+      appImageCfg.setOwner(currentUser);
 
       if (appImageCfg.getDockerHostMachine() == null) {
         DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
         appImageCfg.setDockerHostMachine(dockerHostMachine);
 
-        appImageCfg= appimagecfgRepository.saveAndFlush(appImageCfg);
+        appImageCfg = appimagecfgRepository.saveAndFlush(appImageCfg);
       }
     } catch (Exception e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
     }
-    
+
   }
 
 

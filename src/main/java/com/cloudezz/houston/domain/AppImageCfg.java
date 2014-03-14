@@ -13,11 +13,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 
 /**
@@ -55,6 +57,11 @@ public class AppImageCfg extends BaseImageCfg {
   @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
       unique = true)
   protected ExposedService exposedService;
+  
+  @JsonIgnore 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "owner_user_id", nullable = false)
+  private User owner;
 
   @Override
   public String getId() {
@@ -164,6 +171,14 @@ public class AppImageCfg extends BaseImageCfg {
       }
     }
     return false;
+  }
+
+  public User getOwner() {
+    return owner;
+  }
+
+  public void setOwner(User owner) {
+    this.owner = owner;
   }
 
 
