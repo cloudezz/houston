@@ -51,13 +51,13 @@
 	border-bottom-color: #555;
 }
 
-.dropdown-menu>li {
-	background-color: #F8F8F8 !important;
-	color: #E7E7E7;
+.navbar-default .dropdown-menu>li>a,.navbar-default .dropdown-menu>li>a:focus
+	{
+	color: #008CBA;
 }
 
-.dropdown-menu>a {
-	color: #008CBA;
+.dropdown-menu>li {
+	background-color: #F8F8F8 !important;
 }
 
 .alert-danger {
@@ -111,19 +111,26 @@ table#appconfigTable th {
 	color: #008CBA;
 }
 
-
 .alert-success {
-    background-color: #1ABC9C;
-    border-color: #1ABC9C;
-    color: #FFFFFF;
+	background-color: #1ABC9C;
+	border-color: #1ABC9C;
+	color: #FFFFFF;
 }
 
 .well {
-    background-color: #FAFAFA;
-    border: 1px solid #E8E8E8;
-    border-radius: 0;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
-    margin-bottom: 20px;
-    min-height: 20px;
-    padding: 19px;
+	background-color: #FAFAFA;
+	border: 1px solid #E8E8E8;
+	border-radius: 0;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+	margin-bottom: 20px;
+	min-height: 20px;
+	padding: 19px;
+}
+
+.dropdown-menu {
+	color: #606060;
+}
+
+.progress {
+	margin-bottom : 0px;
 }
