@@ -90,7 +90,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	</port-config>
 </img-settings>"
 
-68926,cloudezz/ubuntu12-04,Ubuntu Precise,1,NULL,/images/logos/ubuntu-12-04.png,"<?xml version="1.0" encoding="UTF-8"?>
+68926,cloudezz/ubuntu12-04,Ubuntu Precise,0,NULL,/images/logos/ubuntu-12-04.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu12-04">
@@ -100,7 +100,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<port-config/>
 </img-settings>"
 
-189898,cloudezz/ubuntu12-10,Ubuntu Quantal,1,NULL,/images/logos/ubuntu-12-10.png,"<?xml version="1.0" encoding="UTF-8"?>
+189898,cloudezz/ubuntu12-10,Ubuntu Quantal,0,NULL,/images/logos/ubuntu-12-10.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu12-10">
@@ -110,7 +110,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<port-config/>
 </img-settings>"
 
-26826,cloudezz/ubuntu13-04,Ubuntu Raring,1,NULL,/images/logos/ubuntu-13-04.png,"<?xml version="1.0" encoding="UTF-8"?>
+26826,cloudezz/ubuntu13-04,Ubuntu Raring,0,NULL,/images/logos/ubuntu-13-04.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu13-04">
@@ -120,7 +120,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	<port-config/>
 </img-settings>"
 
-16776,cloudezz/ubuntu13-10,Ubuntu Saucy,1,NULL,/images/logos/ubuntu-13-10.png,"<?xml version="1.0" encoding="UTF-8"?>
+16776,cloudezz/ubuntu13-10,Ubuntu Saucy,0,NULL,/images/logos/ubuntu-13-10.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu13-10">
