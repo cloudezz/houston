@@ -147,6 +147,10 @@ houstonApp
 	
 	                        // If the login page has been requested and the user is already logged in
 	                        // the user is redirected to the home page
+	                        if ($location.path() === "") {
+	                            $location.path('/appimagecfg').replace();
+	                        }
+	                        
 	                        if ($location.path() === "/login") {
 	                            $location.path('/').replace();
 	                        }

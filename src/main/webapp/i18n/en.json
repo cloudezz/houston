@@ -5,6 +5,7 @@
         "menu": {
          	"appimagecfg" : "View Applications",
             "home": "Home",
+            "apps": "Apps",
             "blog": "Blog",
             "login": "Login",
             "signup": "Signup",
