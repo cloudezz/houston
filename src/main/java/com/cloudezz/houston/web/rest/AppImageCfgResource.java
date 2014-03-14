@@ -77,7 +77,7 @@ public class AppImageCfgResource {
 
     try {
       AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
-      
+
       // set owner
       String email = SecurityUtils.getCurrentLogin();
       User currentUser = userRepository.getOne(email);
@@ -189,10 +189,11 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public List<AppImageCfg> getAll() {
+  public List<AppImageCfg> getAllForCurrentUser() {
     log.debug("REST request to get all AppImageCfgs");
     try {
-      return appimagecfgRepository.findAll();
+      User currentLoggedInUser = userRepository.getOne(SecurityUtils.getCurrentLogin());
+      return appimagecfgRepository.getAllForUser(currentLoggedInUser);
     } catch (Exception e) {
       e.printStackTrace();
     }
