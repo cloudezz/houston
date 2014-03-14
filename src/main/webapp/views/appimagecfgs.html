@@ -11,7 +11,7 @@
 			<thead>
 				<tr>
 					<th>App name</th>
-					<th>Created on</th>
+					<th>Started on</th>
 					<th>Running since</th>
 					<th>Status</th>
 					<th>Action</th>
@@ -21,10 +21,10 @@
 			<tbody>
 				<tr ng-repeat="appimagecfg in appimagecfgs | filter:search">
 					<td>{{appimagecfg.appName}}</td>
-					<td>{{appimagecfg.creationTime.year}}-{{appimagecfg.creationTime.monthOfYear}}-{{appimagecfg.creationTime.dayOfMonth}}
-						{{appimagecfg.creationTime.hourOfDay}}:{{appimagecfg.creationTime.minuteOfHour}}:{{appimagecfg.creationTime.secondOfMinute}}
-					</td>
-					<td>{{appimagecfg.runningSince.startTime}}</td>
+					<td>{{appimagecfg.startTime}}</td>
+					<td>{{appimagecfg.runningSince.years}} years,
+						{{appimagecfg.runningSince.months}} months,
+						{{appimagecfg.runningSince.days}} days ago</td>
 					<td ng-show="appimagecfg.running == true && starting == false">Running</td>
 					<td ng-show="appimagecfg.running == false && starting == false">Stopped</td>
 					<td ng-show="starting == true"><div
@@ -45,7 +45,7 @@
 							type="button" name="color">Delete</button>
 					</td>
 					<td ng-if="!appimagecfg.running"></td>
-					<td class="dropdown pointer" ng-if="appimagecfg.running"><a 
+					<td class="dropdown pointer" ng-if="appimagecfg.running"><a
 						class="dropdown-toggle" data-toggle="dropdown"> <span>
 								<span class="glyphicon glyphicon-tower"></span> <span
 								class="hidden-tablet">Open</span> <b class="caret"></b>
@@ -119,8 +119,8 @@
 			class="glyphicon glyphicon-flash"></span> &nbsp;<span> New
 				AppImageCfg</span></a>
 	</div> -->
-	
-		<script type="text/ng-template" id="deleteConfirm.html">
+
+	<script type="text/ng-template" id="deleteConfirm.html">
 		<div id="confirmDeleteApp">	
 			<div class="modal-header">
 				<h4>Confirm Delete</h4>
