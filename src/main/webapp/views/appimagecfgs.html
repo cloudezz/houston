@@ -11,39 +11,27 @@
 			<thead>
 				<tr>
 					<th>App name</th>
-					<th>Started on</th>
+					<th>Image type</th>
 					<th>Running since</th>
 					<th>Status</th>
-					<th>Action</th>
 					<th>Services</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="appimagecfg in appimagecfgs | filter:search">
 					<td>{{appimagecfg.appName}}</td>
-					<td>{{appimagecfg.startTime}}</td>
-					<td>{{appimagecfg.runningSince.years}} years,
-						{{appimagecfg.runningSince.months}} months,
-						{{appimagecfg.runningSince.days}} days ago</td>
+					<td>{{appimagecfg.imageType}}</td>
+					<td>{{appimagecfg.formattedStartTime | timeago}}</td>
 					<td ng-show="appimagecfg.running == true && starting == false">Running</td>
 					<td ng-show="appimagecfg.running == false && starting == false">Stopped</td>
 					<td ng-show="starting == true"><div
 							class="progress progress-striped">
 							<div class="progress-bar progress-bar-success" id="progressBar"
-								style="width: 0%"><span style="font-size: 8pt; float:left;">{{progressText}}</span> </div>
+								style="width: 0%">
+								<span style="font-size: 8pt; float: left;">{{progressText}}</span>
+							</div>
 						</div></td>
-					<td style="width: 265px;">
-						<button class="btn btn-xs btn-start"
-							ng-if="!appimagecfg.running" value="btn btn-primary"
-							style="width: 80px;" ng-click="start(appimagecfg.id)"
-							type="button" name="color">Start</button>
-						<button class="btn btn-xs btn-stop" ng-if="appimagecfg.running"
-							value="btn btn-primary" style="width: 80px;"
-							ng-click="stop(appimagecfg.id)" type="button" name="color">Stop</button>
-						<button class="btn btn-xs btn-delete" value="btn btn-primary"
-							style="width: 80px;" ng-click="delete(appimagecfg.id)"
-							type="button" name="color">Delete</button>
-					</td>
 					<td ng-if="!appimagecfg.running"></td>
 					<td class="dropdown pointer" ng-if="appimagecfg.running"><a
 						class="dropdown-toggle" data-toggle="dropdown"> <span>
@@ -59,6 +47,17 @@
 							</li>
 
 						</ul></td>
+					<td style="width: 265px;">
+						<button class="btn btn-xs btn-start" ng-if="!appimagecfg.running"
+							value="btn btn-primary" style="width: 80px;"
+							ng-click="start(appimagecfg.id)" type="button" name="color">Start</button>
+						<button class="btn btn-xs btn-stop" ng-if="appimagecfg.running"
+							value="btn btn-primary" style="width: 80px;"
+							ng-click="stop(appimagecfg.id)" type="button" name="color">Stop</button>
+						<button class="btn btn-xs btn-delete" value="btn btn-primary"
+							style="width: 80px;" ng-click="delete(appimagecfg.id)"
+							type="button" name="color">Delete</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
