@@ -4,7 +4,7 @@
 			id="servicecard1">
 			<h3 hidden="true">Service Name</h3>
 			<div class="wizard-input-section ">
-				<label>Service Name</label> <input id="serviceAppName" type="text"
+				<label style="font-size:15px;">Service Name</label> <input id="serviceAppName" type="text"
 					class="form-control" name="serviceAppName"
 					ng-model="serviceDTO.appName" ng-minlength=1 ng-maxlength=50
 					required />
@@ -17,7 +17,7 @@
 							<a ng-click=setSubService(svcImg.id,svcImg.imageName)> <img
 								class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
-							<div class="caption" style="padding: 2px">
+							<div class="caption" style="padding: 2px; text-align:center">
 								<p>{{svcImg.name}}</p>
 							</div>
 						</div>
@@ -85,7 +85,7 @@
 			<div class="wizard-card" data-cardname="card1" id="card1">
 				<h3 hidden="true">App Name</h3>
 				<div class="wizard-input-section ">
-					<label>App Name</label> <input id="appName" type="text"
+					<label Style="font-size :15px">App Name</label> <input id="appName" type="text"
 						class="form-control" name="appName"
 						ng-model="appImageCfgDTO.appName" ng-minlength=1 ng-maxlength=50
 						required />
@@ -98,7 +98,7 @@
 								<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
 									class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 								</a>
-								<div class="caption" style="padding: 2px">
+								<div class="caption" style="padding: 2px; text-align:center">
 									<p>{{svcImg.name}}</p>
 								</div>
 							</div>
@@ -136,20 +136,18 @@
 			<div class="wizard-card" data-cardname="card4">
 				<h3 hidden="true">Services</h3>
 				<div class="wizard-input-section">
-					<div align="left">
-						<button class="btn btn-primary btn-lg" style="font-size: 12px;"
-							modal" data-target="#serviceConfigWzd" id="open-service-wizard"
+					<div align="left" style="margin-bottom: 10px;">
+						<button class="btn btn-primary btn-md" data-target="#serviceConfigWzd" id="open-service-wizard"
 							ng-click="openServiceWizard()">
 							<span class="glyphicon glyphicon-flash"></span>Add Service
 						</button>
 					</div>
-					<div class="table-responsive">
-						<table class="table table-striped">
+					<div>
+						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
 									<th>Service Name</th>
-									<th></th>
-									<th></th>
+									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -157,11 +155,11 @@
 									<td>{{serviceItem.appName}}</td>
 									<td>
 										<button type="submit" ng-click="update(serviceItem.id)"
-											class="btn">
+											class="btn btn-sm" style="width:100px;">
 											<span class="glyphicon glyphicon-pencil"></span> Edit
 										</button>
 										<button type="submit" ng-click="delete(serviceItem.id)"
-											class="btn btn-danger">
+											class="btn btn-sm btn-delete" style="width:100px;">
 											<span class="glyphicon glyphicon-remove-circle"></span>
 											Delete
 										</button>
