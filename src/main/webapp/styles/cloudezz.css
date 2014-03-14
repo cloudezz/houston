@@ -20,6 +20,7 @@
 .navbar-default .navbar-nav>li>a:hover,.navbar-default .navbar-nav>li>a:focus
 	{
 	color: #008CBA;
+	background-color: #D5D5D5;
 }
 
 .navbar-default .navbar-nav>.active>a,.navbar-default .navbar-nav>.active>a:hover,.navbar-default .navbar-nav>.active>a:focus
@@ -54,11 +55,22 @@
 .navbar-default .dropdown-menu>li>a,.navbar-default .dropdown-menu>li>a:focus
 	{
 	color: #008CBA;
+	background-color: #FFFFFF;
 }
 
 .dropdown-menu>li {
 	background-color: #F8F8F8 !important;
 }
+
+.dropdown-menu > li > a {
+	background-color: #FFFFFF;
+    float: left;
+    padding: 12px 15px;
+    width: 100%;
+    text-align:left;
+    cursor:pointer;
+}
+
 
 .alert-danger {
 	background-color: #FBE3E4;
@@ -67,33 +79,38 @@
 }
 
 .btn-danger {
-    background-color: #F04124;
-    border-color: #EA2F10;
-    color: #FFFFFF;
+	background-color: #F04124;
+	border-color: #EA2F10;
+	color: #FFFFFF;
 }
 
 .btn-success {
-    background-color: #1ABC9C;
-    border-color: #3C9A5F;
-    color: #FFFFFF;
+	background-color: #1ABC9C;
+	border-color: #3C9A5F;
+	color: #FFFFFF;
 }
 
 .btn-start {
-    background-color: #1ABC9C;
-    color: #FFFFFF;
+	background-color: #1ABC9C;
+	color: #FFFFFF;
+	padding: 7px 16px;
+}
+
+.btn-sm {
+	padding: 4px 16px;
 }
 
 .btn-delete {
-    background-color: #FF807A;
-    color: #FFFFFF;
+	background-color: #FF807A;
+	color: #FFFFFF;
+	width: 20px;
 }
 
 .btn-stop {
-    background-color: #FFB74B;
-    color: #FFFFFF;
+	background-color: #FFB74B;
+	color: #FFFFFF;
+	width: 20px;
 }
-
-
 
 table {
 	font-size: 14px;
@@ -124,9 +141,9 @@ table th {
 }
 
 .btn-danger {
-    background-color: #FF807A;
-    border-color: #EA2F10;
-    color: #FFFFFF;
+	background-color: #FF807A;
+	border-color: #EA2F10;
+	color: #FFFFFF;
 }
 
 .search-box {
@@ -167,5 +184,5 @@ table th {
 }
 
 .progress {
-	margin-bottom : 0px;
+	margin-bottom: 0px;
 }
