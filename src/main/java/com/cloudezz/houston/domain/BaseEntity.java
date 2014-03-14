@@ -25,7 +25,6 @@ public abstract class BaseEntity implements Serializable {
 
   protected String name;
 
-  @JsonIgnore
   @Column(name = "creation_time")
   @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
   protected LocalDateTime creationTime;
