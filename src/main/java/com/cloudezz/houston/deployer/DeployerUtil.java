@@ -1,10 +1,14 @@
 package com.cloudezz.houston.deployer;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
@@ -19,6 +23,7 @@ import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.deployer.docker.model.Image;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.BaseImageCfg;
+import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.google.common.base.Preconditions;
 
@@ -30,6 +35,8 @@ import com.google.common.base.Preconditions;
  * 
  */
 public class DeployerUtil {
+
+  private static Logger log = LoggerFactory.getLogger(DeployerUtil.class);
 
   public static void checkAndPullImage(DockerClient dockerClient, String imageTag)
       throws CloudezzDeployException {
@@ -157,7 +164,7 @@ public class DeployerUtil {
     return dockerClient.stopContainer(cloudezzImageConfig.getContainerId());
 
   }
-  
+
   public static boolean killContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
@@ -332,10 +339,110 @@ public class DeployerUtil {
   public static boolean deleteContainer(DockerClient dockerClient, BaseImageCfg baseImageConfig)
       throws CloudezzDeployException {
     try {
-      return dockerClient.removeContainer(baseImageConfig.getContainerId(),true);
+      return dockerClient.removeContainer(baseImageConfig.getContainerId(), true);
     } catch (DockerClientException e) {
       throw new CloudezzDeployException(e);
     }
   }
 
+  /**
+   * The class does the vol mapping of the two main folder '/cloudezz/app' and '/cloudezz/data' in
+   * the docker image to '/cloudezz/instance/{appName}/app' and '/cloudezz/instance/{appName}/data'
+   * of docker host machine . These folder are mainly used to hold the data even after container
+   * destruction or restart. Currently done only for app imgs but has to be done to service img
+   * later. It creates the init file that will be called when the server starts , the init file is
+   * created and copied to '/cloudezz/instance/{appName}/data/cloudezz-config' of docker host and
+   * due to docker volume mapping the file will be available under '/cloudezz/data/cloudezz-config'
+   * inside docker container
+   * 
+   * @param dockerClient
+   * @param appImageCfg
+   * @throws IOException
+   */
+  public static void setupVolumeMappingAndInitFile(DockerClient dockerClient,
+      AppImageCfg appImageCfg) throws CloudezzDeployException {
+
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(appImageCfg, "applicationImageConfig arg cannot be null");
+
+    String cloudezzHostSideAppFolder =
+        String.format(DockerConstant.FOLDER_APP_DOCKER_HOST_SIDE, appImageCfg.getAppName());
+    String cloudezzHostSideDataFolder =
+        String.format(DockerConstant.FOLDER_DATA_DOCKER_HOST_SIDE, appImageCfg.getAppName());
+    String cloudezzHostSideConfigFolder =
+        cloudezzHostSideAppFolder + DockerConstant.FOLDER_CLOUDEZZ_CONFIG;
+
+    // creating init file and adding to folder thru ssh
+    try {
+
+      DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
+      DockerHostSSHConnection dockerHostSSHConnection =
+          new DockerHostSSHConnection(dockerHostMachine);
+
+      String createAppFolderCMD = "mkdir -p " + cloudezzHostSideAppFolder;
+      String createDataFolderCMD = "mkdir -p " + cloudezzHostSideDataFolder;
+      String createDataCfgFolderCMD = "mkdir -p " + cloudezzHostSideConfigFolder;
+
+
+      dockerHostSSHConnection.execCommand(createAppFolderCMD, dockerHostMachine.isSudo());
+      dockerHostSSHConnection.execCommand(createDataCfgFolderCMD, dockerHostMachine.isSudo());
+      dockerHostSSHConnection.execCommand(createDataFolderCMD, dockerHostMachine.isSudo());
+
+      if (appImageCfg.getInitScript() != null && !appImageCfg.getInitScript().isEmpty()) {
+        String createInitFileCMD =
+            "echo " + appImageCfg.getInitScript() + "  > " + cloudezzHostSideConfigFolder + "/"
+                + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
+        dockerHostSSHConnection.execCommand(createInitFileCMD, dockerHostMachine.isSudo());
+      }
+
+    } catch (Exception e) {
+      throw new CloudezzDeployException(e);
+    }
+    // adding vol mapping
+    appImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideDataFolder,
+        DockerConstant.FOLDER_DATA_DOCKER_SIDE);
+    appImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideAppFolder,
+        DockerConstant.FOLDER_APP_DOCKER_SIDE);
+
+  }
+
+
+  /**
+   * Delete the folder on docker host while deleteing the aoo img cfg
+   * 
+   * @param dockerClient
+   * @param appImageCfg
+   * @throws CloudezzDeployException
+   */
+  public static boolean cleanUpVolumeOnDockerHost(DockerClient dockerClient, AppImageCfg appImageCfg)
+      throws CloudezzDeployException {
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(appImageCfg, "applicationImageConfig arg cannot be null");
+
+    boolean success = false;
+    // delete the folder on docker host while deleteing the aoo img cfg
+    try {
+      String cloudezzHostSideFolder =
+          String.format(DockerConstant.FOLDER_APP_MAIN_DOCKER_HOST_SIDE, appImageCfg.getAppName());
+
+      DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
+      DockerHostSSHConnection dockerHostSSHConnection =
+          new DockerHostSSHConnection(dockerHostMachine);
+
+      String deleteMainAppFolderCMD = "rm -r -f " + cloudezzHostSideFolder;
+
+      List<String> result =
+          dockerHostSSHConnection.execCommand(deleteMainAppFolderCMD, dockerHostMachine.isSudo());
+
+      for (String str : result) {
+        log.debug(str);
+      }
+
+      success = true;
+    } catch (Exception e) {
+      throw new CloudezzDeployException(e);
+    }
+
+    return success;
+  }
 }

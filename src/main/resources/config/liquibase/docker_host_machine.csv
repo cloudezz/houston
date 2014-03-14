@@ -1,2 +1,2 @@
-ip_address,name,cloud_provider,docker_port,https,password,username
-127.0.0.1,localhost,local,4243,0,,
+ip_address,name,cloud_provider,docker_port,https,password,username,key,sudo,ssh_port
+127.0.0.1,localhost,local,4243,0,vagrant,vagrant,,1,2222

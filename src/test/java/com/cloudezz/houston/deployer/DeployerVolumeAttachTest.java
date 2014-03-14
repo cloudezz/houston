@@ -59,6 +59,7 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
     ContainerInspectResponse containerInspectResponse =
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
     Assert.assertTrue(containerInspectResponse.volumes.size() > 0);
+    
   }
 
   @After

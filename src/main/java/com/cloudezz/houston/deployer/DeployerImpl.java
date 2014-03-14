@@ -45,6 +45,10 @@ public class DeployerImpl implements Deployer {
         }
 
       }
+      
+      // setup the volume mapping
+      DeployerUtil.setupVolumeMappingAndInitFile(dockerClient, appImageConfig);
+      
     } catch (DockerImageStartException e) {
       throw new CloudezzDeployException(
           "One of the service image container start failed so couldn't deploy the application");
@@ -53,6 +57,8 @@ public class DeployerImpl implements Deployer {
       throw new CloudezzDeployException(
           "Port Overlap Issue :  The service image added exposes the ports exposed by other service or by app image");
     }
+    
+   
     // the host config contains all the logic to add env and ports and links to service image
     return DeployerUtil
         .startContainer(dockerClient, appImageConfig, appImageConfig.getHostConfig());
@@ -114,8 +120,9 @@ public class DeployerImpl implements Deployer {
     // finally stop app image
     if (appImageConfig.getContainerId() != null) {
       boolean success = DeployerUtil.deleteContainer(dockerClient, appImageConfig);
-      if (containerIdFailList.size() > 0 || !success) {
-        throw new DockerImageStopException("Few container's delete failed");
+      boolean cleanUpSuccess = DeployerUtil.cleanUpVolumeOnDockerHost(dockerClient, appImageConfig);
+      if (containerIdFailList.size() > 0 || !success || !cleanUpSuccess) {
+        throw new DockerImageStopException("Few container's delete failed or docker host volume delete failed");
       } else {
         return true;
       }

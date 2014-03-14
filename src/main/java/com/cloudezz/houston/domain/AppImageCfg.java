@@ -48,6 +48,9 @@ public class AppImageCfg extends BaseImageCfg {
   @Id
   @Column(name = "app_name")
   private String appName;
+  
+  @Column(name = "init_script",columnDefinition="VARCHAR(6000)")
+  private String initScript;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
   private List<ServiceImageCfg> serviceImages;
@@ -62,6 +65,7 @@ public class AppImageCfg extends BaseImageCfg {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_user_id", nullable = false)
   private User owner;
+  
 
   @Override
   public String getId() {
@@ -179,6 +183,14 @@ public class AppImageCfg extends BaseImageCfg {
 
   public void setOwner(User owner) {
     this.owner = owner;
+  }
+
+  public String getInitScript() {
+    return initScript;
+  }
+
+  public void setInitScript(String initScript) {
+    this.initScript = initScript;
   }
 
 
