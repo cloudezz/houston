@@ -10,12 +10,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudezz.houston.domain.DockerHostMachine;
-
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+
+import com.cloudezz.houston.domain.DockerHostMachine;
 
 /**
  * This a helper class for SSH connectivity.
@@ -23,7 +23,7 @@ import ch.ethz.ssh2.StreamGobbler;
 
 public class DockerHostSSHConnection {
 
-  private static Logger log = LoggerFactory.getLogger(DockerHostSSHConnection.class);
+  private final Logger log = LoggerFactory.getLogger(DockerHostSSHConnection.class);
   
   private Connection connection;
   private SCPClient scpcClient;
