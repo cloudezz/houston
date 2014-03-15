@@ -1,7 +1,9 @@
 package com.cloudezz.houston.domain;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.persistence.CascadeType;
@@ -13,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -49,6 +52,21 @@ public class ServiceImageCfg extends BaseImageCfg {
       name = "service_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
 
+  @ElementCollection(fetch = FetchType.EAGER)
+  @MapKeyColumn(name = "env_name")
+  @Column(name = "env_mapping", nullable = true)
+  @CollectionTable(name = "T_SERVICE_ENV_VARIABLE_MAPPING", joinColumns = @JoinColumn(
+      name = "env_mapping_id"))
+  protected Map<String, String> environmentMapping = new HashMap<String, String>();
+  
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @MapKeyColumn(name = "host_volume")
+  @Column(name = "volume_mapping", nullable = true)
+  @CollectionTable(name = "T_SERVICE_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
+  protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
+  
+  
   @JsonIgnore 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "app_config_id", nullable = false)
@@ -158,6 +176,47 @@ public class ServiceImageCfg extends BaseImageCfg {
     this.exposedService = exposedService;
   }
 
+  /**
+   * @return the hostToDockervolumeMapping
+   */
+  public Map<String, String> getHostToDockerVolumeMapping() {
+    return hostToDockerVolumeMapping;
+  }
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) {
+    this.hostToDockerVolumeMapping = hostToDockervolumeMapping;
+  }
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public void addHostToDockerVolumeMapping(String hostVolume, String dockerVolume) {
+    this.hostToDockerVolumeMapping.put(hostVolume, dockerVolume);
+  }
+
+  /**
+   * @return the environmentMapping
+   */
+  public Map<String, String> getEnvironmentMapping() {
+    return environmentMapping;
+  }
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public void setEnvironmentMapping(Map<String, String> environmentMapping) {
+    this.environmentMapping = environmentMapping;
+  }
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public void addEnvironmentMapping(String envName, String envValue) {
+    this.environmentMapping.put(envName, envValue);
+  }
 
 
 }

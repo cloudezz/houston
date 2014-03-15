@@ -1,18 +1,14 @@
 package com.cloudezz.houston.domain;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
@@ -36,6 +32,8 @@ public abstract class BaseImageCfg extends BaseEntity {
   private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
+  
+  protected String dataContainerName;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "docker_host")
@@ -58,19 +56,9 @@ public abstract class BaseImageCfg extends BaseEntity {
   @Column(name = "cpu_shares")
   protected Integer cpuShares = 0;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping", nullable = true)
-  @CollectionTable(name = "T_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
-  protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
-
-  @ElementCollection(fetch = FetchType.EAGER)
-  @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping", nullable = true)
-  @CollectionTable(name = "T_ENVIRONMENT_VARIABLE_MAPPING", joinColumns = @JoinColumn(
-      name = "env_mapping_id"))
-  protected Map<String, String> environmentMapping = new HashMap<String, String>();
-
+  @Column(name = "data_volume_from")
+  private String dataVolumeFrom="";
+  
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean daemon = new Boolean(true);
 
@@ -83,6 +71,9 @@ public abstract class BaseImageCfg extends BaseEntity {
   @Column(name = "start_time")
   @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
   private LocalDateTime startTime;
+
+  @Column(name = "init_script", columnDefinition = "VARCHAR(6000)")
+  private String initScript="";
 
   @Transient
   @JsonIgnore
@@ -166,6 +157,18 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
   /**
+   * Data container name that is used with docker -volume-from option
+   * @return
+   */
+  public String getDataContainerName() {
+    return dataContainerName;
+  }
+
+  public void setDataContainerName(String dataContainer) {
+    this.dataContainerName = dataContainer;
+  }
+
+  /**
    * @return the hostName
    */
   public String getHostName() {
@@ -210,48 +213,7 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.memory = memory;
   }
 
-  /**
-   * @return the hostToDockervolumeMapping
-   */
-  public Map<String, String> getHostToDockerVolumeMapping() {
-    return hostToDockerVolumeMapping;
-  }
-
-  /**
-   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
-   */
-  public void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) {
-    this.hostToDockerVolumeMapping = hostToDockervolumeMapping;
-  }
-
-  /**
-   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
-   */
-  public void addHostToDockerVolumeMapping(String hostVolume, String dockerVolume) {
-    this.hostToDockerVolumeMapping.put(hostVolume, dockerVolume);
-  }
-
-  /**
-   * @return the environmentMapping
-   */
-  public Map<String, String> getEnvironmentMapping() {
-    return environmentMapping;
-  }
-
-  /**
-   * @param environmentMapping the environmentMapping to set
-   */
-  public void setEnvironmentMapping(Map<String, String> environmentMapping) {
-    this.environmentMapping = environmentMapping;
-  }
-
-  /**
-   * @param environmentMapping the environmentMapping to set
-   */
-  public void addEnvironmentMapping(String envName, String envValue) {
-    this.environmentMapping.put(envName, envValue);
-  }
-
+ 
 
   /**
    * @return the daemon
@@ -338,17 +300,30 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
   /**
+   * Get the start init script for image
+   * 
+   * @return
+   */
+  public String getInitScript() {
+    return initScript;
+  }
+
+  public void setInitScript(String initScript) {
+    this.initScript = initScript;
+  }
+
+  /**
    * @return the volumeMapping
    */
   public String[] getVolumeMapping() {
     String[] volumeMapping = null;
-    if (hostToDockerVolumeMapping != null && hostToDockerVolumeMapping.size() > 0) {
+    if (getHostToDockerVolumeMapping() != null && getHostToDockerVolumeMapping().size() > 0) {
       int index = 0;
-      volumeMapping = new String[hostToDockerVolumeMapping.size()];
-      for (Iterator<String> iterator = hostToDockerVolumeMapping.keySet().iterator(); iterator
+      volumeMapping = new String[getHostToDockerVolumeMapping().size()];
+      for (Iterator<String> iterator = getHostToDockerVolumeMapping().keySet().iterator(); iterator
           .hasNext();) {
         String hostVol = iterator.next();
-        String dockerVol = hostToDockerVolumeMapping.get(hostVol);
+        String dockerVol = getHostToDockerVolumeMapping().get(hostVol);
         String volMap = hostVol + ":" + dockerVol;
         volumeMapping[index] = volMap;
         index++;
@@ -406,4 +381,44 @@ public abstract class BaseImageCfg extends BaseEntity {
   public void setStartTime(LocalDateTime startTime) {
     this.startTime = startTime;
   }
+
+  public String getDataVolumeFrom() {
+    return dataVolumeFrom;
+  }
+
+  public void setDataVolumeFrom(String dataVolumeFrom) {
+    this.dataVolumeFrom = dataVolumeFrom;
+  }
+  
+  /**
+   * @return the hostToDockervolumeMapping
+   */
+  public abstract Map<String, String> getHostToDockerVolumeMapping();
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public abstract void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) ;
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public abstract void addHostToDockerVolumeMapping(String hostVolume, String dockerVolume);
+
+  /**
+   * @return the environmentMapping
+   */
+  public abstract Map<String, String> getEnvironmentMapping();
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public abstract void setEnvironmentMapping(Map<String, String> environmentMapping) ;
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public abstract void addEnvironmentMapping(String envName, String envValue);
+
+
 }

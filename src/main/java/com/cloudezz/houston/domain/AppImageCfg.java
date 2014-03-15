@@ -1,9 +1,11 @@
 package com.cloudezz.houston.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -14,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -45,27 +48,40 @@ public class AppImageCfg extends BaseImageCfg {
   @CollectionTable(name = "T_APP_IMAGE_PORTS", joinColumns = @JoinColumn(name = "app_img_port_id"))
   protected List<String> ports = new LinkedList<String>();
 
+  @ElementCollection(fetch = FetchType.EAGER)
+  @MapKeyColumn(name = "env_name")
+  @Column(name = "env_mapping", nullable = true)
+  @CollectionTable(name = "T_APP_ENV_VARIABLE_MAPPING", joinColumns = @JoinColumn(
+      name = "env_mapping_id"))
+  protected Map<String, String> environmentMapping = new HashMap<String, String>();
+
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @MapKeyColumn(name = "host_volume")
+  @Column(name = "volume_mapping", nullable = true)
+  @CollectionTable(name = "T_APP_VOLUME_MAPPING",
+      joinColumns = @JoinColumn(name = "vol_mapping_id"))
+  protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
+
   @Id
   @Column(name = "app_name")
   private String appName;
-  
-  @Column(name = "init_script",columnDefinition="VARCHAR(6000)")
-  private String initScript;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
   private List<ServiceImageCfg> serviceImages;
-
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
       unique = true)
   protected ExposedService exposedService;
-  
-  @JsonIgnore 
+
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_user_id", nullable = false)
   private User owner;
-  
+
+  @Column(name = "data_container_id")
+  private String dataContainerId;
 
   @Override
   public String getId() {
@@ -185,12 +201,54 @@ public class AppImageCfg extends BaseImageCfg {
     this.owner = owner;
   }
 
-  public String getInitScript() {
-    return initScript;
+  public String getDataContainerId() {
+    return dataContainerId;
   }
 
-  public void setInitScript(String initScript) {
-    this.initScript = initScript;
+  public void setDataContainerId(String dataContainerId) {
+    this.dataContainerId = dataContainerId;
+  }
+
+  /**
+   * @return the hostToDockervolumeMapping
+   */
+  public Map<String, String> getHostToDockerVolumeMapping() {
+    return hostToDockerVolumeMapping;
+  }
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) {
+    this.hostToDockerVolumeMapping = hostToDockervolumeMapping;
+  }
+
+  /**
+   * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
+   */
+  public void addHostToDockerVolumeMapping(String hostVolume, String dockerVolume) {
+    this.hostToDockerVolumeMapping.put(hostVolume, dockerVolume);
+  }
+
+  /**
+   * @return the environmentMapping
+   */
+  public Map<String, String> getEnvironmentMapping() {
+    return environmentMapping;
+  }
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public void setEnvironmentMapping(Map<String, String> environmentMapping) {
+    this.environmentMapping = environmentMapping;
+  }
+
+  /**
+   * @param environmentMapping the environmentMapping to set
+   */
+  public void addEnvironmentMapping(String envName, String envValue) {
+    this.environmentMapping.put(envName, envValue);
   }
 
 

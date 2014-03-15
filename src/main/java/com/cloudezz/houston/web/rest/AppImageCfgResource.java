@@ -109,6 +109,7 @@ public class AppImageCfgResource {
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
     appCfg.setPorts(appimagecfgDto.getPorts());
+    appCfg.setInitScript(appimagecfgDto.getInitScript());
 
     if (appimagecfgDto.getServiceImages() != null) {
       for (ServiceImageCfgDTO serviceImageCfgDTO : appimagecfgDto.getServiceImages()) {
@@ -143,20 +144,21 @@ public class AppImageCfgResource {
     boolean success = false;
     try {
       success = deployer.start(appImageCfg);
-      if (success) {
-        appImageCfg.setRunning(true);
-        // set the exposed service after start of the image
-        try {
-          ExposedService exposedService = imageService.getExposedService(appImageCfg);
-          appImageCfg.setExposedService(exposedService);
-        } catch (CloudezzException e) {
-          log.error(e.getMessage());
-        }
-        appImageCfg = appimagecfgRepository.save(appImageCfg);
+      if (!success)
+        return false;
+
+      appImageCfg.setRunning(true);
+      // set the exposed service after start of the image
+      try {
+        ExposedService exposedService = imageService.getExposedService(appImageCfg);
+        appImageCfg.setExposedService(exposedService);
+      } catch (CloudezzException e) {
+        log.error(e.getMessage());
       }
+      appImageCfg = appimagecfgRepository.save(appImageCfg);
 
     } catch (CloudezzDeployException e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(), e);
     }
     return success;
   }
@@ -177,7 +179,7 @@ public class AppImageCfgResource {
         appimagecfgRepository.save(appImageCfg);
       }
     } catch (CloudezzDeployException e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(), e);
     }
     return success;
   }
@@ -195,7 +197,7 @@ public class AppImageCfgResource {
       User currentLoggedInUser = userRepository.getOne(SecurityUtils.getCurrentLogin());
       return appimagecfgRepository.getAllForUser(currentLoggedInUser);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
     }
     return null;
   }
@@ -283,7 +285,7 @@ public class AppImageCfgResource {
         FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
             "C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
       }
       files.add(fileMeta);
     }

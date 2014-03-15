@@ -3,6 +3,8 @@ package com.cloudezz.houston.deployer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -14,12 +16,16 @@ import com.cloudezz.houston.deployer.docker.client.DockerImageStopException;
 import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.service.ContainerLogManager;
 import com.google.common.collect.Lists;
 
 @Component
 public class DeployerImpl implements Deployer {
 
   private final Logger log = LoggerFactory.getLogger(DeployerImpl.class);
+
+  @Inject
+  private ContainerLogManager containerLogManager;
 
   @Override
   public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException {
@@ -28,7 +34,15 @@ public class DeployerImpl implements Deployer {
     List<String> containerIdCache = new ArrayList<String>();
 
     try {
+      // create data container
+      String dataContainerName = DeployerUtil.createDataContainer(dockerClient, appImageConfig);
+      // set data container on app img
+      appImageConfig.setDataVolumeFrom(dataContainerName);
+
       for (ServiceImageCfg serviceImageConfig : appImageConfig.getServiceImages()) {
+        serviceImageConfig.setDockerHostMachine(appImageConfig.getDockerHostMachine());
+        // set data container on service image too
+        serviceImageConfig.setDataVolumeFrom(dataContainerName);
         boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
 
         if (success) {
@@ -43,12 +57,10 @@ public class DeployerImpl implements Deployer {
           throw new DockerImageStartException("Cloudn't start container with id "
               + serviceImageConfig.getContainerId());
         }
-
       }
-      
-      // setup the volume mapping
-      DeployerUtil.setupVolumeMappingAndInitFile(dockerClient, appImageConfig);
-      
+
+
+
     } catch (DockerImageStartException e) {
       throw new CloudezzDeployException(
           "One of the service image container start failed so couldn't deploy the application");
@@ -57,14 +69,19 @@ public class DeployerImpl implements Deployer {
       throw new CloudezzDeployException(
           "Port Overlap Issue :  The service image added exposes the ports exposed by other service or by app image");
     }
-    
-   
+
     // the host config contains all the logic to add env and ports and links to service image
-    return DeployerUtil
-        .startContainer(dockerClient, appImageConfig, appImageConfig.getHostConfig());
+    boolean success =
+        DeployerUtil.startContainer(dockerClient, appImageConfig, appImageConfig.getHostConfig());
+
+    // stream log
+
+    containerLogManager.startLog(appImageConfig.getContainerId(),
+        appImageConfig.getDockerHostMachine());
+
+    return success;
 
   }
-
 
   @Override
   public boolean restart(AppImageCfg appImageConfig) throws CloudezzDeployException {
@@ -79,13 +96,16 @@ public class DeployerImpl implements Deployer {
     List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(appImageConfig.getServiceImages());
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
 
-
       boolean done = DeployerUtil.stopContainer(dockerClient, serviceImageConfig);
 
       if (!done)
         containerIdFailList.add(serviceImageConfig.getContainerId());
     }
 
+
+    // stop log
+    containerLogManager.stopLog(appImageConfig.getContainerId());
+    
     // finally stop app image
     boolean success = DeployerUtil.stopContainer(dockerClient, appImageConfig);
     if (containerIdFailList.size() > 0 || !success) {
@@ -119,10 +139,30 @@ public class DeployerImpl implements Deployer {
 
     // finally stop app image
     if (appImageConfig.getContainerId() != null) {
+
+      String dataContainerId = appImageConfig.getDataContainerId();
+
       boolean success = DeployerUtil.deleteContainer(dockerClient, appImageConfig);
+      if (!success)
+        throw new DockerImageStopException("App container deletion failed for App Img Cfg : "
+            + appImageConfig.getAppName());
+
+      // Delete data container too
+      boolean dataContainerDeleted = DeployerUtil.deleteContainer(dockerClient, dataContainerId);
+      if (!dataContainerDeleted)
+        throw new DockerImageStopException("App Data container deletion failed for App Img Cfg : "
+            + appImageConfig.getAppName());
+
+
       boolean cleanUpSuccess = DeployerUtil.cleanUpVolumeOnDockerHost(dockerClient, appImageConfig);
-      if (containerIdFailList.size() > 0 || !success || !cleanUpSuccess) {
-        throw new DockerImageStopException("Few container's delete failed or docker host volume delete failed");
+      if (!cleanUpSuccess)
+        throw new DockerImageStopException(
+            "Data folder in docker host deletion failed for App Img Cfg : "
+                + appImageConfig.getAppName());
+
+      if (containerIdFailList.size() > 0) {
+        throw new DockerImageStopException("Few container's delete cmd failed for App Img Cfg : "
+            + appImageConfig.getAppName());
       } else {
         return true;
       }

@@ -14,6 +14,7 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.client.DockerClientException;
 import com.cloudezz.houston.deployer.docker.client.DockerConstant;
+import com.cloudezz.houston.deployer.docker.client.DockerHostSSHConnection;
 import com.cloudezz.houston.deployer.docker.model.Container;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
@@ -72,6 +73,9 @@ public class DeployerUtil {
     config.setHostName(cloudezzImageConfig.getHostName());
     config.setDomainName(cloudezzImageConfig.getDomainName());
     config.setDns(cloudezzImageConfig.getDnsAsArray());
+    config.setVolumesFrom(cloudezzImageConfig.getDataVolumeFrom());
+    if (cloudezzImageConfig.getName() != null && !cloudezzImageConfig.getName().isEmpty())
+      config.setName(cloudezzImageConfig.getName());
 
     String[] ports = cloudezzImageConfig.getPortsAsArray();
     if (ports != null && ports.length > 0) {
@@ -141,9 +145,15 @@ public class DeployerUtil {
     // on the host..time consuming step
     DeployerUtil.checkAndPullImage(dockerClient, cloudezzImageConfig.getDockerImageName());
 
+    ContainerInspectResponse containerInspectResponse = null;
     ContainerConfig containerConfig = getDockerConfigFromCloudezzConfig(cloudezzImageConfig);
-    ContainerInspectResponse containerInspectResponse =
-        dockerClient.createAndGetContainer(containerConfig);
+    if (cloudezzImageConfig.getName() != null && !cloudezzImageConfig.getName().isEmpty()) {
+      containerInspectResponse =
+          dockerClient.createAndGetContainer(containerConfig, cloudezzImageConfig.getName());
+    } else {
+      containerInspectResponse = dockerClient.createAndGetContainer(containerConfig);
+    }
+
     if (containerInspectResponse == null)
       return false;
 
@@ -178,6 +188,22 @@ public class DeployerUtil {
 
   }
 
+
+  public static String createContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
+      throws CloudezzDeployException {
+
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
+
+    String containerId = cloudezzImageConfig.getContainerId();
+    if (containerId == null) {
+      createAndSetContainerOnImageConfig(dockerClient, cloudezzImageConfig);
+      containerId = cloudezzImageConfig.getContainerId();
+    }
+
+    return containerId;
+  }
+
   /**
    * Start the container once the container is created or if already created then jus start it .
    * 
@@ -193,14 +219,8 @@ public class DeployerUtil {
 
   public static boolean startContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig,
       HostConfig hostConfig) throws CloudezzDeployException {
-    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
-    String containerId = cloudezzImageConfig.getContainerId();
-    if (containerId == null) {
-      createAndSetContainerOnImageConfig(dockerClient, cloudezzImageConfig);
-      containerId = cloudezzImageConfig.getContainerId();
-    }
+    String containerId = createContainer(dockerClient, cloudezzImageConfig);
 
     ContainerInspectResponse containerInspectResponse = dockerClient.inspectContainer(containerId);
 
@@ -345,6 +365,15 @@ public class DeployerUtil {
     }
   }
 
+  public static boolean deleteContainer(DockerClient dockerClient, String containerNameOrId)
+      throws CloudezzDeployException {
+    try {
+      return dockerClient.removeContainer(containerNameOrId, true);
+    } catch (DockerClientException e) {
+      throw new CloudezzDeployException(e);
+    }
+  }
+
   /**
    * The class does the vol mapping of the two main folder '/cloudezz/app' and '/cloudezz/data' in
    * the docker image to '/cloudezz/instance/{appName}/app' and '/cloudezz/instance/{appName}/data'
@@ -356,59 +385,74 @@ public class DeployerUtil {
    * inside docker container
    * 
    * @param dockerClient
-   * @param appImageCfg
+   * @param appName
+   * @param baseImageCfg
    * @throws IOException
    */
-  public static void setupVolumeMappingAndInitFile(DockerClient dockerClient,
-      AppImageCfg appImageCfg) throws CloudezzDeployException {
+  public static void setupVolumeMapping(DockerClient dockerClient, String appName,
+      BaseImageCfg baseImageCfg) throws CloudezzDeployException {
 
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    Preconditions.checkNotNull(appImageCfg, "applicationImageConfig arg cannot be null");
+    Preconditions.checkNotNull(baseImageCfg, "applicationImageConfig arg cannot be null");
 
     String cloudezzHostSideAppFolder =
-        String.format(DockerConstant.FOLDER_APP_DOCKER_HOST_SIDE, appImageCfg.getAppName());
+        String.format(DockerConstant.FOLDER_APP_DOCKER_HOST_SIDE, appName);
     String cloudezzHostSideDataFolder =
-        String.format(DockerConstant.FOLDER_DATA_DOCKER_HOST_SIDE, appImageCfg.getAppName());
+        String.format(DockerConstant.FOLDER_DATA_DOCKER_HOST_SIDE, appName);
     String cloudezzHostSideConfigFolder =
         cloudezzHostSideAppFolder + DockerConstant.FOLDER_CLOUDEZZ_CONFIG;
 
     // creating init file and adding to folder thru ssh
     try {
 
-      DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
+      DockerHostMachine dockerHostMachine = baseImageCfg.getDockerHostMachine();
       DockerHostSSHConnection dockerHostSSHConnection =
           new DockerHostSSHConnection(dockerHostMachine);
 
       String createAppFolderCMD = "mkdir -p " + cloudezzHostSideAppFolder;
       String createDataFolderCMD = "mkdir -p " + cloudezzHostSideDataFolder;
-      String createDataCfgFolderCMD = "mkdir -p " + cloudezzHostSideConfigFolder;
-
 
       dockerHostSSHConnection.execCommand(createAppFolderCMD, dockerHostMachine.isSudo());
-      dockerHostSSHConnection.execCommand(createDataCfgFolderCMD, dockerHostMachine.isSudo());
       dockerHostSSHConnection.execCommand(createDataFolderCMD, dockerHostMachine.isSudo());
 
-      if (appImageCfg.getInitScript() != null && !appImageCfg.getInitScript().isEmpty()) {
-        String createInitFileCMD =
-            "echo " + appImageCfg.getInitScript() + "  > " + cloudezzHostSideConfigFolder + "/"
-                + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
-        dockerHostSSHConnection.execCommand(createInitFileCMD, dockerHostMachine.isSudo());
+      // create init script only for app img inside /cloudezz/instance/{appName}/app/cloudezz-config
+      // on docker host machine
+      if (baseImageCfg.getInitScript() != null && !baseImageCfg.getInitScript().isEmpty()) {
+        
+        String createDataCfgFolderCMD = "mkdir -p " + cloudezzHostSideConfigFolder;
+
+        dockerHostSSHConnection.execCommand(dockerHostMachine.isSudo(), createDataCfgFolderCMD);
+        
+        dockerHostSSHConnection.upload(baseImageCfg.getInitScript().getBytes(), DockerConstant.FILE_CLOUDEZZ_INIT_SH, "/tmp");
+    
+        String copyInitFileCMD =
+            "cp /tmp/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH + "  " + cloudezzHostSideConfigFolder
+                + "/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
+        String chmodXInitFileCMD =
+            "chmod +x " + cloudezzHostSideConfigFolder + "/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
+
+        String removeInitFileTmpCMD = "rm /tmp/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
+
+        dockerHostSSHConnection.execCommand(dockerHostMachine.isSudo(), createDataCfgFolderCMD,
+            copyInitFileCMD, chmodXInitFileCMD, removeInitFileTmpCMD);
       }
+
 
     } catch (Exception e) {
       throw new CloudezzDeployException(e);
     }
     // adding vol mapping
-    appImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideDataFolder,
+    baseImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideDataFolder,
         DockerConstant.FOLDER_DATA_DOCKER_SIDE);
-    appImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideAppFolder,
+    baseImageCfg.addHostToDockerVolumeMapping(cloudezzHostSideAppFolder,
         DockerConstant.FOLDER_APP_DOCKER_SIDE);
 
   }
 
-
   /**
-   * Delete the folder on docker host while deleteing the aoo img cfg
+   * Delete the folder on docker host while deleting the all img cfg. We can call this only for app
+   * level as it will go into service level and clean the folders at Linux level as the same volumes
+   * are mapped for service images too
    * 
    * @param dockerClient
    * @param appImageCfg
@@ -444,5 +488,45 @@ public class DeployerUtil {
     }
 
     return success;
+  }
+
+
+
+  /**
+   * Start the container that will be used to share data between app and service images based on
+   * cloudezz/data img
+   * 
+   * @param dockerClient
+   * @param appImageCfg
+   * @return
+   * @throws CloudezzDeployException
+   */
+  public static String createDataContainer(DockerClient dockerClient, AppImageCfg appImageCfg)
+      throws CloudezzDeployException {
+
+    if (appImageCfg.getDataContainerName() != null)
+      return appImageCfg.getDataContainerName();
+
+    String dataContainerName = appImageCfg.getAppName() + "-data";
+
+    ServiceImageCfg dataImgCfg = new ServiceImageCfg();
+    dataImgCfg.setDockerImageName("cloudezz/data");
+    dataImgCfg.setHostName(dataContainerName);
+    dataImgCfg.setName(dataContainerName);
+    dataImgCfg.setTty(false);
+    dataImgCfg.setDaemon(false);
+    dataImgCfg.setDockerHostMachine(appImageCfg.getDockerHostMachine());
+    dataImgCfg.setInitScript(appImageCfg.getInitScript());
+    setupVolumeMapping(dockerClient, appImageCfg.getAppName(), dataImgCfg);
+    try {
+      String containerId = createContainer(dockerClient, dataImgCfg);
+      appImageCfg.setDataContainerId(containerId);
+      appImageCfg.setDataContainerName(dataContainerName);
+      startContainer(dockerClient, dataImgCfg);
+    } catch (Exception e) {
+      throw new CloudezzDeployException("Failed to create or start data container");
+    }
+
+    return dataContainerName;
   }
 }

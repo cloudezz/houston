@@ -1,11 +1,13 @@
-package com.cloudezz.houston.deployer;
+package com.cloudezz.houston.deployer.docker.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,7 @@ import com.cloudezz.houston.domain.DockerHostMachine;
 public class DockerHostSSHConnection {
 
   private final Logger log = LoggerFactory.getLogger(DockerHostSSHConnection.class);
-  
+
   private Connection connection;
   private SCPClient scpcClient;
 
@@ -95,6 +97,24 @@ public class DockerHostSSHConnection {
    * @return Return the outout of the command as a List of Strings
    * @throws IOException
    */
+  public Map<String, List<String>> execCommand(boolean sudo ,String... cmds) throws IOException {
+    Map<String, List<String>> mapCmdtoResult = new HashMap<>();
+    for (String cmd : cmds) {
+      List<String> result = execCommand(cmd, sudo);
+      mapCmdtoResult.put(cmd, result);
+    }
+    
+    return mapCmdtoResult;
+  }
+
+  /**
+   * This method execute a command via SSH
+   * 
+   * @param cmd The command to execute
+   * @param sudo need to append sudo or not to cmd
+   * @return Return the outout of the command as a List of Strings
+   * @throws IOException
+   */
   public List<String> execCommand(String cmd, boolean sudo) throws IOException {
     if (cmd == null)
       return new ArrayList<>();
@@ -137,7 +157,7 @@ public class DockerHostSSHConnection {
     for (String str : output) {
       log.debug(str);
     }
-    
+
     return output;
   }
 

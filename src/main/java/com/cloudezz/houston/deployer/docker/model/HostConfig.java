@@ -53,7 +53,7 @@ public class HostConfig {
 	private String[] links;
 
 	@JsonProperty("ContainerIDFile")
-	private String containerIDFile;
+	private String containerIDFile="";
 
 	@JsonProperty("LxcConf")
 	private LxcConf[] lxcConf;

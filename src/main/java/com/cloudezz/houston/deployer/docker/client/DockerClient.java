@@ -262,6 +262,18 @@ public class DockerClient {
     return null;
   }
 
+  
+  public ContainerInspectResponse createAndGetContainer(ContainerConfig containerConfig,String containerName)
+      throws DockerClientException {
+    ContainerCreateResponse containerCreateResponse = createContainer(containerConfig, containerName);
+    if (containerCreateResponse.getId() != null) {
+      ContainerInspectResponse containerInspectResponse =
+          inspectContainer(containerCreateResponse.getId());
+      return containerInspectResponse;
+    }
+    return null;
+  }
+  
   public ContainerCreateResponse createContainer(ContainerConfig containerConfig)
       throws DockerClientException {
     return createContainer(containerConfig, null);

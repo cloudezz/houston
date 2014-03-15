@@ -348,6 +348,11 @@
 			<artifactId>ganymed-ssh2</artifactId>
 			<version>build210</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.3</version>
+		</dependency>
 
 		<!-- cloudezz internal dependencies -->
 		<dependency>
