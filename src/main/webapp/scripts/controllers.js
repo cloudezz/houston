@@ -289,7 +289,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			$scope.progressText ="";
         			$("#progressBar").css("width", "100%");
         			
-//        			alert("Machine Stopped");
+// alert("Machine Stopped");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
@@ -393,6 +393,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				serviceWizard.showSubmitCard("success");
 				serviceWizard.updateProgressBar(0);	 
 			};
+			
+		$scope.restoreDefaultScript=function () {
+			$scope.appImageCfgDTO.initScript=$scope.defaultScript;
+		}
 			
 		$scope.openServiceWizard = function () {
 			$scope.serviceDTO = new Object(); 
@@ -507,6 +511,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		if(activeCard.name=="card3"){
 	       			$scope.loadForm($scope.service,'formDiv','formElementHolder');
 	       		}
+	       		if(activeCard.name=="card4"){
+	       			$scope.loadDefaultScript($scope.service);
+	       		}
 				});
 				
 	       		wizard.on("closed", function(wizard) {
@@ -527,7 +534,12 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 					wizard.reset();
 				});
 		}	        		
-
+$scope.loadDefaultScript=function(serviceId){
+	AppImageService.loadScript(serviceId).then(function(data){
+		$scope.defaultScript=data;
+		$scope.appImageCfgDTO.initScript=data;
+	});
+};
         		$scope.loadForm = function (serviceId,formId,holdername) {
         			AppImageService.loadForm(serviceId).then(function(data){
         				if(formId=='formDiv')
