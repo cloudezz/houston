@@ -73,6 +73,17 @@ public class ImageInfoResource {
   public ImageInfo findByName(@PathVariable(value = "name") String name) {
     return imageInfoRepository.findByImageName(name);
   }
+  
+  @RequestMapping(value = "/rest/imageInfos/{name}/initscript", method = RequestMethod.GET,
+      produces = "application/json")
+  @RolesAllowed(AuthoritiesConstants.USER)
+  public String getImageInitScript(@PathVariable(value = "name") String name) {
+    ImageInfo imageInfo =imageInfoRepository.findByImageName(name);
+    if(imageInfo!=null)
+      return imageInfo.getInitScript();
+    
+    return "#!/bin/sh";
+  }
 
   @RequestMapping(value = "/rest/imageInfos/form/{id}", method = RequestMethod.GET,
       produces = "application/json")

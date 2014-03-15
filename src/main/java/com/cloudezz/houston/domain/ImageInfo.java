@@ -46,6 +46,9 @@ public class ImageInfo extends BaseEntity {
 
   @Column(name = "img_settings_block",columnDefinition="VARCHAR(6000)")
   private String imgSettingsBlock;
+  
+  @Column(name = "init_script",columnDefinition="VARCHAR(6000)")
+  private String initScript;
 
   @Override
   public String getId() {
@@ -131,6 +134,14 @@ public class ImageInfo extends BaseEntity {
     StringReader reader = new StringReader(getImgSettingsBlock());
     ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
     return imgSettings.getPortConfig().getPort();
+  }
+
+  public String getInitScript() {
+    return initScript;
+  }
+
+  public void setInitScript(String initScript) {
+    this.initScript = initScript;
   }
 
   // public static void main(String args[]) throws JsonProcessingException {
