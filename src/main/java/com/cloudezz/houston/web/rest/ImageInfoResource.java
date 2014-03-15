@@ -1,6 +1,5 @@
 package com.cloudezz.houston.web.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -74,11 +73,11 @@ public class ImageInfoResource {
     return imageInfoRepository.findByImageName(name);
   }
   
-  @RequestMapping(value = "/rest/imageInfos/{name}/initscript", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/imageInfos/{id}/initscript", method = RequestMethod.GET,
       produces = "application/json")
   @RolesAllowed(AuthoritiesConstants.USER)
-  public String getImageInitScript(@PathVariable(value = "name") String name) {
-    ImageInfo imageInfo =imageInfoRepository.findByImageName(name);
+  public String getImageInitScript(@PathVariable(value = "id") String id) {
+    ImageInfo imageInfo = imageInfoRepository.findOne(id);
     if(imageInfo!=null)
       return imageInfo.getInitScript();
     
