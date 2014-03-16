@@ -2,7 +2,7 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 07887,cloudezz/nodejs,"Node JS",0,NULL,/images/logos/nodejs.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
-	<form name="cloudezz/tomcat7">
+	<form name="cloudezz/nodejs">
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
 		<form-element type="input" name="main-js" display-name="Main JS" optional="true" />
 		<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
@@ -36,7 +36,18 @@ id,image_name,name,service_image,build_pack_git_url,logo_url,img_settings_block
 	</form>
 	<port-config/>
 </img-settings>"
+34754,cloudezz/ghost,"Ghost",0,NULL,/images/logos/ghost.png,"<?xml version="1.0" encoding="UTF-8"?>
+<img-settings>
+<form name="cloudezz/ghost">
+	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
+	<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access" optional="true" />
+</form>
 
+<port-config>
+	<port name="ghost_web" display-name="Ghost Web" default-value="2368"/>  
+</port-config>
+
+</img-settings>"
 57320,cloudezz/rabbitmq,Rabbitmq,1,NULL,/images/logos/rabbitmq.png,"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
