@@ -418,13 +418,14 @@ public class DeployerUtil {
       // create init script only for app img inside /cloudezz/instance/{appName}/app/cloudezz-config
       // on docker host machine
       if (baseImageCfg.getInitScript() != null && !baseImageCfg.getInitScript().isEmpty()) {
-        
+
         String createDataCfgFolderCMD = "mkdir -p " + cloudezzHostSideConfigFolder;
 
         dockerHostSSHConnection.execCommand(dockerHostMachine.isSudo(), createDataCfgFolderCMD);
-        
-        dockerHostSSHConnection.upload(baseImageCfg.getInitScript().getBytes(), DockerConstant.FILE_CLOUDEZZ_INIT_SH, "/tmp");
-    
+
+        dockerHostSSHConnection.upload(baseImageCfg.getInitScript().getBytes(),
+            DockerConstant.FILE_CLOUDEZZ_INIT_SH, "/tmp");
+
         String copyInitFileCMD =
             "cp /tmp/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH + "  " + cloudezzHostSideConfigFolder
                 + "/" + DockerConstant.FILE_CLOUDEZZ_INIT_SH;
@@ -518,13 +519,15 @@ public class DeployerUtil {
     dataImgCfg.setDockerHostMachine(appImageCfg.getDockerHostMachine());
     dataImgCfg.setInitScript(appImageCfg.getInitScript());
     setupVolumeMapping(dockerClient, appImageCfg.getAppName(), dataImgCfg);
+
     try {
       String containerId = createContainer(dockerClient, dataImgCfg);
       appImageCfg.setDataContainerId(containerId);
       appImageCfg.setDataContainerName(dataContainerName);
       startContainer(dockerClient, dataImgCfg);
     } catch (Exception e) {
-      throw new CloudezzDeployException("Failed to create or start data container");
+      // Failed to start data container but not an 
+      // error so we handle it and don't propagate
     }
 
     return dataContainerName;
