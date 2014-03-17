@@ -442,7 +442,7 @@
 			separator="," tableName="T_DOCKER_HOST_MACHINE" />
 
 		<loadData encoding="UTF-8" file="config/liquibase/image_info.csv"
-			separator="," tableName="T_IMAGE_INFO" />
+			separator=";" tableName="T_IMAGE_INFO" />
 
 	</changeSet>
 

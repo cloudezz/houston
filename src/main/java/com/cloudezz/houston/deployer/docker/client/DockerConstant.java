@@ -42,5 +42,9 @@ public class DockerConstant {
   
   public static final String FILE_CLOUDEZZ_INIT_SH = "cloudezz-init.sh";
   
+  public static final String VOL_APP_FOLDER_MAPPING_XML_VAR = "$app_folder";
+  
+  public static final String VOL_DATA_FOLDER_MAPPING_XML_VAR = "$data_folder";
+  
 
 }

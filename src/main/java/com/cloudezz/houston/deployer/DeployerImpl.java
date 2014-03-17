@@ -15,7 +15,9 @@ import com.cloudezz.houston.deployer.docker.client.DockerImageStartException;
 import com.cloudezz.houston.deployer.docker.client.DockerImageStopException;
 import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.cloudezz.houston.service.ContainerLogManager;
 import com.google.common.collect.Lists;
 
@@ -26,6 +28,9 @@ public class DeployerImpl implements Deployer {
 
   @Inject
   private ContainerLogManager containerLogManager;
+  
+  @Inject
+  private ImageInfoRepository imageInfoRepository;
 
   @Override
   public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException {
@@ -43,6 +48,9 @@ public class DeployerImpl implements Deployer {
         serviceImageConfig.setDockerHostMachine(appImageConfig.getDockerHostMachine());
         // set data container on service image too
         serviceImageConfig.setDataVolumeFrom(dataContainerName);
+        // setup vol mapping based on img setting vol config info 
+        ImageInfo imageInfo = imageInfoRepository.findByImageName(serviceImageConfig.getImageName());
+        DeployerUtil.setupContainerVolumeMapping(dockerClient,appImageConfig.getAppName(),serviceImageConfig,imageInfo);
         boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
 
         if (success) {
@@ -69,7 +77,9 @@ public class DeployerImpl implements Deployer {
       throw new CloudezzDeployException(
           "Port Overlap Issue :  The service image added exposes the ports exposed by other service or by app image");
     }
-
+    // setup vol mapping based on img setting vol config info 
+    ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageConfig.getImageName());
+    DeployerUtil.setupContainerVolumeMapping(dockerClient,appImageConfig.getAppName(),appImageConfig,imageInfo);
     // the host config contains all the logic to add env and ports and links to service image
     boolean success =
         DeployerUtil.startContainer(dockerClient, appImageConfig, appImageConfig.getHostConfig());

@@ -3,8 +3,8 @@
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL"
 			optional="true" />
-		<!-- <form-element type="file-upload" name="uploadWar"
-			display-name="Upload WAR" optional="false" /> -->
+		<form-element type="file-upload" name="uploadWar"
+			display-name="Upload WAR" optional="false" /> 
 		<form-element type="input" name="WAR_URL" display-name="War URL"
 			optional="true" />	
 		<form-element type="password" name="ROOT_SSH_PASSWD"
@@ -16,5 +16,12 @@
 	<port-config>
 		<port name="tomcat_web" display-name="Tomcat Web" default-value="8080" />
 	</port-config>
+	
+	<!-- only two folder are allowed on host side $app_folder and $data_folder -->
+	<!-- everything is relative to these folders -->
+	<volume-config>
+		<volume-mapping host="$app_folder/tomcat7/webapps"  container="/var/lib/tomcat7/webapps" />
+		<volume-mapping host="$data_folder/log/tomcat7"  container="/var/log/tomcat7" />
+	</volume-config>
 
 </img-settings>

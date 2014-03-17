@@ -124,14 +124,14 @@ public abstract class BaseImageCfg extends BaseEntity {
   /**
    * @return the dockerImageName
    */
-  public String getDockerImageName() {
+  public String getImageName() {
     return imageName;
   }
 
   /**
    * @param dockerImageName the dockerImageName to set
    */
-  public void setDockerImageName(String dockerImageName) {
+  public void setImageName(String dockerImageName) {
     this.imageName = dockerImageName;
   }
 

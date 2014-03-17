@@ -52,7 +52,7 @@ public class ImageService {
 
     ExposedService exposedService = new ExposedService();
     try {
-      ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getDockerImageName());
+      ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getImageName());
       if (imageInfo == null) {
         throw new CloudezzException("Image info not available");
       }

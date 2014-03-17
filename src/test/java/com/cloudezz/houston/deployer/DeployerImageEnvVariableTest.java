@@ -41,7 +41,7 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
     applicationImageConfig.setDaemon(false);
-    applicationImageConfig.setDockerImageName("cloudezz/base");
+    applicationImageConfig.setImageName("cloudezz/base");
     applicationImageConfig.setHostName("testmachine");
     applicationImageConfig.setMemory(512L);
     applicationImageConfig.setMemorySwap(1024L);
@@ -61,7 +61,7 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
-    serviceImageConfig.setDockerImageName("cloudezz/base");
+    serviceImageConfig.setImageName("cloudezz/base");
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);

@@ -262,10 +262,11 @@ public class DockerClient {
     return null;
   }
 
-  
-  public ContainerInspectResponse createAndGetContainer(ContainerConfig containerConfig,String containerName)
-      throws DockerClientException {
-    ContainerCreateResponse containerCreateResponse = createContainer(containerConfig, containerName);
+
+  public ContainerInspectResponse createAndGetContainer(ContainerConfig containerConfig,
+      String containerName) throws DockerClientException {
+    ContainerCreateResponse containerCreateResponse =
+        createContainer(containerConfig, containerName);
     if (containerCreateResponse.getId() != null) {
       ContainerInspectResponse containerInspectResponse =
           inspectContainer(containerCreateResponse.getId());
@@ -273,7 +274,7 @@ public class DockerClient {
     }
     return null;
   }
-  
+
   public ContainerCreateResponse createContainer(ContainerConfig containerConfig)
       throws DockerClientException {
     return createContainer(containerConfig, null);
@@ -350,18 +351,27 @@ public class DockerClient {
     return this.removeContainer(container, false);
   }
 
+
+
   public boolean removeContainer(String containerId, boolean removeVolumes)
       throws DockerClientException {
     Preconditions.checkState(!StringUtils.isEmpty(containerId), "Container ID can't be empty");
-
     try {
-      restTemplate.delete(dockerDeamonUrl + "/containers/{containerId}?v={removeVolumes}",
-          containerId, removeVolumes ? "1" : "0");
-    } catch (HttpClientErrorException e) {
+      ResponseEntity<String> response =
+          restTemplate.exchange(dockerDeamonUrl + "/containers/{containerId}?v={removeVolumes}",
+              HttpMethod.DELETE, null, String.class, containerId, removeVolumes ? "1" : "0");
+      HttpStatus status = response.getStatusCode();
+      if (status.value() == DockerConstant.STATUS_NO_ERROR
+          || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
+        return true;
+      } else {
+        return false;
+      }
+
+    } catch (Exception e) {
       throw new DockerClientException(e);
     }
 
-    return true;
   }
 
   public void removeContainers(List<String> containers, boolean removeVolumes)
@@ -458,7 +468,8 @@ public class DockerClient {
               dockerDeamonUrl + "/containers/{containerId}/stop?t={timeout}", null, null,
               containerId, timeout);
       HttpStatus status = response.getStatusCode();
-      if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+      if (status.value() == DockerConstant.STATUS_NO_ERROR
+          || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
         return true;
       } else {
         return false;

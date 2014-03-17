@@ -81,7 +81,7 @@ public class ImageInfoResource {
     if(imageInfo!=null)
       return imageInfo.getInitScript();
     
-    return "#!/bin/sh";
+    return "";
   }
 
   @RequestMapping(value = "/rest/imageInfos/form/{id}", method = RequestMethod.GET,

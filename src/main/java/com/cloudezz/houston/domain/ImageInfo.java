@@ -13,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 
 import com.cloudezz.houston.domain.ImgSettings.Form;
 import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
+import com.cloudezz.houston.domain.ImgSettings.VolumeConfig.VolumeMapping;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -49,6 +50,15 @@ public class ImageInfo extends BaseEntity {
   
   @Column(name = "init_script",columnDefinition="VARCHAR(6000)")
   private String initScript;
+  
+  @Column(name = "image_version")
+  private String version;
+  
+  @Column(name = "short_desc")
+  private String shortDesc;
+  
+  @Column(name = "desc",columnDefinition="VARCHAR(6000)")
+  private String desc;
 
   @Override
   public String getId() {
@@ -125,6 +135,7 @@ public class ImageInfo extends BaseEntity {
     return imgSettings.getForm();
   }
 
+  @JsonIgnore
   public List<Port> getPortsExposed() throws JAXBException {
     if (getImgSettingsBlock() == null)
       throw new IllegalStateException("The settings block is not set yet");
@@ -133,7 +144,25 @@ public class ImageInfo extends BaseEntity {
     Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader(getImgSettingsBlock());
     ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
+    if(imgSettings.getPortConfig()==null)
+      return null;
+    
     return imgSettings.getPortConfig().getPort();
+  }
+  
+  @JsonIgnore
+  public List<VolumeMapping> getVolumeMapping() throws JAXBException {
+    if (getImgSettingsBlock() == null)
+      throw new IllegalStateException("The settings block is not set yet");
+
+    JAXBContext jc = JAXBContext.newInstance(ImgSettings.class);
+    Unmarshaller unmarshaller = jc.createUnmarshaller();
+    StringReader reader = new StringReader(getImgSettingsBlock());
+    ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
+    if(imgSettings.getVolumeConfig()==null)
+      return null;
+    
+    return imgSettings.getVolumeConfig().getVolumeMapping();
   }
 
   public String getInitScript() {
@@ -142,6 +171,30 @@ public class ImageInfo extends BaseEntity {
 
   public void setInitScript(String initScript) {
     this.initScript = initScript;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getShortDesc() {
+    return shortDesc;
+  }
+
+  public void setShortDesc(String shortDesc) {
+    this.shortDesc = shortDesc;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
   }
 
   // public static void main(String args[]) throws JsonProcessingException {

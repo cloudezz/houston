@@ -42,7 +42,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
     applicationImageConfig.setDaemon(false);
-    applicationImageConfig.setDockerImageName("cloudezz/tomcat7");
+    applicationImageConfig.setImageName("cloudezz/tomcat7");
     applicationImageConfig.setHostName("testmachine");
     applicationImageConfig.setMemory(512L);
     applicationImageConfig.setMemorySwap(1024L);
@@ -59,7 +59,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
-    serviceImageConfig.setDockerImageName("cloudezz/base");
+    serviceImageConfig.setImageName("cloudezz/base");
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);

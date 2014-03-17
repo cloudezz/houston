@@ -37,7 +37,7 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
-    serviceImageConfig.setDockerImageName("cloudezz/base");
+    serviceImageConfig.setImageName("cloudezz/base");
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);

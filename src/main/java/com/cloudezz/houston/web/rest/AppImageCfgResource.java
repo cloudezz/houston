@@ -102,7 +102,7 @@ public class AppImageCfgResource {
     appCfg.setAppName(appimagecfgDto.getAppName());
     appCfg.setCpuShares(appimagecfgDto.getCpuShares());
     appCfg.setDaemon(appimagecfgDto.getDaemon());
-    appCfg.setDockerImageName(appimagecfgDto.getImageName());
+    appCfg.setImageName(appimagecfgDto.getImageName());
     appCfg.setDomainName(appimagecfgDto.getDomainName());
     appCfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
     appCfg.setHostName(appimagecfgDto.getHostName());
@@ -117,7 +117,7 @@ public class AppImageCfgResource {
         serviceImageCfg.setServiceName(serviceImageCfgDTO.getAppName());
         serviceImageCfg.setCpuShares(serviceImageCfgDTO.getCpuShares());
         serviceImageCfg.setDaemon(serviceImageCfgDTO.getDaemon());
-        serviceImageCfg.setDockerImageName(serviceImageCfgDTO.getImageName());
+        serviceImageCfg.setImageName(serviceImageCfgDTO.getImageName());
         serviceImageCfg.setDomainName(serviceImageCfgDTO.getDomainName());
         serviceImageCfg.setEnvironmentMapping(serviceImageCfgDTO.getEnvironmentMapping());
         serviceImageCfg.setHostName(serviceImageCfgDTO.getHostName());
@@ -254,13 +254,15 @@ public class AppImageCfgResource {
       AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
       if (appImgCfg == null) {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }else{
+        deployer.delete(appImgCfg);
+        appimagecfgRepository.delete(id);
       }
-      deployer.delete(appImgCfg);
     } catch (CloudezzDeployException e) {
       log.error("Failed during delete app cfg", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
-    appimagecfgRepository.delete(id);
+   
   }
 
   LinkedList<FileMeta> files = new LinkedList<FileMeta>();
