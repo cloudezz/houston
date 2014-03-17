@@ -17,6 +17,7 @@ import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.client.DockerHostSSHConnection;
 import com.cloudezz.houston.deployer.docker.model.Container;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
+import com.cloudezz.houston.deployer.docker.model.ContainerCreateResponse;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse.NetworkSettings;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
@@ -161,6 +162,40 @@ public class DeployerUtil {
     return true;
 
   }
+  
+  /**
+   * Create the container and set data containers it on config object
+   * 
+   * @param dockerClient
+   * @param cloudezzImageConfig
+   * @return
+   * @throws CloudezzDeployException
+   */
+  private static boolean createAndSetDataContainerOnImageConfig(DockerClient dockerClient,
+      BaseImageCfg cloudezzImageConfig) throws CloudezzDeployException {
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
+
+    // pull the image to the host if not there already ..will take a long time to download the file
+    // on the host..time consuming step
+    DeployerUtil.checkAndPullImage(dockerClient, cloudezzImageConfig.getDockerImageName());
+
+    ContainerCreateResponse containerCreateResponse = null;
+    ContainerConfig containerConfig = getDockerConfigFromCloudezzConfig(cloudezzImageConfig);
+    if (cloudezzImageConfig.getName() != null && !cloudezzImageConfig.getName().isEmpty()) {
+      containerCreateResponse =
+          dockerClient.createContainer(containerConfig, cloudezzImageConfig.getName());
+    } else {
+      containerCreateResponse = dockerClient.createContainer(containerConfig);
+    }
+
+    if (containerCreateResponse == null)
+      return false;
+
+    cloudezzImageConfig.setContainerId(containerCreateResponse.getId());
+    return true;
+
+  }
 
   public static boolean stopContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
       throws CloudezzDeployException {
@@ -198,6 +233,21 @@ public class DeployerUtil {
     String containerId = cloudezzImageConfig.getContainerId();
     if (containerId == null) {
       createAndSetContainerOnImageConfig(dockerClient, cloudezzImageConfig);
+      containerId = cloudezzImageConfig.getContainerId();
+    }
+
+    return containerId;
+  }
+  
+  public static String createDataContainer(DockerClient dockerClient, BaseImageCfg cloudezzImageConfig)
+      throws CloudezzDeployException {
+
+    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
+    Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
+
+    String containerId = cloudezzImageConfig.getContainerId();
+    if (containerId == null) {
+      createAndSetDataContainerOnImageConfig(dockerClient, cloudezzImageConfig);
       containerId = cloudezzImageConfig.getContainerId();
     }
 
@@ -521,11 +571,12 @@ public class DeployerUtil {
     setupVolumeMapping(dockerClient, appImageCfg.getAppName(), dataImgCfg);
 
     try {
-      String containerId = createContainer(dockerClient, dataImgCfg);
+      String containerId = createDataContainer(dockerClient, dataImgCfg);
       appImageCfg.setDataContainerId(containerId);
       appImageCfg.setDataContainerName(dataContainerName);
       startContainer(dockerClient, dataImgCfg);
     } catch (Exception e) {
+      log.warn(e.getMessage(),e);
       // Failed to start data container but not an 
       // error so we handle it and don't propagate
     }
