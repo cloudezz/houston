@@ -528,8 +528,9 @@
 		var navHeight = baseHeight + this.args.increaseHeight;
 
 		this.el.find(".wizard-nav-container").css("height", navHeight);
-		this.el.find(".wizard-steps").css("height", (navHeight + 65) + "px");
-		this.el.find(".wizard-card").css("height", (navHeight - 60) + "px");
+		this.el.find(".wizard-nav-container").css("border", "1px solid #CCCCCC");
+		this.el.find(".wizard-steps").css("height", navHeight + "px");
+		this.el.find(".wizard-card").css("height", navHeight + "px");
 		this.submitCards.css("height", (navHeight - 60) + "px");
 
 		if (this.args.isModal) {
