@@ -2,6 +2,7 @@ package com.cloudezz.houston.deployer.docker.model;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Thanneer
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Container {
 
   @JsonProperty("Id")

@@ -1,8 +1,9 @@
 package com.cloudezz.houston.deployer.docker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageInspectResponse {
 
     @JsonProperty("id") public String id;
