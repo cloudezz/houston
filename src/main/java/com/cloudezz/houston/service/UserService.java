@@ -53,7 +53,7 @@ public class UserService {
         currentUser.setLogin(email);
         currentUser.setEmail(email);
         currentUser.setAccountId(RepositoryUtils.generateSmallId());
-        
+        currentUser.setActive(false);
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setAuthorityName(AuthoritiesConstants.USER);

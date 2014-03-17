@@ -167,6 +167,7 @@ public class SignUpResource {
       Set<PersistentToken> persistentTokens = new HashSet<>();
       persistentTokens.add(token);
       user.setPersistentTokens(persistentTokens);
+      user.setActive(true);
       userRepository.saveAndFlush(user);
       // delete the activation key
 //      userSignUpActivationKeyRepository.delete(actKey);
