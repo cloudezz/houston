@@ -283,7 +283,7 @@ public class AppImageCfgResource {
       try {
         fileMeta.setBytes(mpf.getBytes());
         FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
-            "C:/Users/Deeps/AppData/Local/Temp/" + mpf.getOriginalFilename()));
+            System.getProperty("java.io.tmpdir")+ mpf.getOriginalFilename()));
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }
