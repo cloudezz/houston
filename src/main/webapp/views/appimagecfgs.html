@@ -23,11 +23,11 @@
 					<td>{{appimagecfg.appName}}</td>
 					<td>{{appimagecfg.imageType}}</td>
 					<td>{{appimagecfg.formattedStartTime | timeago}}</td>
-					<td ng-show="appimagecfg.running == true && starting == false">Running</td>
-					<td ng-show="appimagecfg.running == false && starting == false">Stopped</td>
-					<td ng-show="starting == true"><div
+					<td ng-show="appimagecfg.running == true && selectedAppId != appimagecfg.id">Running</td>
+					<td ng-show="appimagecfg.running == false && selectedAppId != appimagecfg.id">Stopped</td>
+					<td ng-show="selectedAppId == appimagecfg.id"><div
 							class="progress progress-striped">
-							<div class="progress-bar progress-bar-success" id="progressBar"
+							<div class="progress-bar progress-bar-success" id='progressBar{{appimagecfg.id}}'
 								style="width: 0%">
 								<span style="font-size: 8pt; float: left;">{{progressText}}</span>
 							</div>
@@ -46,7 +46,6 @@
 									ng-click="openService(value)"><a><span
 										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{key}}</span></a>
 								</li>
-
 							</ul>
 						</div>
 					</td>

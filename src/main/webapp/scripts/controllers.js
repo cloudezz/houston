@@ -224,22 +224,19 @@ function QueryStringToJSON(queryStr) {
 
 houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$location', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
     function ($rootScope,$scope, $location, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
-
         $scope.appimagecfgs = AppImageCfg.query();		
-       
         console.log($scope.appimagecfgs);
-        
         $scope.starting = false;
-        
+        $scope.selectedAppId = null;
         $scope.start = function (appimagecfgId) {
-        	$scope.starting = true;
+        	$scope.selectedAppId = appimagecfgId;
         	$scope.progressText ="Starting";
         	var percent = 0;
         	progress();
         	function progress(){
             	$timeout(function(){
             		percent = percent + 10;
-            		$("#progressBar").css("width", percent+"%");
+            		$("#progressBar" + appimagecfgId).css("width", percent+"%");
             		if(percent < 80){
             			progress();
             		}
@@ -247,19 +244,16 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	};
         	
         	AppImageService.start(appimagecfgId, function (data, status) {
+        		$scope.selectedAppId = null;
+        		$scope.progressText ="";
         		if(status == 200 ) {
-        			$scope.starting = false;
-        			$scope.progressText ="";
-        			$("#progressBar").css("width", "100%");
+        			$("#progressBar" + appimagecfgId).css("width", "100%");
         			// alert("Machine Started");
         			AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
         			});
-        		}
-        		else {
-        			$scope.starting = false;
-        			$scope.progressText ="";
-        			$("#progressBar").css("width", "0%");
+        		} else {
+        			$("#progressBar" + appimagecfgId).css("width", "0%");
         			// alert("Machine was not started :: Error is - " +
 					// data.error);
         		}
@@ -267,15 +261,14 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         };
         
         $scope.stop = function (appimagecfgId) {
-        	
-        	$scope.starting = true;
+        	$scope.selectedAppId = appimagecfgId;
         	$scope.progressText ="Stopping";
         	var percent = 0;
         	progress();
         	function progress(){
             	$timeout(function(){
             		percent = percent + 10;
-            		$("#progressBar").css("width", percent+"%");
+            		$("#progressBar" + appimagecfgId).css("width", percent+"%");
             		if(percent < 80){
             			progress();
             		}
@@ -284,21 +277,17 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	
         	
         	AppImageService.stop(appimagecfgId, function (data, status) {
+    			$scope.selectedAppId = null;
+    			$scope.progressText ="";
         		if(status == 200 ) {
-        			$scope.starting = false;
-        			$scope.progressText ="";
-        			$("#progressBar").css("width", "100%");
-        			
-// alert("Machine Stopped");
+        			$("#progressBar" + appimagecfgId).css("width", "100%");
+        				// alert("Machine Stopped");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
-        		}
-        		else {
-        			$scope.starting = false;
-        			$scope.progressText ="";
-        			$("#progressBar").css("width", "0%");
-// alert("Machine was not started :: Error is - " + data.error);
+        		} else {
+        			$("#progressBar" + appimagecfgId).css("width", "0%");
+        				// alert("Machine was not started :: Error is - " + data.error);
         		}
         	});
         };
