@@ -4,7 +4,13 @@ public interface ReverseProxyClient {
 
   public void init();
   
-  public boolean register(String frontendURL, String backendURL);
+  public boolean add(String frontendURL, String backendURL);
+  
+  public boolean update(String frontendURL, String oldBackendURL, String newBackendURL);
+ 
+  public boolean delete(String frontendURL);
+  
+  public boolean delete(String frontendURL,String backendURL);
   
   public boolean serverReachable();
 }

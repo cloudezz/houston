@@ -503,14 +503,12 @@ public class ImgSettings {
     @XmlType(name = "", propOrder = {"value"})
     public static class Port {
 
-      @XmlValue
+      @XmlAttribute(name = "value")
       protected String value;
       @XmlAttribute(name = "name")
       protected String name;
       @XmlAttribute(name = "display-name")
       protected String displayName;
-      @XmlAttribute(name = "default-value")
-      protected Short defaultValue;
 
       /**
        * Gets the value of the value property.
@@ -570,26 +568,6 @@ public class ImgSettings {
        */
       public void setDisplayName(String value) {
         this.displayName = value;
-      }
-
-      /**
-       * Gets the value of the defaultValue property.
-       * 
-       * @return possible object is {@link Short }
-       * 
-       */
-      public Short getDefaultValue() {
-        return defaultValue;
-      }
-
-      /**
-       * Sets the value of the defaultValue property.
-       * 
-       * @param value allowed object is {@link Short }
-       * 
-       */
-      public void setDefaultValue(Short value) {
-        this.defaultValue = value;
       }
 
     }

@@ -31,6 +31,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
@@ -305,11 +306,15 @@ public class DockerClient {
     if (containerName != null) {
       containerParameter = "?name=" + containerName;
     }
+    try{
     String response =
         restTemplate.postForObject(dockerDeamonUrl + "/containers/create" + containerParameter,
             requestEntity, String.class);
-    try {
-      return new ObjectMapper().readValue(response, ContainerCreateResponse.class);
+    return new ObjectMapper().readValue(response, ContainerCreateResponse.class);
+    }catch (HttpClientErrorException e) {
+      if (e.getStatusCode().value() == DockerConstant.STATUS_CONFLICT) {
+        throw new DockerClientException("Container with same name "+containerName +" already available ");
+      }
     } catch (JsonParseException e) {
       throw new IllegalStateException(e);
     } catch (JsonMappingException e) {
@@ -317,6 +322,7 @@ public class DockerClient {
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
+    return null;
   }
 
   public boolean startContainer(String containerId) throws DockerClientException {
@@ -368,9 +374,19 @@ public class DockerClient {
         return false;
       }
 
+    } catch (HttpClientErrorException e) {
+      if (e.getStatusCode().value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (HttpServerErrorException e) {
+      System.out.println(e.getResponseBodyAsString());
+      return false;
     } catch (Exception e) {
       throw new DockerClientException(e);
     }
+
 
   }
 
@@ -458,7 +474,7 @@ public class DockerClient {
   }
 
   public boolean stopContainer(String containerId) throws DockerClientException {
-    return this.stopContainer(containerId, 10);
+    return this.stopContainer(containerId, 20);
   }
 
   public boolean stopContainer(String containerId, int timeout) throws DockerClientException {
@@ -470,6 +486,12 @@ public class DockerClient {
       HttpStatus status = response.getStatusCode();
       if (status.value() == DockerConstant.STATUS_NO_ERROR
           || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (HttpClientErrorException e) {
+      if (e.getStatusCode().value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
         return true;
       } else {
         return false;
@@ -486,11 +508,22 @@ public class DockerClient {
           restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/kill", null,
               null, containerId);
       HttpStatus status = response.getStatusCode();
-      if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+      if (status.value() == DockerConstant.STATUS_NO_ERROR
+          || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
         return true;
       } else {
         return false;
       }
+
+    } catch (HttpClientErrorException e) {
+      if (e.getStatusCode().value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (HttpServerErrorException e) {
+      System.out.println(e.getResponseBodyAsString());
+      return false;
     } catch (Exception e) {
       throw new DockerClientException(e);
     }

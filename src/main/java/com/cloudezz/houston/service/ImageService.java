@@ -1,5 +1,6 @@
 package com.cloudezz.houston.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
+import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.codahale.metrics.annotation.Timed;
@@ -72,7 +74,7 @@ public class ImageService {
           if (hostPortBinds != null && hostPortBinds.length > 0) {
             checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, exposedService);
             for (Port port : ports) {
-              String portValue = port.getDefaultValue() + "/tcp";
+              String portValue = port.getValue() + "/tcp";
               if (dockerPort.equals(portValue)) {
                 String url = "http://";
                 if (dockerHostMachine.isHttps()) {
@@ -92,6 +94,25 @@ public class ImageService {
     return exposedService;
   }
 
+  public void setExposedPorts(ServiceImageCfg serviceImageCfg, String imageName) {
+    ImageInfo imageInfo = imageInfoRepository.findByImageName(imageName);
+    if (imageInfo == null)
+      return;
+    List<String> ports = new ArrayList<>();
+    try {
+      if(imageInfo.getPortsExposed()==null)
+        return;
+      
+      for (Port port : imageInfo.getPortsExposed()) {
+        ports.add(port.getValue());
+      }
+    } catch (JAXBException e) {
+      log.error(e.getMessage(), e);
+      return;
+    }
+    serviceImageCfg.setPorts(ports);
+  }
+
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],
       DockerHostMachine dockerHostMachine, ExposedService exposedService) {
     if (dockerPort.equals(DockerConstant.DEFAULT_SSH_PORT)) {
@@ -104,7 +125,7 @@ public class ImageService {
       }
       url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
       exposedService.addServiceToURL(DockerConstant.WEB_SHELL_SERVICE_NAME, url);
-    } 
+    }
   }
 
   /**

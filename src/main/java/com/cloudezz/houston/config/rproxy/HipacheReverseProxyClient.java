@@ -57,7 +57,7 @@ public class HipacheReverseProxyClient implements ReverseProxyClient {
 
 
   @Override
-  public boolean register(String frontendURL, String backendURL) {
+  public boolean add(String frontendURL, String backendURL) {
     Long id = null;
     try {
       jedis = pool.getResource();
@@ -93,6 +93,24 @@ public class HipacheReverseProxyClient implements ReverseProxyClient {
         pool.returnResource(jedis);
     }
 
+    return false;
+  }
+
+  @Override
+  public boolean update(String frontendURL, String oldBackendURL, String newBackendURL) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean delete(String frontendURL) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean delete(String frontendURL, String backendURL) {
+    // TODO Auto-generated method stub
     return false;
   }
 

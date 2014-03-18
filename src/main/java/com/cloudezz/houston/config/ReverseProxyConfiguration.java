@@ -1,8 +1,5 @@
 package com.cloudezz.houston.config;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -13,6 +10,7 @@ import org.springframework.core.env.Environment;
 
 import com.cloudezz.houston.config.rproxy.HipacheReverseProxyClient;
 import com.cloudezz.houston.config.rproxy.ReverseProxyClient;
+import com.cloudezz.houston.util.ConnectionUtils;
 
 @Configuration
 public class ReverseProxyConfiguration implements EnvironmentAware {
@@ -63,7 +61,7 @@ public class ReverseProxyConfiguration implements EnvironmentAware {
     rProxyClient.init();
 
     // check reverse proxy server conn settings
-    if(!urlReachable(host, port)){
+    if(!ConnectionUtils.urlReachable(host, port)){
       log.warn("Warning! Not able to reach reverse proxy server");
       log.debug("Did you configure your reverse proxy rerver settings in your application.yml?");
     }
@@ -77,22 +75,5 @@ public class ReverseProxyConfiguration implements EnvironmentAware {
     return rProxyClient;
   }
 
-  private boolean urlReachable(String host, int port) {
-    Socket socket = null;
-    boolean reachable = false;
-    try {
-      socket = new Socket(host, port);
-      reachable = true;
-    } catch (IOException e) {
-      reachable = false;
-    } finally {
-      if (socket != null)
-        try {
-          socket.close();
-        } catch (IOException e) {
-        }
-    }
-    return reachable;
-  }
-
+ 
 }

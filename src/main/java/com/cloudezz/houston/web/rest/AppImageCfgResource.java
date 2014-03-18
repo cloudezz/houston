@@ -34,6 +34,7 @@ import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
@@ -125,6 +126,9 @@ public class AppImageCfgResource {
         serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
         serviceImageCfg.setPorts(appimagecfgDto.getPorts());
         serviceImageCfg.setApplicationImageConfig(appCfg);
+        // set the ports that are to be exposed using the setting xml config details. This is
+        // required for the app image links to work and see the exposed service ports in the app machine from service machines
+        imageService.setExposedPorts(serviceImageCfg, serviceImageCfgDTO.getImageName());
         // add the service images to the main app cfg
         appCfg.addServiceImages(serviceImageCfg);
       }
@@ -254,7 +258,7 @@ public class AppImageCfgResource {
       AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
       if (appImgCfg == null) {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      }else{
+      } else {
         deployer.delete(appImgCfg);
         appimagecfgRepository.delete(id);
       }
@@ -262,7 +266,7 @@ public class AppImageCfgResource {
       log.error("Failed during delete app cfg", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
-   
+
   }
 
   LinkedList<FileMeta> files = new LinkedList<FileMeta>();
@@ -284,8 +288,8 @@ public class AppImageCfgResource {
       fileMeta.setFileType(mpf.getContentType());
       try {
         fileMeta.setBytes(mpf.getBytes());
-        FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(
-            System.getProperty("java.io.tmpdir")+ mpf.getOriginalFilename()));
+        FileCopyUtils.copy(mpf.getBytes(),
+            new FileOutputStream(System.getProperty("java.io.tmpdir") + mpf.getOriginalFilename()));
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }

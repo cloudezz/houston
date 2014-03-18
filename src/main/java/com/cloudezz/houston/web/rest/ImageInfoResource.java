@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
 import javax.xml.bind.JAXBException;
 
 import org.joda.time.LocalDateTime;
@@ -72,15 +71,15 @@ public class ImageInfoResource {
   public ImageInfo findByName(@PathVariable(value = "name") String name) {
     return imageInfoRepository.findByImageName(name);
   }
-  
+
   @RequestMapping(value = "/rest/imageInfos/{id}/initscript", method = RequestMethod.GET,
       produces = "application/json")
   @RolesAllowed(AuthoritiesConstants.USER)
   public String getImageInitScript(@PathVariable(value = "id") String id) {
     ImageInfo imageInfo = imageInfoRepository.findOne(id);
-    if(imageInfo!=null)
+    if (imageInfo != null)
       return imageInfo.getInitScript();
-    
+
     return "";
   }
 
@@ -90,7 +89,7 @@ public class ImageInfoResource {
   public Form getEnvForm(@PathVariable(value = "id") String id) throws JAXBException {
     ImageInfo imageInfo = imageInfoRepository.findOne(id);
     if (imageInfo == null) {
-      throw new EntityNotFoundException("Couldnt find env form for image with name " + id);
+      return null;
     }
     return imageInfo.getEnvForm();
   }

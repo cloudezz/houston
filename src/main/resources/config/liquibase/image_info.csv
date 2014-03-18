@@ -9,7 +9,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
 	<port-config>
-		<port name="node_web" display-name="Node JS Web" default-value="3000" />
+		<port name="node_web" display-name="Node JS Web" value="3000"/>
 	</port-config>
 </img-settings>"
 81277;cloudezz/tomcat7;"Tomcat 7";0;NULL;/images/logos/tomcat-on.png;"v7.0.52";"Image with tomcat 7, java 7, maven and ant";"Image with tomcat 7, java 7, maven and ant";"<?xml version="1.0" encoding="UTF-8"?>
@@ -23,7 +23,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 </form>
 
 <port-config>
-	<port name="tomcat_web" display-name="Tomcat Web" default-value="8080"/>  
+	<port name="tomcat_web" display-name="Tomcat Web" value="8080"/>  
 </port-config>
 
 </img-settings>"
@@ -44,7 +44,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 </form>
 
 <port-config>
-	<port name="ghost_web" display-name="Ghost Web" default-value="2368"/>  
+	<port name="ghost_web" display-name="Ghost Web" value="2368"/>  
 </port-config>
 
 </img-settings>"
@@ -58,7 +58,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
 	<port-config>
-		<port name="rabbitmq_admin_web" display-name="Admin Web" default-value="15672" />
+		<port name="rabbitmq_admin_web" display-name="Admin Web" value="15672" />
 	</port-config>
 </img-settings>"
 
@@ -84,7 +84,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
 	<port-config>
-		<port name="mysql_port" display-name="Mysql Access" default-value="3306" />
+		<port name="mysql_port" display-name="Mysql Access" value="3306" />
 	</port-config>
 </img-settings>"
 
@@ -96,7 +96,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<form-element type="checkbox" name="WEB_SHELL" display-name="Shell Web Access " optional="true" />
 	</form>
 	<port-config>
-		<port name="haproxy_port" display-name="HAProxy Access" default-value="443"/>
+		<port name="haproxy_port" display-name="HAProxy Access" value="443"/>
 	</port-config>
 </img-settings>"
 

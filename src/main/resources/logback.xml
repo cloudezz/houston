@@ -23,6 +23,9 @@
     <logger name="org.springframework.security" level="WARN"/>
     <logger name="org.springframework.cache" level="WARN"/>
     <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="io.netty" level="OFF"/>
+    <logger name="com.corundumstudio" level="INFO"/>
+    
 
     <root level="${logback.loglevel}">
         <appender-ref ref="CONSOLE"/>

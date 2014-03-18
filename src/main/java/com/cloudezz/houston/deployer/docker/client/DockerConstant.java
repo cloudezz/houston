@@ -5,6 +5,8 @@ public class DockerConstant {
   public static final int STATUS_NO_ERROR = 204;
 
   public static final int STATUS_OK = 200;
+  
+  public static final int STATUS_CONFLICT = 409;
 
   public static final int STATUS_NO_SUCH_ENTITY = 404;
 
