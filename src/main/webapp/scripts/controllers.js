@@ -356,18 +356,17 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         	});
 		$scope.setService = function(serviceId,serviceName) {
         if($scope.service!=null){
-        	 $("#app"+$scope.service+"").removeClass('active');
+        	 $("#app"+$scope.service+"").css('border-color', 'white');
              }
-        $("#app"+serviceId+"").addClass('active');
-     //   $("#app"+serviceId+"").find(".imageDiv").css('background-image', 'url(' + logoUrl + ')');
+        $("#app"+serviceId+"").css('border-color', 'grey');
 			 $scope.service = serviceId;
 			 $scope.serviceImg = serviceName; 
 		}
 		$scope.setSubService = function(serviceId,serviceName) {
 			 if($scope.subService!=null){
-	        	 $("#service"+$scope.subService+"").removeClass('active');
+	        	 $("#service"+$scope.subService+"").css('border-color', 'white');
 	             }
-	           $("#service"+serviceId+"").addClass('active');			
+	           $("#service"+serviceId+"").css('border-color', 'white');			
 
 			 $scope.subService = serviceId;
 			 $scope.subServiceImg = serviceName;
