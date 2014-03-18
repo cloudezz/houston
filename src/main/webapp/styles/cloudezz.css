@@ -112,9 +112,9 @@
 }
 
 a {
-    color: #008CBA;
-    cursor: pointer;
-    text-decoration: none;
+	color: #008CBA;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 table {
@@ -200,4 +200,20 @@ table th {
 .thumbnail:focus,.thumbnail.active {
 	background-color: #999999;
 	cursor: pointer;
+}
+
+#imageDiv {
+	float: left;
+	height: 120px;
+	width: 100px;
+	padding-top: 25px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+#detailsDiv {
+	height: 120px;
+	margin-left: 100px;
+	width: 140px;
+	padding-left: 10px;
 }

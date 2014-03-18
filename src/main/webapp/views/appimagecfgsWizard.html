@@ -12,13 +12,15 @@
 
 			<div class="wizard-input-section">
 				<div class="row">
-					<div class=" col-xs-4" ng-repeat="svcImg in subServiceImages">
+					<div class=" col-xs-5" ng-repeat="svcImg in subServiceImages">
 						<div class="thumbnail" id="service{{svcImg.id}}">
-							<a ng-click=setSubService(svcImg.id,svcImg.imageName)> <img
-								class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
-							</a>
-							<div class="caption" style="padding: 2px; text-align: center">
-								<p>{{svcImg.name}}</p>
+							<div id=imageDiv class="imageDiv"
+								style="background-image: url('{{svcImg.logoURL}}');"></div>
+							<div id=detailsDiv>
+								<label style="font-weight: bold">{{svcImg.version}}</label> <label>{{svcImg.shortDesc}}&nbsp<a
+									ng-click="showDetailedDesc(svcImg.desc);" data-toggle="modal"
+									data-target="#imageDescModal">more..</a></label>
+								<button ng-click=setSubService(svcImg.id,svcImg.imageName)>select</button>
 							</div>
 						</div>
 					</div>
@@ -95,11 +97,12 @@
 					<div class="row">
 						<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
 							<div class="thumbnail" id="app{{svcImg.id}}">
-								<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
-									class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
-								</a>
-								<div class="caption" style="padding: 2px; text-align: center">
-									<p>{{svcImg.name}}</p>
+								<div id=imageDiv class="imageDiv"
+									style="background-image: url('{{svcImg.logoURL}}');"></div>
+								<div id=detailsDiv>
+									<label style="font-weight: bold">{{svcImg.version}}</label> <label>{{svcImg.shortDesc}}
+									</label>
+									<button ng-click=setService(svcImg.id,svcImg.imageName)>select</button>
 								</div>
 							</div>
 						</div>
@@ -139,7 +142,8 @@
 					<label>Init Shell Script</label>
 					<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
 						required="true" ng-required="true" ng-minlength="0"
-						class="form-control" style="height: 300px;font-size:14px" spellcheck="false"></textarea>
+						class="form-control" style="height: 300px; font-size: 14px"
+						spellcheck="false"></textarea>
 					<div align="left" style="margin-bottom: 10px; padding-top: 20px">
 						<button class="btn btn-primary btn-md" id="restoreScriptBtn"
 							ng-click="restoreDefaultScript();">Restore Default
@@ -214,5 +218,24 @@
 		</div>
 	</div>
 	<div id="wizardDivParent" align="left" style="position: absolute;"></div>
+
+	<div class="modal fade" id="imageDescModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true" ng-click="clear()">&times;</button>
+					<h4 class="modal-title" id="imageDescModalLabel">Image
+						Description</h4>
+				</div>
+				<div class="modal-body">{{selectedImgDesc}}</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal"
+						ng-click="clear()">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 

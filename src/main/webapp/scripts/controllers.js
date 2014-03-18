@@ -339,6 +339,8 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService){
 		
 		$scope.service;
+		
+		$scope.selectedImgDesc;
         
         $scope.appImageCfgDTO = {};
         
@@ -352,12 +354,12 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         $scope.$on('$viewContentLoaded', function(){
         	$scope.openWizard();
         	});
-        
 		$scope.setService = function(serviceId,serviceName) {
         if($scope.service!=null){
         	 $("#app"+$scope.service+"").removeClass('active');
              }
-           $("#app"+serviceId+"").addClass('active');			
+        $("#app"+serviceId+"").addClass('active');
+     //   $("#app"+serviceId+"").find(".imageDiv").css('background-image', 'url(' + logoUrl + ')');
 			 $scope.service = serviceId;
 			 $scope.serviceImg = serviceName; 
 		}
@@ -401,7 +403,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.sshpwd="";			
 				
 			var options = {
-    				contentWidth : 800,
+    				contentWidth : 1000,
     				contentHeight : 400,
     				keyboard : false,
     				backdrop : true
