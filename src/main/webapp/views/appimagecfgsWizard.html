@@ -10,11 +10,93 @@
 					ng-maxlength=50 required />
 			</div>
 
+			<ul class="thumbnails" id="hover-cap-4col">
+				<li class="span3" ng-repeat="svcImg in subServiceImages">
+					<div class="thumbnail">
+						<div class="caption">
+							<p>
+								This is the image description.<a>more</a>
+							<p>
+								<label>version</label>
+								<button>Select</button>
+							</p>
+						</div>
+						<img ng-src="{{svcImg.logoURL}}" alt="">
+					</div>
+				</li>
+			</ul>
+		</div>
+	<div class="wizard-card" data-cardname="servicecard2">
+		<h3 hidden="true">Machine Configuration</h3>
+		<div class="wizard-input-section">
+			<label>Memory (MB)</label> <input type="text" class="form-control"
+				name="serviceMemory" ng-model="serviceDTO.memory" ng-minlength=1
+				ng-maxlength=50 required />
+		</div>
+
+		<div class="wizard-input-section">
+			<label>Memory Swap (MB)</label> <input type="text"
+				class="form-control" name="serviceMemorySwap"
+				ng-model="serviceDTO.memorySwap" ng-minlength=1 ng-maxlength=50
+				required />
+		</div>
+
+		<div class="wizard-input-section">
+			<label>CPU Shares</label> <input type="text" class="form-control"
+				name="serviceCpuShares" ng-model="serviceDTO.cpuShares"
+				ng-minlength=1 ng-maxlength=50 required />
+		</div>
+
+	</div>
+
+	<div class="wizard-card" data-cardname="servicecard3">
+		<h3 hidden="true">Environment</h3>
+		<div id="serviceFormDiv"></div>
+	</div>
+
+	<div class="wizard-error">
+		<div class="alert alert-error">
+			<strong>There was a problem</strong> with your submission. Please
+			correct the errors and re-submit.
+		</div>
+	</div>
+
+	<div class="wizard-failure">
+		<div class="alert alert-error">
+			<strong>There was a problem</strong> submitting the form. Please try
+			again in a minute.
+		</div>
+	</div>
+
+	<div class="wizard-success">
+		<div class="alert alert-success">
+			<span class="create-server-name">{{serviceDTO.appName}}</span> was
+			created <strong>successfully.</strong>
+		</div>
+
+		<a class="btn create-another-server">Configure another Image</a> <span
+			style="padding: 0 10px">or</span> <a class="btn im-done">Done</a>
+	</div>
+</div>
+
+
+<div id="wizardDiv" align="center">
+	<div class="wizard" id="appImageConfigWzd"
+		data-title="Application Config">
+		<div class="wizard-card" data-cardname="card1" id="card1">
+			<h3 hidden="true">App Name</h3>
+			<div class="wizard-input-section ">
+				<label Style="font-size: 15px">App Name</label> <input id="appName"
+					type="text" class="form-control" name="appName"
+					ng-model="appImageCfgDTO.appName" ng-minlength=1 ng-maxlength=50
+					required style="width: 80%" />
+			</div>
 			<div class="wizard-input-section">
+				<div id="errorSpan"></div>
 				<div class="row">
-					<div class=" col-xs-4" ng-repeat="svcImg in subServiceImages">
-						<div class="thumbnail" id="service{{svcImg.id}}">
-							<a ng-click=setSubService(svcImg.id,svcImg.imageName)> <img
+					<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
+						<div class="thumbnail" id="app{{svcImg.id}}">
+							<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
 								class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
 							</a>
 							<div class="caption" style="padding: 2px; text-align: center">
@@ -25,32 +107,83 @@
 				</div>
 			</div>
 		</div>
-		<div class="wizard-card" data-cardname="servicecard2">
+		<div class="wizard-card" data-cardname="card2">
 			<h3 hidden="true">Machine Configuration</h3>
 			<div class="wizard-input-section">
 				<label>Memory (MB)</label> <input type="text" class="form-control"
-					name="memory" ng-model="serviceDTO.memory" ng-minlength=1
-					ng-maxlength=50 required />
+					id="memory" name="memory" ng-model="appImageCfgDTO.memory"
+					ng-minlength=1 ng-maxlength=50 required style="width: 80%" />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>Memory Swap (MB)</label> <input type="text"
-					class="form-control" name="memorySwap"
-					ng-model="serviceDTO.memorySwap" ng-minlength=1 ng-maxlength=50
-					required />
+					class="form-control" name="memorySwap" id="memorySwap"
+					ng-model="appImageCfgDTO.memorySwap" ng-minlength=1 ng-maxlength=50
+					required style="width: 80%" />
 			</div>
 
 			<div class="wizard-input-section">
 				<label>CPU Shares</label> <input type="text" class="form-control"
-					name="cpuShares" ng-model="serviceDTO.cpuShares" ng-minlength=1
-					ng-maxlength=50 required />
+					name="cpuShares" id="cpuShares" ng-model="appImageCfgDTO.cpuShares"
+					ng-minlength=1 ng-maxlength=50 required style="width: 80%" />
 			</div>
-
 		</div>
 
-		<div class="wizard-card" data-cardname="servicecard3">
+		<div class="wizard-card" data-cardname="card3">
 			<h3 hidden="true">Environment</h3>
-			<div id="serviceFormDiv"></div>
+			<div id="formDiv"></div>
+		</div>
+
+		<div class="wizard-card" data-cardname="card4">
+			<h3 hidden="true">Initialization Script</h3>
+			<div class="wizard-input-section">
+				<label>Init Shell Script</label>
+				<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
+					required="true" ng-required="true" ng-minlength="0"
+					class="form-control" style="height: 300px"></textarea>
+				<div align="left" style="margin-bottom: 10px; padding-top: 20px">
+					<button class="btn btn-primary btn-md" id="restoreScriptBtn"
+						ng-click="restoreDefaultScript();">Restore Default Script</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="wizard-card" data-cardname="card5">
+			<h3 hidden="true">Services</h3>
+			<div class="wizard-input-section">
+				<div align="left" style="margin-bottom: 10px;">
+					<button class="btn btn-primary btn-md"
+						data-target="#serviceConfigWzd" id="open-service-wizard"
+						ng-click="openServiceWizard()">
+						<span class="glyphicon glyphicon-flash"></span>Add Service
+					</button>
+				</div>
+				<div>
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>Service Name</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="serviceItem in serviceDTOList">
+								<td>{{serviceItem.appName}}</td>
+								<td>
+									<button type="submit" ng-click="update(serviceItem.id)"
+										class="btn btn-sm" style="width: 100px;">
+										<span class="glyphicon glyphicon-pencil"></span> Edit
+									</button>
+									<button type="submit" ng-click="delete(serviceItem.id)"
+										class="btn btn-sm btn-delete" style="width: 100px;">
+										<span class="glyphicon glyphicon-remove-circle"></span> Delete
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 
 		<div class="wizard-error">
@@ -69,150 +202,30 @@
 
 		<div class="wizard-success">
 			<div class="alert alert-success">
-				<span class="create-server-name">{{serviceDTO.appName}}</span> was
-				created <strong>successfully.</strong>
+				<span class="create-server-name">{{appImageCfgDTO.appName}}</span>
+				was created <strong>successfully.</strong>
 			</div>
 
 			<a class="btn create-another-server">Configure another Image</a> <span
-				style="padding: 0 10px">or</span> <a class="btn im-done">Done</a>
+				style="padding: 0 10px">or</span> <a class="btn im-done"
+				href="#/appimagecfg">Done</a>
 		</div>
 	</div>
-
-
-	<div id="wizardDiv" align="center">
-		<div class="wizard" id="appImageConfigWzd"
-			data-title="Application Config">
-			<div class="wizard-card" data-cardname="card1" id="card1">
-				<h3 hidden="true">App Name</h3>
-				<div class="wizard-input-section ">
-					<label Style="font-size: 15px">App Name</label> <input id="appName"
-						type="text" class="form-control" name="appName"
-						ng-model="appImageCfgDTO.appName" ng-minlength=1 ng-maxlength=50
-						required />
-				</div>
-
-				<div class="wizard-input-section">
-					<div class="row">
-						<div class=" col-xs-4" ng-repeat="svcImg in serviceImages">
-							<div class="thumbnail" id="app{{svcImg.id}}">
-								<a ng-click=setService(svcImg.id,svcImg.imageName)> <img
-									class="thumbnail" ng-src="{{svcImg.logoURL}}" alt="">
-								</a>
-								<div class="caption" style="padding: 2px; text-align: center">
-									<p>{{svcImg.name}}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="wizard-card" data-cardname="card2">
-				<h3 hidden="true">Machine Configuration</h3>
-				<div class="wizard-input-section">
-					<label>Memory (MB)</label> <input type="text" class="form-control"
-						name="memory" ng-model="appImageCfgDTO.memory" ng-minlength=1
-						ng-maxlength=50 required />
-				</div>
-
-				<div class="wizard-input-section">
-					<label>Memory Swap (MB)</label> <input type="text"
-						class="form-control" name="memorySwap"
-						ng-model="appImageCfgDTO.memorySwap" ng-minlength=1
-						ng-maxlength=50 required />
-				</div>
-
-				<div class="wizard-input-section">
-					<label>CPU Shares</label> <input type="text" class="form-control"
-						name="cpuShares" ng-model="appImageCfgDTO.cpuShares"
-						ng-minlength=1 ng-maxlength=50 required />
-				</div>
-			</div>
-
-			<div class="wizard-card" data-cardname="card3">
-				<h3 hidden="true">Environment</h3>
-				<div id="formDiv"></div>
-			</div>
-
-			<div class="wizard-card" data-cardname="card4">
-				<h3 hidden="true">Initialization Script</h3>
-				<div class="wizard-input-section">
-					<label>Init Shell Script</label>
-					<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
-						required="true" ng-required="true" ng-minlength="0"
-						class="form-control" style="height: 300px"></textarea>
-					<div align="left" style="margin-bottom: 10px; padding-top: 20px">
-						<button class="btn btn-primary btn-md" id="restoreScriptBtn"
-							ng-click="restoreDefaultScript();">Restore Default
-							Script</button>
-					</div>
-				</div>
-			</div>
-
-			<div class="wizard-card" data-cardname="card5">
-				<h3 hidden="true">Services</h3>
-				<div class="wizard-input-section">
-					<div align="left" style="margin-bottom: 10px;">
-						<button class="btn btn-primary btn-md"
-							data-target="#serviceConfigWzd" id="open-service-wizard"
-							ng-click="openServiceWizard()">
-							<span class="glyphicon glyphicon-flash"></span>Add Service
-						</button>
-					</div>
-					<div>
-						<table class="table table-hover table-bordered">
-							<thead>
-								<tr>
-									<th>Service Name</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="serviceItem in serviceDTOList">
-									<td>{{serviceItem.appName}}</td>
-									<td>
-										<button type="submit" ng-click="update(serviceItem.id)"
-											class="btn btn-sm" style="width: 100px;">
-											<span class="glyphicon glyphicon-pencil"></span> Edit
-										</button>
-										<button type="submit" ng-click="delete(serviceItem.id)"
-											class="btn btn-sm btn-delete" style="width: 100px;">
-											<span class="glyphicon glyphicon-remove-circle"></span>
-											Delete
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-
-			<div class="wizard-error">
-				<div class="alert alert-error">
-					<strong>There was a problem</strong> with your submission. Please
-					correct the errors and re-submit.
-				</div>
-			</div>
-
-			<div class="wizard-failure">
-				<div class="alert alert-error">
-					<strong>There was a problem</strong> submitting the form. Please
-					try again in a minute.
-				</div>
-			</div>
-
-			<div class="wizard-success">
-				<div class="alert alert-success">
-					<span class="create-server-name">{{appImageCfgDTO.appName}}</span>
-					was created <strong>successfully.</strong>
-				</div>
-
-				<a class="btn create-another-server">Configure another Image</a> <span
-					style="padding: 0 10px">or</span> <a class="btn im-done"
-					href="#/appimagecfg">Done</a>
-			</div>
-		</div>
-	</div>
-	<div id="wizardDivParent" align="left" style="position: absolute;"></div>
 </div>
+<div id="wizardDivParent" align="left" style="position: absolute;"></div>
+</div>
+<script>
+	function validateName(el) {
+		var name = el.val();
+		var retValue = {};
 
+		if (name == "") {
+			retValue.status = false;
+			retValue.msg = "Please enter a name";
+		} else {
+			retValue.status = true;
+		}
+
+		return retValue;
+	}
+</script>
