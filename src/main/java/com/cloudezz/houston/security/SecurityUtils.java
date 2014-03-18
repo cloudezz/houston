@@ -35,6 +35,9 @@ public final class SecurityUtils {
     public static boolean isAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
 
+        if(securityContext==null || securityContext.getAuthentication()==null)
+          return false;
+        
         final Collection<? extends GrantedAuthority> authorities = securityContext.getAuthentication().getAuthorities();
 
         if (authorities != null) {
