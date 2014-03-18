@@ -402,17 +402,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		}
 			
 		$scope.openServiceWizard = function () {
-			
-			 $("[rel='tooltip']").tooltip();    
-			 
-			    $('#hover-cap-4col .thumbnail').hover(
-			        function(){
-			            $(this).find('.caption').slideDown(250); // .fadeIn(250)
-			        },
-			        function(){
-			            $(this).find('.caption').slideUp(250); // .fadeOut(205)
-			        }
-			    );    
 			$scope.serviceDTO = new Object(); 
 			
 			$scope.subServiceImages = {};
@@ -547,58 +536,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				wizard.el.find(".wizard-success .create-another-server").click(function() {
 					wizard.reset();
 				});
-				
-				 $scope.appimagecfgs = AppImageCfg.query();	
-				
-				wizard.cards["card1"].on("validate", function(card) {
-					var input = card.el.find("input");
-				    var name = input.val();
-				    var errorSpan=$("#errorSpan");
-				    var valid=true;
-				    if (name == "") {
-				        card.nwizard.errorPopover(input, "Name cannot be empty");
-				        valid=false;
-				    }
-				    else{
-				    angular.forEach($scope.appimagecfgs, function(cfgItem) {
-				    	if(cfgItem.appName==name){
-				    		 card.nwizard.errorPopover(input, "Name is not unique.Please use a different name");
-						     valid=false;
-				    	}
-				    });}
-				    if(valid){
-				    	input.popover("destroy");
-				    }
-				    if($scope.service==null){
-				    	 card.nwizard.errorPopover(errorSpan, "Please select a service");
-					        valid=false;
-				    }
-				    if(valid){
-				    	errorSpan.popover("destroy");
-				    }
-				    return valid;
-				});
-				
-				$scope.validateFn = function(card) {
-					var valid=true;
-					var input = card.el.find("input");
-					 angular.forEach(input, function(inpItem) {
-					    	if(inpItem.value==""){
-					    		card.nwizard.errorPopover($("#"+inpItem.name), "Field cannot be empty",true);
-							     valid=false;
-					    	}
-					    	else{
-					    		$("#"+inpItem.name).popover("destroy");
-					    	}
-					    });
-				    return valid;
-				};
-				wizard.cards["card2"].on("validate",$scope.validateFn);
-				wizard.cards["card3"].on("validate",$scope.validateFn);
-				wizard.cards["card4"].on("validate",$scope.validateFn);
-				
-		}   		
-   	
+		}	        		
 $scope.loadDefaultScript=function(serviceId){
 	AppImageService.loadScript(serviceId).then(function(data){
 		$scope.defaultScript=data;
