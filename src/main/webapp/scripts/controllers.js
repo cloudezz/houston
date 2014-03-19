@@ -286,7 +286,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
       			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        				// alert("Machine was not started :: Error is - " + data.error);
+        				// alert("Machine was not started :: Error is - " +
+						// data.error);
         		}
         	});
         };
@@ -360,10 +361,22 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         	$scope.openWizard();
         	});
 		$scope.setService = function(serviceId,serviceName) {
+		
+		/* Marking image selection by adding grey border */
         if($scope.service!=null){
-        	 $("#app"+$scope.service+"").css('border-color', 'white');
-             }
+        	 $("#app"+$scope.service+"").css('border-color', 'white');  	    
+            }
         $("#app"+serviceId+"").css('border-color', 'grey');
+        
+        /* Marking image selection by adding tick mark */
+        
+        /*
+		 * if($scope.service!=null){
+		 * $("#app"+$scope.service+"").find('.roll').stop().animate({ opacity: 0 },
+		 * "slow"); } $("#app"+serviceId+"").find('.roll').stop().animate({
+		 * opacity: .7 }, "slow");
+		 */
+        
 			 $scope.service = serviceId;
 			 $scope.serviceImg = serviceName; 
 		}
