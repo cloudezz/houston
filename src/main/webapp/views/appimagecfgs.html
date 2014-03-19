@@ -23,9 +23,9 @@
 					<td>{{appimagecfg.appName}}</td>
 					<td>{{appimagecfg.imageType}}</td>
 					<td>{{appimagecfg.formattedStartTime | timeago}}</td>
-					<td ng-show="appimagecfg.running == true && selectedAppId != appimagecfg.id">Running</td>
-					<td ng-show="appimagecfg.running == false && selectedAppId != appimagecfg.id">Stopped</td>
-					<td ng-show="selectedAppId == appimagecfg.id"><div
+					<td ng-if="appimagecfg.running == true && !appimagecfg.starting">Running</td>
+					<td ng-if="appimagecfg.running == false && !appimagecfg.starting">Stopped</td>
+					<td ng-if="appimagecfg.starting"><div
 							class="progress progress-striped">
 							<div class="progress-bar progress-bar-success" id='progressBar{{appimagecfg.id}}'
 								style="width: 0%">
@@ -52,10 +52,10 @@
 					<td style="width: 225px;">
 						<button class="btn btn-sm btn-start" ng-if="!appimagecfg.running"
 							value="btn btn-primary" style="width: 80px;"
-							ng-click="start(appimagecfg.id)" type="button" name="color"><span class="glyphicon glyphicon-play"></span>Start</button>
+							ng-click="start(appimagecfg)" type="button" name="color"><span class="glyphicon glyphicon-play"></span>Start</button>
 						<button class="btn btn-sm btn-stop" ng-if="appimagecfg.running"
 							value="btn btn-primary" style="width: 80px;"
-							ng-click="stop(appimagecfg.id)" type="button" name="color"><span class="glyphicon glyphicon-stop"></span>Stop</button>
+							ng-click="stop(appimagecfg)" type="button" name="color"><span class="glyphicon glyphicon-stop"></span>Stop</button>
 						<button class="btn btn-sm btn-delete" value="btn btn-primary"
 							style="width: 80px;" ng-click="delete(appimagecfg.id)"
 							type="button" name="color"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button>
