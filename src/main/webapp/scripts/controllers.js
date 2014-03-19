@@ -402,7 +402,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.sshpwd="";			
 				
 			var options = {
-    				contentWidth : 800,
+    				contentWidth : 890,
     				contentHeight : 400,
     				keyboard : false,
     				backdrop : true
