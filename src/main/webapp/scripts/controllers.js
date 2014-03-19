@@ -296,13 +296,19 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 			  var win=$window.open(url, '_blank');
 			  win.focus();
 		}
+		
+		$scope.openTerminal= function (containerId) {
+			var url = "/#/terminal/"+containerId;
+			var win=$window.open(url, '_blank');
+			win.focus();
+		}
         
         $scope.update = function (id) {
             $scope.appimagecfg = AppImageCfg.get({id: id});
             $('#saveAppImageCfgModal').modal('show');
         };
 
-// $scope.delete = function (id) {
+// $scope.delete = function (id) { 
 // AppImageCfg.delete({id: id},
 // function () {
 // $scope.appimagecfgs = AppImageCfg.query();
@@ -703,7 +709,38 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
          };
      }]);
 
-// houstonApp.controller('SetPasswordController', ['$scope',
-// function ($scope ) {
-//	
-// }]);
+houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '$routeParams', 'Password',
+    function ($scope,$location, $route, $routeParams, Password) {
+	 	$scope.containerId =  $routeParams.containerId;
+	 	
+	    var socket = io.connect('http://localhost:81/' + $scope.containerId, {
+            'reconnection delay' : 2000,
+            'force new connection' : true
+          });
+	    
+	   socket.on('connect', function() {
+	     var term = new Terminal({
+	       cols: 150,
+	       rows: 35,
+	       useStyle: true,
+	       screenKeys: true
+	     });
+	
+	     term.on('title', function(title) {
+	       document.title = title;
+	     });
+	
+	     term.open(document.body);
+	     
+	     term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+	
+	     socket.on('message', function(message) {
+	       term.write(message);
+	     });
+	
+	     socket.on('disconnect', function() {
+	       term.destroy();
+	     });
+	   });
+	 	
+    }]);

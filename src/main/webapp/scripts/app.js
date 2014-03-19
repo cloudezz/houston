@@ -29,6 +29,10 @@ houstonApp
                     templateUrl: 'views/setpwd.html',
                     controller: 'SetPasswordController'
                 })
+                .when('/terminal/:containerId', {
+                    templateUrl: 'views/terminal.html',
+                    controller: 'TerminalController'
+                })
                 .when('/sessions', {
                     templateUrl: 'views/sessions.html',
                     controller: 'SessionsController',

@@ -1,0 +1,67 @@
+<!doctype html>
+<title>term.js</title>
+<!--
+  term.js
+  Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
+-->
+<style>
+  html {
+    background: #555;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font: 20px/1.5 sans-serif;
+  }
+
+/*
+  .terminal {
+    float: left;
+    border: #000 solid 5px;
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 11px;
+    color: #f0f0f0;
+    background: #000;
+  }
+
+  .terminal-cursor {
+    color: #000;
+    background: #f0f0f0;
+  }
+*/
+</style>
+
+<!-- <script>
+;(function() {
+  window.onload = function() {
+   var socket = io.connect('http://localhost:81', {
+             'reconnection delay' : 2000,
+             'force new connection' : true
+           });
+    socket.on('connect', function() {
+      var term = new Terminal({
+        cols: 150,
+        rows: 35,
+        useStyle: true,
+        screenKeys: true
+      });
+
+      term.on('title', function(title) {
+        document.title = title;
+      });
+
+      term.open(document.body);
+
+      term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+
+      socket.on('message', function(message) {
+        term.write(message);
+      });
+
+      socket.on('disconnect', function() {
+        term.destroy();
+      });
+    });
+  };
+}).call(this);
+</script> -->
