@@ -20,8 +20,8 @@
 	<!-- only two folder are allowed on host side $app_folder and $data_folder -->
 	<!-- everything is relative to these folders -->
 	<volume-config>
-		<volume-mapping host="$app_folder/tomcat7/webapps"  container="/var/lib/tomcat7/webapps" />
-		<volume-mapping host="$data_folder/log/tomcat7"  container="/var/log/tomcat7" />
+		<volume-mapping host="$app_folder/tomcat7/webapps"  container="/opt/tomcat7/webapps" />
+		<volume-mapping host="$data_folder/log/tomcat7"  container="/opt/tomcat7" />
 	</volume-config>
 
 </img-settings>

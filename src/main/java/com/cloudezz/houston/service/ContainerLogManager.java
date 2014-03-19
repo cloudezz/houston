@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +18,19 @@ import org.springframework.stereotype.Service;
 
 import com.cloudezz.houston.deployer.docker.client.DockerContainerLogStreamer;
 import com.cloudezz.houston.domain.DockerHostMachine;
+import com.corundumstudio.socketio.SocketIOServer;
 
 @Service
 public class ContainerLogManager implements RejectedExecutionHandler {
 
   private final Logger log = LoggerFactory.getLogger(ContainerLogManager.class);
 
-  Map<String, DockerContainerLogStreamer> containerIdToLogStreamer;
+  private Map<String, DockerContainerLogStreamer> containerIdToLogStreamer;
 
-  BlockingQueue<Runnable> worksQueue;
+  private BlockingQueue<Runnable> worksQueue;
+  
+  @Inject
+  private SocketIOServer server;
 
   // Create the ThreadPoolExecutor
   ThreadPoolExecutor executor;
@@ -41,7 +46,7 @@ public class ContainerLogManager implements RejectedExecutionHandler {
 
   public boolean startLog(String containerId, DockerHostMachine dockerHostMachine) {
     DockerContainerLogStreamer logStreamer =
-        new DockerContainerLogStreamer(containerId, dockerHostMachine);
+        new DockerContainerLogStreamer(containerId, dockerHostMachine,server);
     containerIdToLogStreamer.put(containerId, logStreamer);
     executor.execute(logStreamer);
     return true;

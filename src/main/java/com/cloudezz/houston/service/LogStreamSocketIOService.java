@@ -4,6 +4,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.corundumstudio.socketio.AckRequest;
@@ -16,6 +18,9 @@ import com.corundumstudio.socketio.annotation.OnMessage;
 @Service
 public class LogStreamSocketIOService {
 
+  private final Logger log = LoggerFactory.getLogger(LogStreamSocketIOService.class);
+
+  
   @Inject
   private SocketIOServer server;
 
@@ -33,23 +38,22 @@ public class LogStreamSocketIOService {
 
   @OnConnect
   public void onConnectHandler(SocketIOClient client) {
-    System.out.println("CONNECTED :" + client.getSessionId());
+    log.info("New Socket IO client for Log Stream connected sessionid " +client.getSessionId());
     for (int i = 0; i < 100; i++) {
-      client.sendJsonObject("  Can us see me :) " + i);
+      client.sendJsonObject("TEst data " + i);
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
-
-    
   }
 
   @OnDisconnect
   public void onDisconnectHandler(SocketIOClient client) {
+    log.info("Socket IO client diconnected sessionid" +client.getSessionId());
     
-    System.out.println("~~~ DISCONNECTED :" + client.getSessionId());
   }
 
 
@@ -59,7 +63,6 @@ public class LogStreamSocketIOService {
   @OnMessage
   public void onSomeEventHandler(SocketIOClient client, String data, AckRequest ackRequest) {
     System.out.println(data);
-    client.sendJsonObject(data);
   }
 
 }

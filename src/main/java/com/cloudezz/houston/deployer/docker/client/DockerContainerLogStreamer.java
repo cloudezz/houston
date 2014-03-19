@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cloudezz.houston.domain.DockerHostMachine;
+import com.corundumstudio.socketio.SocketIONamespace;
+import com.corundumstudio.socketio.SocketIOServer;
 
 public class DockerContainerLogStreamer implements Runnable {
 
@@ -25,15 +27,13 @@ public class DockerContainerLogStreamer implements Runnable {
 
   private DockerHostMachine dockerHostMachine;
 
-  public DockerContainerLogStreamer() {
-
-  }
+  private SocketIOServer server;
 
   public DockerContainerLogStreamer(final String containerId,
-      final DockerHostMachine dockerHostMachine) {
+      final DockerHostMachine dockerHostMachine, final SocketIOServer server) {
     this.containerId = containerId;
     this.dockerHostMachine = dockerHostMachine;
-
+    this.server = server;
   }
 
   @Override
@@ -66,6 +66,7 @@ public class DockerContainerLogStreamer implements Runnable {
             }
             String chunk = new String(buffer, 0, bytesRead);
             System.out.println(chunk);
+            pushLogToSocket(chunk);
           }
         } catch (Exception e) {
           log.error(e.getMessage(), e);
@@ -89,6 +90,15 @@ public class DockerContainerLogStreamer implements Runnable {
       }
     }
 
+  }
+
+  private void pushLogToSocket(String chunk) {
+    SocketIONamespace socketIONamespace = server.getNamespace(containerId);
+    if(socketIONamespace==null)
+      socketIONamespace = server.addNamespace(containerId);
+    
+    socketIONamespace.getBroadcastOperations().sendJsonObject(chunk);
+    
   }
 
   public void requestExit() {
