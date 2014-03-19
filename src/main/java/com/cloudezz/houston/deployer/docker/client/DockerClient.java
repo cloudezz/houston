@@ -335,6 +335,7 @@ public class DockerClient {
     // "/containers/{containerId}/start", hostConfig, containerId);
 
     // to be tested
+    try{
     ResponseEntity<String> response =
         restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/start", hostConfig,
             String.class, containerId);
@@ -342,6 +343,10 @@ public class DockerClient {
     if (status.value() == DockerConstant.STATUS_NO_ERROR) {
       return true;
     } else {
+      return false;
+    }
+    }catch (HttpServerErrorException e) {
+      LOGGER.error(e.getResponseBodyAsString(),e);
       return false;
     }
 
@@ -474,7 +479,7 @@ public class DockerClient {
   }
 
   public boolean stopContainer(String containerId) throws DockerClientException {
-    return this.stopContainer(containerId, 20);
+    return this.stopContainer(containerId, 60);
   }
 
   public boolean stopContainer(String containerId, int timeout) throws DockerClientException {
