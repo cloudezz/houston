@@ -366,7 +366,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			 if($scope.subService!=null){
 	        	 $("#service"+$scope.subService+"").css('border-color', 'white');
 	             }
-	           $("#service"+serviceId+"").css('border-color', 'white');			
+	           $("#service"+serviceId+"").css('border-color', 'grey');			
 
 			 $scope.subService = serviceId;
 			 $scope.subServiceImg = serviceName;
@@ -402,7 +402,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.sshpwd="";			
 				
 			var options = {
-    				contentWidth : 1000,
+    				contentWidth : 800,
     				contentHeight : 400,
     				keyboard : false,
     				backdrop : true
