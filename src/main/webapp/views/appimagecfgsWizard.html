@@ -23,30 +23,20 @@
 				</div>
 
 				<div class="wizard-input-section">
-					<!-- <div class="row">
-						<div class=" col-xs-5" ng-repeat="svcImg in subServiceImages">
-							<div class="thumbnail" id="service{{svcImg.id}}">
-								<div id=imageDiv class="imageDiv"
-									style="background-image: url('{{svcImg.logoURL}}');"></div>
-								<div id=detailsDiv>
-									<label style="font-weight: bold">{{svcImg.version}}</label> <label>{{svcImg.shortDesc}}</label>
-									<button ng-click=setSubService(svcImg.id,svcImg.imageName)>select</button>
-								</div>
-							</div>
-						</div>
-					</div> -->
 					<div class="imgcontainer">
-							<div class="main">
-								<div class="view view-third" ng-repeat="svcImg in subServiceImages"
-									ng-click=setSubService(svcImg.id,svcImg.name) id=service{{svcImg.id}}>
-									<img ng-src="{{svcImg.logoURL}}" />
-									<div class="mask">
-										<h2>{{svcImg.version}}</h2>
-										<p>{{svcImg.desc}}</p>
-									</div>
+						<div class="main">
+							<div class="view view-third"
+								ng-repeat="svcImg in subServiceImages"
+								ng-click=setSubService(svcImg.id,svcImg.imageName)
+								id=service{{svcImg.id}}>
+								<img ng-src="{{svcImg.logoURL}}" />
+								<div class="mask">
+									<h2>{{svcImg.version}}</h2>
+									<p>{{svcImg.desc}}</p>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div>
 			</div>
 			<div class="wizard-card" data-cardname="servicecard2">
@@ -117,7 +107,8 @@
 						<div class="imgcontainer">
 							<div class="main">
 								<div class="view view-third" ng-repeat="svcImg in serviceImages"
-									ng-click=setService(svcImg.id,svcImg.name) id=app{{svcImg.id}}>
+									ng-click=setService(svcImg.id,svcImg.imageName)
+									id=app{{svcImg.id}}>
 									<img ng-src="{{svcImg.logoURL}}" />
 									<div class="mask">
 										<h2>{{svcImg.version}}</h2>
