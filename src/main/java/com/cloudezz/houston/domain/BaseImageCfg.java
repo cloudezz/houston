@@ -136,7 +136,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
   /**
-   * @return the dockerImageName
+   * @return the image type
    */
   @JsonGetter
   public String getImageType() {
