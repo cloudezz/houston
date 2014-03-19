@@ -725,33 +725,40 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
 houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '$routeParams', 'Password',
     function ($scope,$location, $route, $routeParams, Password) {
 	 	$scope.containerId =  $routeParams.containerId;
-	 	
-	    var socket = io.connect('http://localhost:81/' + $scope.containerId, {
+	 	var url = 'http://localhost:81' ;
+	 	console.log(url);
+	    var socket = io.connect(url, {
             'reconnection delay' : 2000,
             'force new connection' : true
           });
 	    
-	   socket.on('connect', function() {
-	     var term = new Terminal({
-	       cols: 150,
-	       rows: 35,
-	       useStyle: true,
-	       screenKeys: true
-	     });
-	
+	    socket.on('connect', function(message) {
+	    	 var term = new Terminal({
+	  	       cols: 150,
+	  	       rows: 35,
+	  	       useStyle: true,
+	  	       screenKeys: false
+		     });
+	    	 
+	  
+	     
+	    
 	     term.on('title', function(title) {
 	       document.title = title;
 	     });
 	
 	     term.open(document.body);
 	     
-	     term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
-	
-	     socket.on('message', function(message) {
-	       term.write(message);
-	     });
+	     term.write('Waiting for log from server..\r\n');
+	     
+	     socket.emit("join-log-stream", $scope.containerId);
+	     
+	     socket.on("log", function(log) {
+		       term.write(log);
+		     });
 	
 	     socket.on('disconnect', function() {
+	       term.write('disconnecting...\r\n');
 	       term.destroy();
 	     });
 	   });

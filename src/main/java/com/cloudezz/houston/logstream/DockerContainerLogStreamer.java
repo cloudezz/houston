@@ -1,4 +1,4 @@
-package com.cloudezz.houston.deployer.docker.client;
+package com.cloudezz.houston.logstream;
 
 
 import java.io.BufferedInputStream;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
 
 public class DockerContainerLogStreamer implements Runnable {
@@ -29,11 +28,14 @@ public class DockerContainerLogStreamer implements Runnable {
 
   private SocketIOServer server;
 
+  private LogCacheHolder logCacheHolder;
+
   public DockerContainerLogStreamer(final String containerId,
-      final DockerHostMachine dockerHostMachine, final SocketIOServer server) {
+      final DockerHostMachine dockerHostMachine, final SocketIOServer server,final LogCacheHolder logCacheHolder) {
     this.containerId = containerId;
     this.dockerHostMachine = dockerHostMachine;
     this.server = server;
+    this.logCacheHolder = logCacheHolder;
   }
 
   @Override
@@ -92,17 +94,15 @@ public class DockerContainerLogStreamer implements Runnable {
 
   }
 
-  private void pushLogToSocket(String chunk) {
-    SocketIONamespace socketIONamespace = server.getNamespace(containerId);
-    if(socketIONamespace==null)
-      socketIONamespace = server.addNamespace(containerId);
-    
-    socketIONamespace.getBroadcastOperations().sendJsonObject(chunk);
-    
+  private void pushLogToSocket(final String chunk) {
+    logCacheHolder.addData(containerId, chunk);
+    server.getRoomOperations(containerId).sendEvent("log", chunk);
   }
 
   public void requestExit() {
     exit = true;
+    logCacheHolder.removeData(containerId);
+    server.getRoomOperations(containerId).disconnect();
   }
 
   public String toString() {

@@ -1,4 +1,4 @@
-package com.cloudezz.houston.service;
+package com.cloudezz.houston.logstream;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.cloudezz.houston.deployer.docker.client.DockerContainerLogStreamer;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.corundumstudio.socketio.SocketIOServer;
 
@@ -31,6 +30,9 @@ public class ContainerLogManager implements RejectedExecutionHandler {
   
   @Inject
   private SocketIOServer server;
+  
+  @Inject
+  private LogCacheHolder logCacheHolder;
 
   // Create the ThreadPoolExecutor
   ThreadPoolExecutor executor;
@@ -46,7 +48,7 @@ public class ContainerLogManager implements RejectedExecutionHandler {
 
   public boolean startLog(String containerId, DockerHostMachine dockerHostMachine) {
     DockerContainerLogStreamer logStreamer =
-        new DockerContainerLogStreamer(containerId, dockerHostMachine,server);
+        new DockerContainerLogStreamer(containerId, dockerHostMachine,server,logCacheHolder);
     containerIdToLogStreamer.put(containerId, logStreamer);
     executor.execute(logStreamer);
     return true;

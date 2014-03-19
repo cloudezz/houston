@@ -479,7 +479,7 @@ public class DockerClient {
   }
 
   public boolean stopContainer(String containerId) throws DockerClientException {
-    return this.stopContainer(containerId, 60);
+    return this.stopContainer(containerId, 25);
   }
 
   public boolean stopContainer(String containerId, int timeout) throws DockerClientException {

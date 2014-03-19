@@ -17,8 +17,8 @@ import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.logstream.ContainerLogManager;
 import com.cloudezz.houston.repository.ImageInfoRepository;
-import com.cloudezz.houston.service.ContainerLogManager;
 import com.google.common.collect.Lists;
 
 @Component
