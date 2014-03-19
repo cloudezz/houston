@@ -14,8 +14,8 @@
    background: #fff url(../images/bgimg.jpg) no-repeat center center;  
 }
 .view .mask,.view .content {
-   width: 170px;
-   height: 125px;
+   width: 150px;
+   height: 100px;
    position: absolute;
    overflow: hidden;
    top: 0;
@@ -41,13 +41,13 @@
    font-size: 12px;
    position: relative;
    color: #fff;
-   padding: 10px 20px 20px;
+   padding: 10px 20px 10px;
    text-align: center;
 }
 .view a.info {
    display: inline-block;
    text-decoration: none;
-   padding: 7px 14px;
+   padding: 3px 6px;
    background: #000;
    color: #fff;
    text-transform: uppercase;

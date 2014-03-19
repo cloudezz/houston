@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" href="styles/reset.css">
 <link rel="stylesheet" href="styles/style_common.css">
-<link rel="stylesheet" href="styles/style3.css">
+<link rel="stylesheet" href="styles/style1.css">
 
 </head>
 <body>
@@ -25,7 +25,7 @@
 				<div class="wizard-input-section">
 					<div class="imgcontainer">
 						<div class="main">
-							<div class="view view-third"
+							<div class="view view-first"
 								ng-repeat="svcImg in subServiceImages"
 								ng-click=setSubService(svcImg.id,svcImg.imageName)
 								id=service{{svcImg.id}}>
@@ -106,13 +106,13 @@
 					<div class="wizard-input-section">
 						<div class="imgcontainer">
 							<div class="main">
-								<div class="view view-third" ng-repeat="svcImg in serviceImages"
+								<div class="view view-first" ng-repeat="svcImg in serviceImages"
 									ng-click=setService(svcImg.id,svcImg.imageName)
 									id=app{{svcImg.id}}>
 									<img ng-src="{{svcImg.logoURL}}" />
 									<div class="mask">
-										<h2>{{svcImg.version}}</h2>
 										<p>{{svcImg.desc}}</p>
+										<a class="info"><label>{{svcImg.version}}</label></a>
 									</div>
 								</div>
 							</div>
