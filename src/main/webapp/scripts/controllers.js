@@ -739,15 +739,13 @@ houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '
 	  	       useStyle: true,
 	  	       screenKeys: false
 		     });
-	    	 
-	  
-	     
 	    
 	     term.on('title', function(title) {
 	       document.title = title;
 	     });
 	
-	     term.open(document.body);
+	     var divTerminal = document.getElementById("terminal");
+	     term.open(divTerminal);
 	     
 	     term.write('Waiting for log from server..\r\n');
 	     
@@ -758,8 +756,10 @@ houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '
 		     });
 	
 	     socket.on('disconnect', function() {
+	       console.log("Disconnecting");
 	       term.write('disconnecting...\r\n');
 	       term.destroy();
+	       
 	     });
 	   });
 	 	
