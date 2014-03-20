@@ -17,6 +17,8 @@ public class DockerConstant {
   public static final String ENV_SSH_ROOT_PASSWORD = "SSH_ROOT_PASSWORD";
 
   public static final String ENV_RUN_BUILD_PACK = "RUN_BUILD_PACK";
+  
+  public static final String ENV_WEB_SHELL = "WEB_SHELL";
 
   public static final String GIT_URL = "gitURL";
 
@@ -27,6 +29,8 @@ public class DockerConstant {
   public static final String SSH_SERVICE_NAME = "SSH";
   
   public static final String WEB_SHELL_SERVICE_NAME = "Web Shell";
+  
+
   
   public static final String DEFAULT_WEB_SHELL_PORT = "4022/tcp";
   

@@ -72,7 +72,8 @@ public class ImageService {
         for (String dockerPort : hostPortBindings.keySet()) {
           HostPortBinding[] hostPortBinds = hostPortBindings.get(dockerPort);
           if (hostPortBinds != null && hostPortBinds.length > 0) {
-            checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, exposedService);
+            checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, appImageCfg,
+                exposedService);
             for (Port port : ports) {
               String portValue = port.getValue() + "/tcp";
               if (dockerPort.equals(portValue)) {
@@ -100,9 +101,9 @@ public class ImageService {
       return;
     List<String> ports = new ArrayList<>();
     try {
-      if(imageInfo.getPortsExposed()==null)
+      if (imageInfo.getPortsExposed() == null)
         return;
-      
+
       for (Port port : imageInfo.getPortsExposed()) {
         ports.add(port.getValue());
       }
@@ -114,11 +115,12 @@ public class ImageService {
   }
 
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],
-      DockerHostMachine dockerHostMachine, ExposedService exposedService) {
+      DockerHostMachine dockerHostMachine, AppImageCfg appImageCfg, ExposedService exposedService) {
     if (dockerPort.equals(DockerConstant.DEFAULT_SSH_PORT)) {
       exposedService.addServiceToURL(DockerConstant.SSH_SERVICE_NAME, "ssh://root@"
           + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort());
-    } else if (dockerPort.equals(DockerConstant.DEFAULT_WEB_SHELL_PORT)) {
+    } else if (dockerPort.equals(DockerConstant.DEFAULT_WEB_SHELL_PORT)
+        && appImageCfg.getEnvironmentMapping().containsKey(DockerConstant.ENV_WEB_SHELL)) {
       String url = "http://";
       if (dockerHostMachine.isHttps()) {
         url = "https://";
