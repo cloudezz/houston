@@ -34,7 +34,6 @@ import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
-import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
