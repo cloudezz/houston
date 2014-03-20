@@ -1,5 +1,5 @@
 id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short_desc;desc;img_settings_block
-07887;cloudezz/nodejs;"Node JS";0;NULL;/images/logos/nodejs-on.png;"0.10.22";"Image with nodejs v0.10.22, npm and forever";"Image with nodejs v0.10.22, npm and forever";"<?xml version="1.0" encoding="UTF-8"?>
+07887;cloudezz/nodejs;"Node JS";0;NULL;/images/logos/nodejs-on.png;"0.10.22";"Node js v0.10.22, npm and forever";"Image with nodejs v0.10.22, npm and forever";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/nodejs">
@@ -12,7 +12,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<port name="node_web" display-name="Node JS Web" value="3000"/>
 	</port-config>
 </img-settings>"
-81277;cloudezz/tomcat7;"Tomcat 7";0;NULL;/images/logos/tomcat-on.png;"7.0.52";"Image with tomcat 7, java 7, maven and ant";"Image with tomcat 7, java 7, maven and ant";"<?xml version="1.0" encoding="UTF-8"?>
+81277;cloudezz/tomcat7;"Tomcat 7";0;NULL;/images/logos/tomcat-on.png;"7.0.52";"Tomcat 7, java 7, maven 3 and ant";"Image with tomcat 7, java 7, maven and ant";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/tomcat7">
 	<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
@@ -27,7 +27,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 </port-config>
 
 </img-settings>"
-37359;cloudezz/java7;"Java";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Image with oracle sun jdk 7";"Image with oracle sun jdk 7";"<?xml version="1.0" encoding="UTF-8"?>
+37359;cloudezz/java7;"Java";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Oracle sun jdk and jre 7 ";"Image with oracle sun jdk 7";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
@@ -36,7 +36,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	</form>
 	<port-config/> 
 </img-settings>"
-34754;cloudezz/ghost;"Ghost";0;NULL;/images/logos/ghost-on.png;"0.4.1";"Image with Ghost blogging site with node js";"Image with Ghost blogging site with node js";"<?xml version="1.0" encoding="UTF-8"?>
+34754;cloudezz/ghost;"Ghost";0;NULL;/images/logos/ghost-on.png;"0.4.1";"Ghost blogging site with node js";"Image with Ghost blogging site with node js";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/ghost">
 	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
@@ -49,7 +49,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 
 </img-settings>"
 
-57320;cloudezz/rabbitmq;Rabbitmq;1;NULL;/images/logos/rabbitmq-on.png;"3.2.2";"Image with Rabbitmq server and admin console";"Image with Rabbitmq server and admin console";"<?xml version="1.0" encoding="UTF-8"?>
+57320;cloudezz/rabbitmq;Rabbitmq;1;NULL;/images/logos/rabbitmq-on.png;"3.2.2";"Rabbitmq server and admin console";"Image with Rabbitmq server and admin console";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/rabbitmq">
 		<form-element type="input" name="RABBITMQ_USER" display-name="RabbitMQ User" optional="false" />
