@@ -309,7 +309,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
             $('#saveAppImageCfgModal').modal('show');
         };
 
-// $scope.delete = function (id) { 
+// $scope.delete = function (id) {
 // AppImageCfg.delete({id: id},
 // function () {
 // $scope.appimagecfgs = AppImageCfg.query();
@@ -722,18 +722,28 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
          };
      }]);
 
-houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '$routeParams', 'Password',
-    function ($scope,$location, $route, $routeParams, Password) {
+houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',  '$route', '$routeParams', 'Password',
+    function ($rootScope, $scope,$location, $route, $routeParams, Password) {
+		
+		var term;
+	    $rootScope.$on('event:close-term', function() {
+	    	if(term){
+	    		term.write('disconnecting...\r\n');
+	    		term.destroy();	
+	    	}
+	    	 
+	    });
+
+	
 	 	$scope.containerId =  $routeParams.containerId;
 	 	var url = 'http://localhost:81' ;
-	 	console.log(url);
 	    var socket = io.connect(url, {
             'reconnection delay' : 2000,
             'force new connection' : true
           });
 	    
 	    socket.on('connect', function(message) {
-	    	 var term = new Terminal({
+	    	 term = new Terminal({
 	  	       cols: 150,
 	  	       rows: 35,
 	  	       useStyle: true,
