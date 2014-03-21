@@ -725,7 +725,7 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
 houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',  '$route', '$routeParams', 'Password',
     function ($rootScope, $scope,$location, $route, $routeParams, Password) {
 		
-		var term;
+		
 	    $rootScope.$on('event:close-term', function() {
 	    	if(term){
 	    		term.write('disconnecting...\r\n');
@@ -733,7 +733,6 @@ houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',
 	    	}
 	    	 
 	    });
-
 	
 	 	$scope.containerId =  $routeParams.containerId;
 	 	var stompClient = null;
@@ -748,8 +747,17 @@ houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',
  	  	       useStyle: true,
  	  	       screenKeys: false
  		     });
-            term.open(document.body);
-            term.write('Waiting for log from server..\r\n');
+            
+            term.on('title', function(title) {
+     	       document.title = title;
+     	     });
+     	
+     	     var divTerminal = document.getElementById("terminal");
+     	     term.open(divTerminal);
+     	     
+     	     term.write('Waiting for log from server..\r\n');
+     	     
+     	     
                  
             var onLogMessage = function(log) {
                term.write(JSON.parse(log.body));

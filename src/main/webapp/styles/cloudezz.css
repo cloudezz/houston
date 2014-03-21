@@ -77,6 +77,12 @@
 	color: #E64D3B;
 }
 
+.btn-primary {
+    background-color: #0088CC;
+    border-color: #0079A1;
+    color: #FFFFFF;
+}
+
 .btn-danger {
 	background-color: #F04124;
 	border-color: #EA2F10;
@@ -85,8 +91,14 @@
 
 .btn-success {
 	background-color: #1ABC9C;
-	border-color: #3C9A5F;
+	border-color: #16967C;
 	color: #FFFFFF;
+}
+
+.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
+    background-color: #16967C;
+    border-color: #16967C;
+    color: #FFFFFF;
 }
 
 .btn-start {
