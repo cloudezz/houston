@@ -725,42 +725,32 @@ houstonApp.controller('SetPasswordController', ['$scope', '$location',  '$route'
 houstonApp.controller('TerminalController', ['$scope', '$location',  '$route', '$routeParams', 'Password',
     function ($scope,$location, $route, $routeParams, Password) {
 	 	$scope.containerId =  $routeParams.containerId;
-	 	var url = 'http://localhost:81' ;
-	 	console.log(url);
-	    var socket = io.connect(url, {
-            'reconnection delay' : 2000,
-            'force new connection' : true
-          });
-	    
-	    socket.on('connect', function(message) {
-	    	 var term = new Terminal({
-	  	       cols: 150,
-	  	       rows: 35,
-	  	       useStyle: true,
-	  	       screenKeys: false
-		     });
-	    	 
-	  
-	     
-	    
-	     term.on('title', function(title) {
-	       document.title = title;
-	     });
-	
-	     term.open(document.body);
-	     
-	     term.write('Waiting for log from server..\r\n');
-	     
-	     socket.emit("join-log-stream", $scope.containerId);
-	     
-	     socket.on("log", function(log) {
-		       term.write(log);
-		     });
-	
-	     socket.on('disconnect', function() {
-	       term.write('disconnecting...\r\n');
-	       term.destroy();
-	     });
-	   });
+	 	var stompClient = null;
+	 	var term = null ;
+	 	var socket = new SockJS('/log/register');
+	 	stompClient = Stomp.over(socket);
+      	var onConnect = function(frame) {
+            console.log('Connected: ' + frame);
+            term = new Terminal({
+ 	  	       cols: 150,
+ 	  	       rows: 35,
+ 	  	       useStyle: true,
+ 	  	       screenKeys: false
+ 		     });
+            term.open(document.body);
+            term.write('Waiting for log from server..\r\n');
+                 
+            var onLogMessage = function(log) {
+               term.write(JSON.parse(log.body));
+             };
+              
+           stompClient.subscribe("/topic/log/"+$scope.containerId,onLogMessage)
+        };
+          
+    	var onErr = function(err) {
+            term.write(err.headers.message);
+          };
+          
+        stompClient.connect({},onConnect,onErr);
 	 	
     }]);

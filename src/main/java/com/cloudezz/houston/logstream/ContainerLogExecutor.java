@@ -14,31 +14,31 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.corundumstudio.socketio.SocketIOServer;
 
 @Service
-public class ContainerLogManager implements RejectedExecutionHandler {
+public class ContainerLogExecutor implements RejectedExecutionHandler {
 
-  private final Logger log = LoggerFactory.getLogger(ContainerLogManager.class);
+  private final Logger log = LoggerFactory.getLogger(ContainerLogExecutor.class);
 
-  private Map<String, DockerContainerLogStreamer> containerIdToLogStreamer;
+  private Map<String, ContainerLogStreamWorker> containerIdToLogStreamer;
 
   private BlockingQueue<Runnable> worksQueue;
   
   @Inject
-  private SocketIOServer server;
+  private LogCacheHolder logCacheHolder;
   
   @Inject
-  private LogCacheHolder logCacheHolder;
+  private SimpMessageSendingOperations  messagingTemplate;
 
   // Create the ThreadPoolExecutor
-  ThreadPoolExecutor executor;
+  private ThreadPoolExecutor executor;
 
-  public ContainerLogManager() {
-    containerIdToLogStreamer = new HashMap<String, DockerContainerLogStreamer>();
+  public ContainerLogExecutor() {
+    containerIdToLogStreamer = new HashMap<String, ContainerLogStreamWorker>();
     worksQueue = new ArrayBlockingQueue<Runnable>(2);
     executor = new ThreadPoolExecutor(3, 50, 10, TimeUnit.SECONDS, worksQueue, this);
     executor.allowCoreThreadTimeOut(true);
@@ -47,15 +47,15 @@ public class ContainerLogManager implements RejectedExecutionHandler {
 
 
   public boolean startLog(String containerId, DockerHostMachine dockerHostMachine) {
-    DockerContainerLogStreamer logStreamer =
-        new DockerContainerLogStreamer(containerId, dockerHostMachine,server,logCacheHolder);
+    ContainerLogStreamWorker logStreamer =
+        new ContainerLogStreamWorker(containerId, dockerHostMachine,logCacheHolder,messagingTemplate);
     containerIdToLogStreamer.put(containerId, logStreamer);
     executor.execute(logStreamer);
     return true;
   }
 
   public boolean stopLog(String containerId) {
-    DockerContainerLogStreamer logStreamer = containerIdToLogStreamer.get(containerId);
+    ContainerLogStreamWorker logStreamer = containerIdToLogStreamer.get(containerId);
     if (logStreamer == null)
       return false;
 

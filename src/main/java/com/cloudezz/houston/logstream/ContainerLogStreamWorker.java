@@ -12,13 +12,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import com.cloudezz.houston.domain.DockerHostMachine;
-import com.corundumstudio.socketio.SocketIOServer;
 
-public class DockerContainerLogStreamer implements Runnable {
+public class ContainerLogStreamWorker implements Runnable {
 
-  private static final Logger log = LoggerFactory.getLogger(DockerContainerLogStreamer.class);
+  private static final Logger log = LoggerFactory.getLogger(ContainerLogStreamWorker.class);
 
   private volatile boolean exit = false;
 
@@ -26,16 +26,16 @@ public class DockerContainerLogStreamer implements Runnable {
 
   private DockerHostMachine dockerHostMachine;
 
-  private SocketIOServer server;
-
   private LogCacheHolder logCacheHolder;
+  
+  private SimpMessageSendingOperations messagingTemplate;
 
-  public DockerContainerLogStreamer(final String containerId,
-      final DockerHostMachine dockerHostMachine, final SocketIOServer server,final LogCacheHolder logCacheHolder) {
+  public ContainerLogStreamWorker(final String containerId,
+      final DockerHostMachine dockerHostMachine,final LogCacheHolder logCacheHolder, SimpMessageSendingOperations messagingTemplate) {
     this.containerId = containerId;
     this.dockerHostMachine = dockerHostMachine;
-    this.server = server;
     this.logCacheHolder = logCacheHolder;
+    this.messagingTemplate=messagingTemplate;
   }
 
   @Override
@@ -49,11 +49,6 @@ public class DockerContainerLogStreamer implements Runnable {
     try {
       HttpPost httpPostRequest = new HttpPost(url);
       httpResponse = httpClient.execute(httpPostRequest);
-
-      System.out.println("----------------------------------------");
-      System.out.println(httpResponse.getStatusLine());
-      System.out.println("----------------------------------------");
-
       HttpEntity entity = httpResponse.getEntity();
 
       byte[] buffer = new byte[1024];
@@ -67,8 +62,8 @@ public class DockerContainerLogStreamer implements Runnable {
               return;
             }
             String chunk = new String(buffer, 0, bytesRead);
-            System.out.println(chunk);
-            pushLogToSocket(chunk);
+            System.out.print(chunk);
+            pushLogToWebSocket(chunk);
           }
         } catch (Exception e) {
           log.error(e.getMessage(), e);
@@ -94,15 +89,15 @@ public class DockerContainerLogStreamer implements Runnable {
 
   }
 
-  private void pushLogToSocket(final String chunk) {
+  private void pushLogToWebSocket(final String chunk) {
     logCacheHolder.addData(containerId, chunk);
-    server.getRoomOperations(containerId).sendEvent("log", chunk);
+    messagingTemplate.convertAndSend("/topic/log/"+containerId, chunk);
   }
 
   public void requestExit() {
     exit = true;
     logCacheHolder.removeData(containerId);
-    server.getRoomOperations(containerId).disconnect();
+    messagingTemplate.convertAndSend("/topic/log/"+containerId, "Shutting down...\r\n");
   }
 
   public String toString() {

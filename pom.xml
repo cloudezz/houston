@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.0.0.RC3</version>
+		<version>1.0.0.RC4</version>
 	</parent>
 
 	<profiles>
@@ -273,7 +273,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
-			<version>${spring-boot.version}</version>
+			 <version>1.0.0.BUILD-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -303,6 +303,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -351,11 +359,6 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.corundumstudio.socketio</groupId>
-			<artifactId>netty-socketio</artifactId>
-			<version>1.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -450,13 +453,13 @@
 					<runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
 				</configuration>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>

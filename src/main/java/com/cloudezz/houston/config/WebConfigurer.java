@@ -35,124 +35,123 @@ import com.codahale.metrics.servlets.MetricsServlet;
 @AutoConfigureAfter(CacheConfiguration.class)
 public class WebConfigurer implements ServletContextInitializer {
 
-    private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
+  private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
-    @Inject
-    private Environment env;
+  @Inject
+  private Environment env;
 
-    @Inject
-    private MetricRegistry metricRegistry;
+  @Inject
+  private MetricRegistry metricRegistry;
 
-    @Inject
-    private HealthCheckRegistry healthCheckRegistry;
+  @Inject
+  private HealthCheckRegistry healthCheckRegistry;
 
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
-        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+  @Override
+  public void onStartup(ServletContext servletContext) throws ServletException {
+    log.info("Web application configuration, using profiles: {}",
+        Arrays.toString(env.getActiveProfiles()));
+    EnumSet<DispatcherType> disps =
+        EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
 
-        initMetrics(servletContext, disps);
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-            initStaticResourcesProductionFilter(servletContext, disps);
-            initCachingHttpHeadersFilter(servletContext, disps);
-        }
-        initGzipFilter(servletContext, disps);
-
-        log.info("Web application fully configured");
+    initMetrics(servletContext, disps);
+    if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+      initStaticResourcesProductionFilter(servletContext, disps);
+      initCachingHttpHeadersFilter(servletContext, disps);
     }
+    initGzipFilter(servletContext, disps);
 
-    /**
-     * Initializes the GZip filter.
-     */
-    private void initGzipFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
-        log.debug("Registering GZip Filter");
+    log.info("Web application fully configured");
+  }
 
-        FilterRegistration.Dynamic compressingFilter = servletContext.addFilter("gzipFilter", new GZipServletFilter());
-        Map<String, String> parameters = new HashMap<>();
+  /**
+   * Initializes the GZip filter.
+   */
+  private void initGzipFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+    log.debug("Registering GZip Filter");
 
-        compressingFilter.setInitParameters(parameters);
+    FilterRegistration.Dynamic compressingFilter =
+        servletContext.addFilter("gzipFilter", new GZipServletFilter());
+    Map<String, String> parameters = new HashMap<>();
 
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.css");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "/app/rest/*");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
+    compressingFilter.setInitParameters(parameters);
 
-        compressingFilter.setAsyncSupported(true);
-    }
+    compressingFilter.addMappingForUrlPatterns(disps, true, "*.css");
+    compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
+    compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
+    compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
+    compressingFilter.addMappingForUrlPatterns(disps, true, "/app/rest/*");
+    compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
 
-    /**
-     * Initializes the static resources production Filter.
-     */
-    private void initStaticResourcesProductionFilter(ServletContext servletContext,
-                                                     EnumSet<DispatcherType> disps) {
+    compressingFilter.setAsyncSupported(true);
+  }
 
-        log.debug("Registering static resources production Filter");
-        FilterRegistration.Dynamic staticResourcesProductionFilter =
-                servletContext.addFilter("staticResourcesProductionFilter",
-                        new StaticResourcesProductionFilter());
+  /**
+   * Initializes the static resources production Filter.
+   */
+  private void initStaticResourcesProductionFilter(ServletContext servletContext,
+      EnumSet<DispatcherType> disps) {
 
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/images/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/views/*");
-        staticResourcesProductionFilter.setAsyncSupported(true);
-    }
+    log.debug("Registering static resources production Filter");
+    FilterRegistration.Dynamic staticResourcesProductionFilter =
+        servletContext.addFilter("staticResourcesProductionFilter",
+            new StaticResourcesProductionFilter());
 
-    /**
-     * Initializes the cachig HTTP Headers Filter.
-     */
-    private void initCachingHttpHeadersFilter(ServletContext servletContext,
-                                              EnumSet<DispatcherType> disps) {
-        log.debug("Registering Cachig HTTP Headers Filter");
-        FilterRegistration.Dynamic cachingHttpHeadersFilter =
-                servletContext.addFilter("cachingHttpHeadersFilter",
-                        new CachingHttpHeadersFilter());
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/images/*");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
+    staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/views/*");
+    staticResourcesProductionFilter.setAsyncSupported(true);
+  }
 
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/images/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
-        cachingHttpHeadersFilter.setAsyncSupported(true);
-    }
+  /**
+   * Initializes the cachig HTTP Headers Filter.
+   */
+  private void initCachingHttpHeadersFilter(ServletContext servletContext,
+      EnumSet<DispatcherType> disps) {
+    log.debug("Registering Cachig HTTP Headers Filter");
+    FilterRegistration.Dynamic cachingHttpHeadersFilter =
+        servletContext.addFilter("cachingHttpHeadersFilter", new CachingHttpHeadersFilter());
 
-    /**
-     * Initializes Metrics.
-     */
-    private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
-        log.debug("Initializing Metrics registries");
-        servletContext.setAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE,
-                metricRegistry);
-        servletContext.setAttribute(MetricsServlet.METRICS_REGISTRY,
-                metricRegistry);
-        servletContext.setAttribute(HealthCheckServlet.HEALTH_CHECK_REGISTRY,
-                healthCheckRegistry);
+    cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/images/*");
+    cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
+    cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
+    cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
+    cachingHttpHeadersFilter.setAsyncSupported(true);
+  }
 
-        log.debug("Registering Metrics Filter");
-        FilterRegistration.Dynamic metricsFilter = servletContext.addFilter("webappMetricsFilter",
-                new InstrumentedFilter());
+  /**
+   * Initializes Metrics.
+   */
+  private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+    log.debug("Initializing Metrics registries");
+    servletContext.setAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE, metricRegistry);
+    servletContext.setAttribute(MetricsServlet.METRICS_REGISTRY, metricRegistry);
+    servletContext.setAttribute(HealthCheckServlet.HEALTH_CHECK_REGISTRY, healthCheckRegistry);
 
-        metricsFilter.addMappingForUrlPatterns(disps, true, "/*");
-        metricsFilter.setAsyncSupported(true);
+    log.debug("Registering Metrics Filter");
+    FilterRegistration.Dynamic metricsFilter =
+        servletContext.addFilter("webappMetricsFilter", new InstrumentedFilter());
 
-        log.debug("Registering Metrics Servlet");
-        ServletRegistration.Dynamic metricsAdminServlet =
-                servletContext.addServlet("metricsServlet", new MetricsServlet());
+    metricsFilter.addMappingForUrlPatterns(disps, true, "/*");
+    metricsFilter.setAsyncSupported(true);
 
-        metricsAdminServlet.addMapping("/metrics/metrics/*");
-        metricsAdminServlet.setAsyncSupported(true);
-        metricsAdminServlet.setLoadOnStartup(2);
+    log.debug("Registering Metrics Servlet");
+    ServletRegistration.Dynamic metricsAdminServlet =
+        servletContext.addServlet("metricsServlet", new MetricsServlet());
 
-        log.debug("Registering HealthCheck Servlet");
-        ServletRegistration.Dynamic healthCheckServlet =
-                servletContext.addServlet("healthCheckServlet", new HealthCheckServlet());
+    metricsAdminServlet.addMapping("/metrics/metrics/*");
+    metricsAdminServlet.setAsyncSupported(true);
+    metricsAdminServlet.setLoadOnStartup(2);
 
-        healthCheckServlet.addMapping("/metrics/healthcheck/*");
-        healthCheckServlet.setAsyncSupported(true);
-        healthCheckServlet.setLoadOnStartup(2);
-    }
+    log.debug("Registering HealthCheck Servlet");
+    ServletRegistration.Dynamic healthCheckServlet =
+        servletContext.addServlet("healthCheckServlet", new HealthCheckServlet());
+
+    healthCheckServlet.addMapping("/metrics/healthcheck/*");
+    healthCheckServlet.setAsyncSupported(true);
+    healthCheckServlet.setLoadOnStartup(2);
+  }
 }

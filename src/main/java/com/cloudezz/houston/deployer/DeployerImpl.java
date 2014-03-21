@@ -17,7 +17,7 @@ import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ServiceImageCfg;
-import com.cloudezz.houston.logstream.ContainerLogManager;
+import com.cloudezz.houston.logstream.ContainerLogExecutor;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.google.common.collect.Lists;
 
@@ -27,7 +27,7 @@ public class DeployerImpl implements Deployer {
   private final Logger log = LoggerFactory.getLogger(DeployerImpl.class);
 
   @Inject
-  private ContainerLogManager containerLogManager;
+  private ContainerLogExecutor containerLogManager;
   
   @Inject
   private ImageInfoRepository imageInfoRepository;
