@@ -135,8 +135,15 @@ houstonApp
 
                 return $rootScope.account.roles[role];
             };
-
+            
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
+
+            	if(current) {
+            		var template = current.loadedTemplateUrl;
+            		if(template == "views/terminal.html") {
+            			$rootScope.$broadcast('event:close-term');
+            		}
+            	}
                 // Check if the status of the user. Is it authenticated or not?
                 $rootScope.page = $location.path();
         		var currentPage = $location.path();
