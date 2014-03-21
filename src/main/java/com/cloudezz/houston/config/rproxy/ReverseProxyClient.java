@@ -10,7 +10,7 @@ public interface ReverseProxyClient {
  
   public boolean delete(String frontendURL);
   
-  public boolean delete(String frontendURL,String backendURL);
+  public boolean deleteBackend(String frontendURL,String backendURL);
   
   public boolean serverReachable();
 }

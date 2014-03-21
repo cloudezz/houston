@@ -107,9 +107,9 @@ public class HipacheReverseProxyClient implements ReverseProxyClient {
     // TODO Auto-generated method stub
     return false;
   }
-
+  
   @Override
-  public boolean delete(String frontendURL, String backendURL) {
+  public boolean deleteBackend(String frontendURL, String backendURL) {
     // TODO Auto-generated method stub
     return false;
   }
