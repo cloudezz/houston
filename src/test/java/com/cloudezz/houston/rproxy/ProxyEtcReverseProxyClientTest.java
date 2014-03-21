@@ -7,10 +7,7 @@ import org.junit.Test;
 import com.cloudezz.houston.config.rproxy.ProxyEtcReverseProxyClient;
 
 public class ProxyEtcReverseProxyClientTest {
-
-
   ProxyEtcReverseProxyClient proxyEtcReverseProxyClient = new ProxyEtcReverseProxyClient();
-
 
   @Before
   public void init(){
