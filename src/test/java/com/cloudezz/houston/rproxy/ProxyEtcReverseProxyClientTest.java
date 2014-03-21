@@ -25,25 +25,25 @@ public class ProxyEtcReverseProxyClientTest {
 
   @Test
   public void testAdd() {
-    boolean result = proxyEtcReverseProxyClient.add("www.errzffero.com", "localhssosssts:80ssss89");
+    boolean result = proxyEtcReverseProxyClient.add("www.errzero.com", "localhost:8080");
     Assert.assertTrue(result);
   }
   
   @Test
   public void testUpdate() {
-    boolean result = proxyEtcReverseProxyClient.update("www.errzffero.com", "localhssosssts:80ssss89", "xxx:yyy");
-    Assert.assertTrue(result);
-  }
-  
-  @Test
-  public void testDelete() {
-    boolean result = proxyEtcReverseProxyClient.delete("www.errzffero.com");
+    boolean result = proxyEtcReverseProxyClient.update("www.errzero.com", "localhost:8080", "xxx:yyy");
     Assert.assertTrue(result);
   }
   
   @Test
   public void testDeleteBackend() {
-    boolean result = proxyEtcReverseProxyClient.deleteBackend("www.errzffero.com", "localhssosssts:80ssss89");
+    boolean result = proxyEtcReverseProxyClient.deleteBackend("www.errzero.com", "xxx:yyy");
+    Assert.assertTrue(result);
+  }
+
+  @Test
+  public void testDelete() {
+    boolean result = proxyEtcReverseProxyClient.delete("www.errzero.com");
     Assert.assertTrue(result);
   }
 
