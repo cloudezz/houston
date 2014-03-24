@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.websocket.WebSocketAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -22,7 +23,7 @@ import com.cloudezz.houston.config.reload.JHipsterPluginManagerReloadPlugin;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class,
-    MetricRepositoryAutoConfiguration.class})
+    MetricRepositoryAutoConfiguration.class,WebSocketAutoConfiguration.class})
 public class Application {
 
   private static final Logger log = LoggerFactory.getLogger(Application.class);
