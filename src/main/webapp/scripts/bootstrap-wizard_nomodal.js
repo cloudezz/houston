@@ -593,6 +593,7 @@
 			var popover = el.popover({
 				content : msg,
 				trigger : "manual",
+				placement: 'top',
 				html : allowHtml
 			}).popover("show").next(".popover");
 
