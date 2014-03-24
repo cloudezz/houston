@@ -598,22 +598,18 @@
             return this;
         },
         
-        errorPopover: function(el, msg, allowHtml) {
-            this.log("launching popover on", el);
-            allowHtml = typeof allowHtml !== "undefined" ? allowHtml : false;
-            var popover = el.popover({
-                content: msg,
-                trigger: "manual",
-                html: allowHtml,
-                container: el.parents('.form-group')
-            }).addClass("error-popover").popover("show").next(".popover");
+        errorPopover : function(el, msg, allowHtml) {
+			this.log("launching popover on", el);
+			allowHtml = typeof allowHtml !== "undefined" ? allowHtml : false;
+			var popover = el.popover({
+				content : msg,
+				trigger : "manual",
+				html : allowHtml
+			}).popover("show").next(".popover");
 
-            el.parents('.form-group').find('.popover').addClass("error-popover");
-            
-            this.popovers.push(el);
-            
-            return popover;
-        },
+			popover.addClass("error-popover");
+			return popover;
+		},
         
         destroyPopover: function(pop) {
             pop = $(pop);

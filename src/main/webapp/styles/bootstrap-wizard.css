@@ -204,7 +204,7 @@ li.wizard-nav-item.active>a {
 .wizard-dialog .popover.error-popover {
 	background-color: #F2DEDE;
 	color: #B94A48;
-	border-color: #953B39;
+	border-color: #F2DEDE;
 }
 
 .wizard-dialog .popover.error-popover .arrow::after {
@@ -216,5 +216,5 @@ li.wizard-nav-item.active>a {
 }
 
 .wizard-dialog .popover.error-popover .arrow {
-	border-right-color: #953B39;
+	border-right-color: #F2DEDE;
 }

@@ -5307,7 +5307,7 @@ button.close {
   max-width: 276px;
   padding: 1px;
   text-align: left;
-  background-color: #333333;
+  background-color: #FBE3E4;
   background-clip: padding-box;
   border: 1px solid #333333;
   border: 1px solid transparent;
@@ -5315,6 +5315,7 @@ button.close {
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   white-space: normal;
+  border-color:#FBE3E4;
 }
 .popover.top {
   margin-top: -10px;
@@ -5334,12 +5335,14 @@ button.close {
   font-size: 15px;
   font-weight: normal;
   line-height: 18px;
-  background-color: #333333;
+  background-color: #FBE3E4;
   border-bottom: 1px solid #262626;
   border-radius: 5px 5px 0 0;
+  color:#E64D3B;
 }
 .popover-content {
-  padding: 9px 14px;
+  padding: 5px 10px;
+  color:#E64D3B;
 }
 .popover > .arrow,
 .popover > .arrow:after {
@@ -5370,7 +5373,7 @@ button.close {
   bottom: 1px;
   margin-left: -10px;
   border-bottom-width: 0;
-  border-top-color: #333333;
+  border-top-color: #FBE3E4;
 }
 .popover.right > .arrow {
   top: 50%;

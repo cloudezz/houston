@@ -376,7 +376,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		 * "slow"); } $("#app"+serviceId+"").find('.roll').stop().animate({
 		 * opacity: .7 }, "slow");
 		 */
-        
 			 $scope.service = serviceId;
 			 $scope.serviceImg = serviceName; 
 		}
@@ -408,7 +407,125 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.restoreDefaultScript=function () {
 			$scope.appImageCfgDTO.initScript=$scope.defaultScript;
 		}
-			
+		
+		/* Wizard validation functions */
+		
+		$scope.validateFirstStep=function(card) {
+		    var input = card.el.find("input");
+		    var name = input.val();
+		    var errorSpan;
+		    var valid=true;
+		    var wizardCard;
+		    var service;
+		    var list;
+		    if(card.nwizard!=undefined){
+		    	service=$scope.service;
+		    	wizardCard= card.nwizard;
+		    	errorSpan=$("#errorSpan");
+		    	list=$scope.appimagecfgs;
+		    	}		           
+		    	else{
+			    	service=$scope.subService;
+			    	wizardCard= card.wizard;
+			    	errorSpan=$("#serviceErrorSpan");
+			    	list=$scope.serviceDTOList;
+			    	}		           
+		    if (name == "") {
+		    	wizardCard.errorPopover(input, "Name cannot be empty");		    
+		        valid= false;
+		    }				   
+		    else{
+		    angular.forEach(list, function(item) {
+		    	if(item.appName==name){		    		
+		 		    wizardCard.errorPopover(input, "Name is not unique.Please use a different name");
+		    		 valid= false;		    	
+		    }});}
+		    if(valid){
+		    	input.popover("destroy");
+		    }	   
+		    
+		    if(service==null){
+	 		    	wizardCard.errorPopover(errorSpan, "Please select a service");
+			        valid= false;
+			        }
+		    if(valid)
+		    	errorSpan.popover("destroy");
+		    return valid;
+		
+		}
+		$scope.validateFn = function(card) {
+			var valid=true;
+			if(card.name=="card3" || card.name=="servicecard3"){
+				var inputs = card.el.find("input");					
+                valid=$scope.validateEnvForm(inputs,card,valid);
+                inputs = card.el.find("textarea");					
+                valid=$scope.validateEnvForm(inputs,card,valid);
+			}else{
+				var inputs = card.el.find("input");					
+                valid=$scope.validateInputs(inputs,card,valid);
+                inputs = card.el.find("textarea");					
+                valid=$scope.validateInputs(inputs,card,valid);
+			}					
+		    return valid;
+		};
+		$scope.validateInputs=function(inputs,card,valid){
+			var wizardCard; 
+			if(card.nwizard!=undefined)
+		           wizardCard= card.nwizard;
+		    	else
+		    		wizardCard=card.wizard;
+			 angular.forEach(inputs, function(inputItem){
+                	var name = inputItem.value;
+                	var inputComp=$("#"+inputItem.id);
+				    if (name == "") {
+				    	wizardCard.errorPopover(inputComp, "Field cannot be empty");
+				        valid= false;
+				    }
+				    if(valid){
+				    	inputComp.popover("destroy");
+				    }
+			    });
+			 return valid;
+		}
+		
+		$scope.validateEnvForm=function(inputs,card,valid){
+			var wizardCard;
+			var curFormEl;
+			if(card.nwizard!=undefined){
+		           wizardCard= card.nwizard;
+		           curFormEl=$scope.currentForm.formElement;
+			}
+		    	else{
+		    		wizardCard=card.wizard;
+		    		curFormEl=$scope.currentServiceForm.formElement;;
+		    		}
+			var reqMap=createReqMap(curFormEl);
+			 angular.forEach(inputs, function(inputItem){
+                	var name = inputItem.value;
+                	var inputComp=$("#"+inputItem.id);
+                	var reqd=reqMap[inputItem.id];
+				    if (name == ""&& reqd=='true') {				    	
+				    wizardCard.errorPopover(inputComp, "Field cannot be empty");
+				        valid= false;
+				    }
+				    if(valid){
+				    	inputComp.popover("destroy");
+				    }
+			    });
+			 return valid;
+			 function createReqMap(curFormEl){
+				 var reqMap=new Object();
+				 angular.forEach(curFormEl,function(item){
+					 reqMap[item.name]=item.optional;
+				 });
+				 return reqMap;
+			 }
+		}
+		
+	/* Validation functions ends */
+		
+	/* Service wizard creation */
+		
 		$scope.openServiceWizard = function () {
 			$scope.serviceDTO = new Object(); 
 			
@@ -443,9 +560,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 	       			console.log($scope.serviceDTO );	
 	       			$scope.serviceDTOList.push($scope.serviceDTO);
-	            	 $scope.$apply();
+	            	$scope.$apply();
 	       			$scope.createService();	
-	       			
+	       			$scope.subService=null;
+	       			$scope.subServiceImg=null;	       			
 				});
             	
             	serviceWizard.on("incrementCard", function(serviceWizard) {
@@ -470,8 +588,16 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
             	serviceWizard.el.find(".wizard-success .create-another-server").click(function() {
             		serviceWizard.reset();
-				});        		        	
-        }		
+				});
+            	
+            	/* service wizard validation */
+            	serviceWizard.cards["servicecard1"].on("validate", $scope.validateFirstStep);
+            	serviceWizard.cards["servicecard3"].on("validate",$scope.validateFn);
+        }	
+		/* Service wizard creation ends */
+		
+		/* App wizard creation */
+		
 		$scope.openWizard = function () {
 			
 			$scope.serviceDTOList = [];
@@ -519,7 +645,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		
 	       		wizard.on("incrementCard", function(wizard) {
 	       		var activeCard=	wizard.getActiveCard();
-	       		if(activeCard.name=="card3"){
+	       		if(activeCard.name=="card3" && $scope.service!=$scope.prevService){
 	       			$scope.loadForm($scope.service,'formDiv','formElementHolder');
 	       		}
 	       		if(activeCard.name=="card4"){
@@ -544,7 +670,18 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				wizard.el.find(".wizard-success .create-another-server").click(function() {
 					wizard.reset();
 				});
-		}	        		
+               $scope.appimagecfgs = AppImageCfg.query();	
+				
+				
+				 /* App wizard validation */				
+				wizard.cards["card1"].on("validate", $scope.validateFirstStep);
+				// wizard.cards["card2"].on("validate",$scope.validateFn);
+				wizard.cards["card3"].on("validate",$scope.validateFn);
+		    	// wizard.cards["card4"].on("validate",$scope.validateFn);
+				   		
+		}	
+		/* App wizard creation ends */
+		
 $scope.loadDefaultScript=function(serviceId){
 	AppImageService.loadScript(serviceId).then(function(data){
 		$scope.defaultScript=data;
@@ -560,7 +697,8 @@ $scope.loadDefaultScript=function(serviceId){
         				createForm(data,formId,holdername);
         			});
         		};
-        		function createForm(data,formId,holdername){                                        
+        		function createForm(data,formId,holdername){  
+        			$scope.prevService= $scope.service;                                     
         			var comp = $("#"+formId+""); 
         			comp.empty();      
         			var htmlCont = "";
@@ -569,13 +707,13 @@ $scope.loadDefaultScript=function(serviceId){
         			var item = data.formElement[i];      
         			switch (item.type) {
         			case "input":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\"></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         			break;
         			case "password":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\"></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         				break;
         			case "checkbox":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" value=\"option1\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
         				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";

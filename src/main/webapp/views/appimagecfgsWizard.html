@@ -18,6 +18,7 @@
 
 				<div class="wizard-input-section">
 					<div class="imgcontainer">
+					<div id="serviceErrorSpan" style="width: 90%"></div>
 						<div class="main">
 							<div class="view view-first"
 								ng-repeat="svcImg in subServiceImages"
@@ -99,12 +100,13 @@
 					</div>
 					<div class="wizard-input-section">
 						<div class="imgcontainer">
+							<div id="errorSpan" style="width: 90%"></div>
 							<div class="main">
 								<div class="view view-first" ng-repeat="svcImg in serviceImages"
 									ng-click=setService(svcImg.id,svcImg.imageName)
 									id=app{{svcImg.id}}>
 									<img ng-src="{{svcImg.logoURL}}" />
-								<!-- 	<span class="roll" ></span> -->
+									<!-- **added for the tick mark selection**	<span class="roll" ></span> -->
 									<div class="mask">
 										<p>{{svcImg.desc}}</p>
 										<a class="info"><label>{{svcImg.version}}</label></a>
@@ -118,27 +120,26 @@
 					<h3 hidden="true">Machine Configuration</h3>
 					<div class="wizard-input-section">
 						<label>Memory (MB)</label> <input type="text" class="form-control"
-							name="memory" ng-model="appImageCfgDTO.memory" ng-minlength=1
-							ng-maxlength=50 required />
+							name="memory" id="memory" ng-model="appImageCfgDTO.memory" required />
 					</div>
 
 					<div class="wizard-input-section">
 						<label>Memory Swap (MB)</label> <input type="text"
-							class="form-control" name="memorySwap"
+							class="form-control" name="memorySwap" id="memorySwap"
 							ng-model="appImageCfgDTO.memorySwap" ng-minlength=1
 							ng-maxlength=50 required />
 					</div>
 
 					<div class="wizard-input-section">
 						<label>CPU Shares</label> <input type="text" class="form-control"
-							name="cpuShares" ng-model="appImageCfgDTO.cpuShares"
-							ng-minlength=1 ng-maxlength=50 required />
+							name="cpuShares" id="cpuShares"
+							ng-model="appImageCfgDTO.cpuShares" ng-minlength=1
+							ng-maxlength=50 required />
 					</div>
 				</div>
 
-				<div class="wizard-card" data-cardname="card3">
+				<div class="wizard-card" data-cardname="card3" id="formDiv">
 					<h3 hidden="true">Environment</h3>
-					<div id="formDiv"></div>
 				</div>
 
 				<div class="wizard-card" data-cardname="card4">
@@ -146,8 +147,10 @@
 					<div class="wizard-input-section">
 						<label>Init Shell Script</label>
 						<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
-							required="true" ng-required="true" ng-minlength="0"
-							class="form-control" style="height: 300px; font-size: 14px"
+							id="initScript" required="true" ng-required="true"
+							ng-minlength="0" class="form-control"
+							style="height: 300px;"
+							font-size: 14px"
 							spellcheck="false"></textarea>
 						<div align="left" style="margin-bottom: 10px; padding-top: 20px">
 							<button class="btn btn-primary btn-md" id="restoreScriptBtn"
