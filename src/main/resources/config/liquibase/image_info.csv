@@ -27,7 +27,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 </port-config>
 
 </img-settings>"
-37359;cloudezz/java7;"Java";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Oracle sun jdk and jre 7 ";"Image with oracle sun jdk 7";"<?xml version="1.0" encoding="UTF-8"?>
+37359;cloudezz/java7;"Java 7";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Oracle sun jdk and jre 7 ";"Image with oracle sun jdk 7";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
