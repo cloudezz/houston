@@ -155,15 +155,22 @@ houstonApp.controller('LogsController', ['$scope', 'resolvedLogs', 'LogsService'
 /**
  * Signup controller that will send the request to rest services
  */
-houstonApp.controller('SignUpController', ['$scope', '$location', 'SignUpService',
-   function ($scope, $location, SignUpService) {
+houstonApp.controller('SignUpController', ['$scope', '$location', 'SignUpService', '$tooltip',
+   function ($scope, $location, SignUpService, $tooltip) {
+	
 	$scope.username = "";
 	$scope.success = false;
-		$scope.signUp = function () {
-			SignUpService.signUp($scope.username, function(data){
-				console.log("Email Sent");
-				$scope.success = true;
-			});
+	$scope.validEmail = true;
+		$scope.signUp = function (signupForm) {
+			if($scope.username=='' || signupForm.username.$error.email) {
+				console.log("In valid Email Id")
+			}
+			else {
+				SignUpService.signUp($scope.username, function(data){
+					console.log("Email Sent");
+					$scope.success = true;
+				});
+			}
 		};
 	}]);
 	
