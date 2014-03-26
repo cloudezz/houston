@@ -26,9 +26,9 @@
 	margin: 0;
 	line-height: 35px;
 	display: inline;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	font-family: inherit;
-	font-weight: bold;
+	/* font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+	/* font-family: inherit; */
+	/* font-weight: bold; */
 	text-rendering: optimizelegibility;
 	color: rgb(51, 51, 51);
 }
