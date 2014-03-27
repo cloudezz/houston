@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import com.cloudezz.harmony.HarmonyConfigurator;
 
@@ -16,15 +17,21 @@ public class HarmonyProxyConfiguration {
   @Bean
   public HarmonyConfigurator harmonyProxyClient() throws Exception {
 
-    String urlConfigFile =
-        this.getClass().getResource("/harmony/HAProxyConfigurator.properties").getPath();
-    HarmonyConfigurator harmonyConfigurator = new HarmonyConfigurator(urlConfigFile);
+    HarmonyConfigurator harmonyConfigurator = null;
+    try {
+      String urlConfigFile =
+          HarmonyProxyConfiguration.class.getClassLoader()
+              .getResource("harmony/HAProxyConfigurator.properties").getPath();
+      harmonyConfigurator = new HarmonyConfigurator(urlConfigFile);
 
 
-    // check reverse proxy server conn settings
-    if (!harmonyConfigurator.proxyConnectionStatus()) {
-      log.warn("Warning! Not able to reach harmony reverse proxy server");
-      log.debug("Did you configure your harmony HAproxy server settings in your harmony/HAProxyConfigurator.properties file");
+      // check reverse proxy server conn settings
+      if (!harmonyConfigurator.proxyConnectionStatus()) {
+        log.warn("Warning! Not able to reach harmony reverse proxy server");
+        log.debug("Did you configure your harmony HAproxy server settings in your harmony/HAProxyConfigurator.properties file");
+      }
+    } catch (Exception e) {
+      log.error(e.getMessage());
     }
 
     return harmonyConfigurator;
