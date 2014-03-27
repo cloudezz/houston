@@ -92,6 +92,7 @@
 		<commons-io.version>2.3</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<commons-compress.version>1.0</commons-compress.version>
+		<start-class>com.cloudezz.houston.Application</start-class>
 	</properties>
 
 	<repositories>
@@ -380,6 +381,12 @@
 			<version>1.0.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.cloudezz.security</groupId>
+			<artifactId>rest-auth-server</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>com.jayway.awaitility</groupId>
@@ -452,16 +459,20 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<argLine>-XX:MaxPermSize=128m -Xmx256m</argLine>
+					<argLine>-XX:MaxPermSize=528m -Xmx1056m</argLine>
 					<forkCount>1</forkCount>
 					<reuseForks>false</reuseForks>
 					<!-- Force alphabetical order to have a reproducible build -->
 					<runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
-				<configuration> <packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes> 
-				</configuration> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>

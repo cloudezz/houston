@@ -3,7 +3,6 @@ package com.cloudezz.houston.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -47,8 +46,8 @@ public class DockerHostMachine extends BaseEntity {
   private String sshPort;
 
   // shh key to connect to docker host
-  @Lob
-  private byte[] key;
+  @Column(name = "ssh_key", length = 10000)
+  private String key;
 
   // docker rest api on http or https
   @Column(nullable = false, columnDefinition = "TINYINT")
@@ -183,11 +182,11 @@ public class DockerHostMachine extends BaseEntity {
     this.hostName = hostName;
   }
 
-  public byte[] getKey() {
+  public String getKey() {
     return key;
   }
 
-  public void setKey(byte[] key) {
+  public void setKey(String key) {
     this.key = key;
   }
 

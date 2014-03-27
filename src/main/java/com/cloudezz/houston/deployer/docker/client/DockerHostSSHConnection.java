@@ -41,7 +41,7 @@ public class DockerHostSSHConnection {
     connection.connect();
 
     boolean isAuthenticated = false;
-    if (dockerHostMachine.getKey() != null && dockerHostMachine.getKey().length > 0) {
+    if (dockerHostMachine.getKey() != null && dockerHostMachine.getKey().length() > 0) {
       char[] keyfileArray = new String(dockerHostMachine.getKey()).toCharArray();
       /* Authenticate */
       isAuthenticated =

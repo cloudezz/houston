@@ -45,10 +45,10 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "service_image",nullable = false, columnDefinition = "TINYINT")
   private boolean serviceImage;
 
-  @Column(name = "img_settings_block",columnDefinition="VARCHAR(6000)")
+  @Column(name = "img_settings_block", length = 5000)
   private String imgSettingsBlock;
   
-  @Column(name = "init_script",columnDefinition="VARCHAR(6000)")
+  @Column(name = "init_script", length = 5000)
   private String initScript;
   
   @Column(name = "image_version")
@@ -57,7 +57,7 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "short_desc")
   private String shortDesc;
   
-  @Column(name = "desc",columnDefinition="VARCHAR(6000)")
+  @Column(name = "description", length = 5000)
   private String desc;
 
   @Override
