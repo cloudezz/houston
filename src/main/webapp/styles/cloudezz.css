@@ -232,7 +232,7 @@ table th {
 .imgcontainer{
 	position:relative;
 }
-.pace .pace-progress {
+/* .pace .pace-progress {
   background: #29d;
   position: fixed;
   z-index: 2000;
@@ -248,4 +248,4 @@ table th {
 
 .pace-inactive {
   display: none;
-}
+} */

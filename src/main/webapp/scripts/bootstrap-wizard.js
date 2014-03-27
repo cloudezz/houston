@@ -605,6 +605,7 @@
 				content : msg,
 				trigger : "manual",
 				placement: 'top',
+				delay: { show:0, hide:1000},
 				html : allowHtml
 			}).popover("show").next(".popover");
 

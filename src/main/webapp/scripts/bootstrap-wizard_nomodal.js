@@ -431,29 +431,20 @@
 				'<div class="btn-group-single pull-right">',
 				'<button class="btn wizard-back disabled" type="button">Back</button>',
 				'<button class="btn wizard-next btn-primary" type="button">Next</button>',
-				'</div>',
-				'</div>',
-				'</div>',
-				'</div>',
+				'</div>', '</div>', '</div>', '</div>',
 
 				'<div class="pull-left wizard-steps">',
 				'<div class="wizard-nav-container">',
 				'<ul class="nav nav-list" style="padding-bottom:30px;">',
-				'</ul>',
-				'<div class="nwizard-progress-container">',
+				'</ul>', '<div class="nwizard-progress-container">',
 				'<div class="progress progress-striped">',
-				'<div class="progress-bar"></div>',
-				'</div>',
-				'</div>',
-				'</div>',
-				'</div>',
-				
+				'<div class="progress-bar"></div>', '</div>', '</div>',
+				'</div>', '</div>',
 
 				'<div class="wizard-cards">',
-				'<div class="nwizard-card-container">',
-				'</div>',
-				'<div class="wizard-modal-footer">',
-				,'</div>', '</div>', '</div>'];
+				'<div class="nwizard-card-container">', '</div>',
+				'<div class="wizard-modal-footer">', , '</div>', '</div>',
+				'</div>' ];
 
 		this.args = {
 			submitUrl : "",
@@ -511,8 +502,8 @@
 
 		this.nextButton.click(this, this._handleNextClick);
 		this.backButton.click(this, this._handleBackClick);
-		
-		if(!this.args.isModal){
+
+		if (!this.args.isModal) {
 			this.cancelButton.click(this, this._handleCancelButtonClick);
 		}
 
@@ -528,7 +519,8 @@
 		var navHeight = baseHeight + this.args.increaseHeight;
 
 		this.el.find(".wizard-nav-container").css("height", navHeight);
-		this.el.find(".wizard-nav-container").css("border", "1px solid #CCCCCC");
+		this.el.find(".wizard-nav-container")
+				.css("border", "1px solid #CCCCCC");
 		this.el.find(".wizard-steps").css("height", navHeight + "px");
 		this.el.find(".wizard-card").css("height", navHeight + "px");
 		this.submitCards.css("height", (navHeight - 60) + "px");
@@ -593,7 +585,11 @@
 			var popover = el.popover({
 				content : msg,
 				trigger : "manual",
-				placement: 'top',
+				placement : 'top',
+				delay : {
+					show : 0,
+					hide : 1000
+				},
 				html : allowHtml
 			}).popover("show").next(".popover");
 
@@ -1146,7 +1142,7 @@
 			var nwizard = event.data;
 			nwizard._onBackClick.call(nwizard);
 		},
-		
+
 		_handleCancelButtonClick : function(event) {
 			var nwizard = event.data;
 			nwizard.reset();

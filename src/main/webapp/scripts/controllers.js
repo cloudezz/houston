@@ -388,9 +388,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		}
 		$scope.setSubService = function(serviceId,serviceName) {
 			 if($scope.subService!=null){
-	        	 $("#service"+$scope.subService+"").css('border-color', 'white');
+	        	 serviceWizard.find("#service"+$scope.subService+"").css('border-color', 'white');
 	             }
-	           $("#service"+serviceId+"").css('border-color', 'grey');			
+	        var curSel=$("#service"+serviceId+""); 
+	        serviceWizard.find("#service"+serviceId+"").css('border-color', 'grey');			
 
 			 $scope.subService = serviceId;
 			 $scope.subServiceImg = serviceName;
@@ -418,8 +419,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		/* Wizard validation functions */
 		
 		$scope.validateFirstStep=function(card) {
-		    var input = card.el.find("input");
-		    var name = input.val();
+		    var input;
 		    var errorSpan;
 		    var valid=true;
 		    var wizardCard;
@@ -430,18 +430,22 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		    	wizardCard= card.nwizard;
 		    	errorSpan=$("#errorSpan");
 		    	list=$scope.appimagecfgs;
+		    	input=card.el.find("#appName");
 		    	}		           
 		    	else{
 			    	service=$scope.subService;
 			    	wizardCard= card.wizard;
-			    	errorSpan=$("#serviceErrorSpan");
+			    	errorSpan=serviceWizard.find("#serviceErrorSpan");
 			    	list=$scope.serviceDTOList;
-			    	}		           
+			    	input=card.el.find("#serviceAppName");
+			    	}
+		    var name = input.val();
 		    if (name == "") {
 		    	wizardCard.errorPopover(input, "Name cannot be empty");		    
 		        valid= false;
 		    }				   
 		    else{
+		    input.popover("destroy");
 		    angular.forEach(list, function(item) {
 		    	if(item.appName==name){		    		
 		 		    wizardCard.errorPopover(input, "Name is not unique.Please use a different name");
@@ -450,7 +454,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		    if(valid){
 		    	input.popover("destroy");
 		    }	   
-		    
 		    if(service==null){
 	 		    	wizardCard.errorPopover(errorSpan, "Please select a service");
 			        valid= false;
@@ -477,13 +480,22 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		};
 		$scope.validateInputs=function(inputs,card,valid){
 			var wizardCard; 
-			if(card.nwizard!=undefined)
+			var nModalWzd=false;
+			if(card.nwizard!=undefined){
 		           wizardCard= card.nwizard;
+		           nModalWzd=true;
+			}
 		    	else
 		    		wizardCard=card.wizard;
 			 angular.forEach(inputs, function(inputItem){
                 	var name = inputItem.value;
-                	var inputComp=$("#"+inputItem.id);
+                	var inputComp;
+                	if(nModalWzd){
+                		inputComp=$("#"+inputItem.id);
+                	}
+                	else{
+                		inputComp=serviceWizard.find("#"+inputItem.id);
+                	}
 				    if (name == "") {
 				    	wizardCard.errorPopover(inputComp, "Field cannot be empty");
 				        valid= false;
@@ -498,20 +510,32 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.validateEnvForm=function(inputs,card,valid){
 			var wizardCard;
 			var curFormEl;
+			var formId;
+			var nModalWzd=false;
+			
 			if(card.nwizard!=undefined){
 		           wizardCard= card.nwizard;
 		           curFormEl=$scope.currentForm.formElement;
+		           formId="formDiv";
+		           nModalWzd=true;
 			}
-		    	else{
-		    		wizardCard=card.wizard;
-		    		curFormEl=$scope.currentServiceForm.formElement;;
-		    		}
-			var reqMap=createReqMap(curFormEl);
+		    else{
+		    	   wizardCard=card.wizard;
+		    	   curFormEl=$scope.currentServiceForm.formElement;
+		    	   formId="serviceFormDiv";
+		    }
+			var reqMap=createReqMap(formId,curFormEl);
 			 angular.forEach(inputs, function(inputItem){
                 	var name = inputItem.value;
-                	var inputComp=$("#"+inputItem.id);
-                	var reqd=reqMap[inputItem.id];
-				    if (name == ""&& reqd=='true') {				    	
+                	var inputComp;
+                	if(nModalWzd){
+                		inputComp=$("#"+inputItem.id);
+                	}
+                	else{
+                		inputComp=serviceWizard.find("#"+inputItem.id);
+                	}
+                	var optional=reqMap[inputItem.id];
+				    if (name == ""&& optional=='false') {				    	
 				    wizardCard.errorPopover(inputComp, "Field cannot be empty");
 				        valid= false;
 				    }
@@ -520,10 +544,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				    }
 			    });
 			 return valid;
-			 function createReqMap(curFormEl){
+			 function createReqMap(formId,curFormEl){
 				 var reqMap=new Object();
 				 angular.forEach(curFormEl,function(item){
-					 reqMap[item.name]=item.optional;
+					 reqMap[formId+"_"+item.name]=item.optional;
 				 });
 				 return reqMap;
 			 }
@@ -570,12 +594,12 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	            	$scope.$apply();
 	       			$scope.createService();	
 	       			$scope.subService=null;
-	       			$scope.subServiceImg=null;	       			
+	       			$scope.subServiceImg=null;	
 				});
             	
             	serviceWizard.on("incrementCard", function(serviceWizard) {
 	       		var activeCard=	serviceWizard.getActiveCard();
-	       		if(activeCard.name=="servicecard3"){
+	       		if(activeCard.name=="servicecard3" && $scope.subService!=$scope.prevSubService){
 	       			$scope.loadForm($scope.subService,'serviceFormDiv','serviceFormElementHolder');
 	       		}
 				});
@@ -704,9 +728,14 @@ $scope.loadDefaultScript=function(serviceId){
         				createForm(data,formId,holdername);
         			});
         		};
-        		function createForm(data,formId,holdername){  
-        			$scope.prevService= $scope.service;                                     
-        			var comp = $("#"+formId+""); 
+        		function createForm(data,formId,holdername){ 
+        			var comp = $("#"+formId+"");
+        			if(formId=='formDiv')
+        				$scope.prevService= $scope.service; 
+     				else if(formId=='serviceFormDiv'){
+     					$scope.prevSubService= $scope.subService; 
+     					comp=serviceWizard.find("#serviceFormDiv");
+     				}                                  
         			comp.empty();      
         			var htmlCont = "";
         			for ( var i = 0; i < data.formElement.length; i++) {   
@@ -714,16 +743,16 @@ $scope.loadDefaultScript=function(serviceId){
         			var item = data.formElement[i];      
         			switch (item.type) {
         			case "input":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         			break;
         			case "password":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+item.name+"\" name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+formId+"_"+item.name+"\" name=\""+formId+"_"+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         				break;
         			case "checkbox":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+item.name+"\" name=\""+item.name+"\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+item.name+"\" name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";
         				break;
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);
@@ -745,6 +774,7 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppIma
 		AppImageCfg.delete({id: id},
                 function () {
                     $scope.$parent.appimagecfgs = AppImageCfg.query();
+                   // Messenger().post("Application deleted!");
                 });
 		
 		
