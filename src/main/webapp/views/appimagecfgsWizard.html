@@ -57,9 +57,8 @@
 
 			</div>
 
-			<div class="wizard-card" data-cardname="servicecard3">
+			<div class="wizard-card" data-cardname="servicecard3" id="serviceFormDiv">
 				<h3 hidden="true">Environment</h3>
-				<div id="serviceFormDiv"></div>
 			</div>
 
 			<div class="wizard-error">
@@ -186,7 +185,7 @@
 												class="btn btn-sm" style="width: 100px;">
 												<span class="glyphicon glyphicon-pencil"></span> Edit
 											</button>
-											<button type="submit" ng-click="delete(serviceItem.id)"
+											<button type="submit" ng-click="deleteService(serviceItem.id)"
 												class="btn btn-sm btn-delete" style="width: 100px;">
 												<span class="glyphicon glyphicon-remove-circle"></span>
 												Delete

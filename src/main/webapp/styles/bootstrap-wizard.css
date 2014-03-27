@@ -141,6 +141,7 @@ li.wizard-nav-item.active>a {
 .wizard-card-container {
 	margin-left: 26%;
 	overflow: auto;
+	position:relative;
 }
 
 .nwizard-card-container {

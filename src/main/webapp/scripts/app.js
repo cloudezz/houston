@@ -135,8 +135,11 @@ houstonApp
 
                 return $rootScope.account.roles[role];
             };
-            
-            $rootScope.$on("$routeChangeStart", function(event, next, current) {
+            Messenger.options = {
+            	    extraClasses: 'messenger-fixed messenger-on-top',
+            	    theme: 'air'
+            	};
+            	$rootScope.$on("$routeChangeStart", function(event, next, current) {
 
             	if(current) {
             		var template = current.loadedTemplateUrl;
