@@ -320,3 +320,11 @@ houstonApp.factory('uploadManager', function($rootScope, $http) {
 		}
 	};
 });
+
+houstonApp.factory('DockerHostMachine', ['$resource',
+                                         function ($resource) {
+                                             return $resource('app/rest/dockerhostmachines/:id', {}, {
+                                                 'query': { method: 'GET', isArray: true},
+                                                 'get': { method: 'GET'}
+                                             });
+                                         }]);

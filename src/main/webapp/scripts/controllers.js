@@ -960,3 +960,35 @@ houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',
         stompClient.connect({},onConnect,onErr);
 	 	
     }]);
+
+
+houstonApp.controller('DockerHostMachineController', ['$scope', 'resolvedDockerHostMachine', 'DockerHostMachine',
+                                                      function ($scope, resolvedDockerHostMachine, DockerHostMachine) {
+
+                                                          $scope.dockerhostmachines = resolvedDockerHostMachine;
+
+                                                          $scope.create = function () {
+                                                              DockerHostMachine.save($scope.dockerhostmachine,
+                                                                  function () {
+                                                                      $scope.dockerhostmachines = DockerHostMachine.query();
+                                                                      $('#saveDockerHostMachineModal').modal('hide');
+                                                                      $scope.clear();
+                                                                  });
+                                                          };
+
+                                                          $scope.update = function (id) {
+                                                              $scope.dockerhostmachine = DockerHostMachine.get({id: id});
+                                                              $('#saveDockerHostMachineModal').modal('show');
+                                                          };
+
+                                                          $scope.delete = function (id) {
+                                                              DockerHostMachine.delete({id: id},
+                                                                  function () {
+                                                                      $scope.dockerhostmachines = DockerHostMachine.query();
+                                                                  });
+                                                          };
+
+                                                          $scope.clear = function () {
+                                                              $scope.dockerhostmachine = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
+                                                          };
+                                                      }]);

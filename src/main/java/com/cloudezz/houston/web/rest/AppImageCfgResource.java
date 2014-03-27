@@ -126,7 +126,8 @@ public class AppImageCfgResource {
         serviceImageCfg.setPorts(appimagecfgDto.getPorts());
         serviceImageCfg.setApplicationImageConfig(appCfg);
         // set the ports that are to be exposed using the setting xml config details. This is
-        // required for the app image links to work and see the exposed service ports in the app machine from service machines
+        // required for the app image links to work and see the exposed service ports in the app
+        // machine from service machines
         imageService.setExposedPorts(serviceImageCfg, serviceImageCfgDTO.getImageName());
         // add the service images to the main app cfg
         appCfg.addServiceImages(serviceImageCfg);
