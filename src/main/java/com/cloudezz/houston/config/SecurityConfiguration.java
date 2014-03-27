@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,7 +17,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 import com.cloudezz.houston.security.AjaxAuthenticationFailureHandler;
 import com.cloudezz.houston.security.AjaxAuthenticationSuccessHandler;
@@ -24,6 +28,8 @@ import com.cloudezz.houston.security.AjaxLogoutSuccessHandler;
 import com.cloudezz.houston.security.AuthoritiesConstants;
 import com.cloudezz.houston.security.CustomPersistentRememberMeServices;
 import com.cloudezz.houston.security.Http401UnauthorizedEntryPoint;
+import com.cloudezz.security.RestHMACAuthProvider;
+import com.cloudezz.security.RestHMACAuthURLMatchingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -74,6 +80,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
+    
+    @Bean
+    protected AuthenticationProvider getRestAuthProvider() throws Exception {
+       return new RestHMACAuthProvider();
+    }
+    
+//    @Bean
+    protected AbstractAuthenticationProcessingFilter getRestHMACAuthFilter()
+            throws Exception {
+      RestHMACAuthURLMatchingFilter restFilter = new RestHMACAuthURLMatchingFilter(
+                new RegexRequestMatcher("^/slave.*", null));
+        restFilter.setAuthenticationManager(authenticationManagerBean());
+        return restFilter;
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -89,6 +109,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+//        .authenticationProvider(getRestAuthProvider())
+//        .addFilterAfter(getRestHMACAuthFilter(), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
