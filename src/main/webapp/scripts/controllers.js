@@ -254,14 +254,13 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         		$scope.progressText ="";
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
-        			// alert("Machine Started");
+        			 Messenger().post("Machine Started!");
         			AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
         			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        			// alert("Machine was not started :: Error is - " +
-					// data.error);
+        			 Messenger().post("Machine was not started :: Error is - " + data.error);
         		}
         	});
         };
@@ -287,14 +286,13 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
     			$scope.progressText ="";
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
-        				// alert("Machine Stopped");
+        			Messenger().post("Machine Stopped!");
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        				// alert("Machine was not started :: Error is - " +
-						// data.error);
+        			Messenger().post("Machine was not stopped :: Error is - " + data.error+"!");
         		}
         	});
         };
@@ -411,6 +409,13 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				serviceWizard.showSubmitCard("success");
 				serviceWizard.updateProgressBar(0);	 
 			};
+			
+			$scope.deleteService=function(id){
+				angular.forEach($scope.serviceDTOList, function(item) {
+			    	if(item.id==id){
+			    		$scope.serviceDTOList.splice($.inArray(item, $scope.serviceDTOList),1);
+			    }});
+			}	
 			
 		$scope.restoreDefaultScript=function () {
 			$scope.appImageCfgDTO.initScript=$scope.defaultScript;
@@ -774,9 +779,10 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppIma
 		AppImageCfg.delete({id: id},
                 function () {
                     $scope.$parent.appimagecfgs = AppImageCfg.query();
-                   // Messenger().post("Application deleted!");
-                });
-		
+                    Messenger().post("Application deleted!");
+                },function(httpResponse){
+                	 Messenger().post("Could not delete application.Error is : "+httpResponse.data.error+"!");
+                });		
 		
 		$modalInstance.close();
 	};
@@ -811,6 +817,9 @@ houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceIm
             ServiceImageCfg.delete({id: id},
                 function () {
                     $scope.serviceimagecfgs = ServiceImageCfg.query();
+                    Messenger().post("Deleted service image!");
+                },function(httpResponse){
+                	 Messenger().post("Could not delete service image.Error is :"+httpResponse.data.error+" !");
                 });
         };
 
@@ -867,6 +876,9 @@ houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'Im
           ImageInfo.delete({id: id},
               function () {
                   $scope.imageinfos = ImageInfo.query();
+                  Messenger().post("Image config deleted! ");
+              },function (httpResponse) {
+                  Messenger().post("Could not delete image config.Error is :"+httpResponse.data.error+" ! ");
               });
       };
 
