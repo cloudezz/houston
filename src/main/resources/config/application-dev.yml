@@ -5,18 +5,18 @@ server:
 spring:
     profiles: dev
     datasource:
-        driverClass: org.hsqldb.jdbc.JDBCDriver
-        url: jdbc:hsqldb:mem:houston
+        driverClass: org.h2.Driver
+        url: jdbc:h2:mem:houston
         serverName: 
         username: 
         password:
 
     jpa:
-        database-platform: org.hibernate.dialect.HSQLDialect
-        database: HSQL
-        openInView: true
+        database-platform: org.hibernate.dialect.H2Dialect
+        database: H2
+        openInView: false
         show_sql: true
-        generate-ddl: true
+        generate-ddl: false
         hibernate:
             ddl-auto: create
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
@@ -40,3 +40,9 @@ reverse-proxy:
   redis-password:password
 
         
+# You can add as many as folders to watch
+# You just need to add a dash + the directory to watch
+hotReload:
+  enabled: true
+  watchdir:
+    - target/classes

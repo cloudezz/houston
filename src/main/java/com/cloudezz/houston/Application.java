@@ -64,14 +64,15 @@ public class Application {
     // Fallback to set the list of liquibase package list
     addLiquibaseScanPackages();
 
-    ConfigurableApplicationContext applicationContext = app.run(args);
-    try {
-      SpringLoadedAgent.getInstrumentation();
-      log.info("Spring Loaded is running, registering hot reloading features");
-      JHipsterPluginManagerReloadPlugin.register(applicationContext);
-    } catch (UnsupportedOperationException uoe) {
-      log.info("Spring Loaded is not running, hot reloading is not enabled");
-    }
+    app.run(args);
+//    ConfigurableApplicationContext applicationContext = app.run(args);
+//    try {
+//      SpringLoadedAgent.getInstrumentation();
+//      log.info("Spring Loaded is running, registering hot reloading features");
+//      JHipsterPluginManagerReloadPlugin.register(applicationContext);
+//    } catch (UnsupportedOperationException uoe) {
+//      log.info("Spring Loaded is not running, hot reloading is not enabled");
+//    }
   }
 
   /**

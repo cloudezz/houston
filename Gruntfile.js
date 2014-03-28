@@ -1,4 +1,4 @@
-// Generated on 2014-02-19 using generator-jhipster 0.10.0
+// Generated on 2014-03-28 using generator-jhipster 0.11.0
 'use strict';
 
 // # Globbing
@@ -62,7 +62,21 @@ module.exports = function (grunt) {
           port: 8090,
           https: false,
           changeOrigin: false
-        }
+        },
+        {
+        context: '/dump',
+        host: 'localhost',
+        port: 8090,
+        https: false,
+        changeOrigin: false
+        },
+        {
+          context: '/console',
+          host: 'localhost',
+          port: 8080,
+          https: false,
+          changeOrigin: false
+         }
       ],
       options: {
         port: 9000,
