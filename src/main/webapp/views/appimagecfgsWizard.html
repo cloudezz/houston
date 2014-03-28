@@ -18,7 +18,7 @@
 
 				<div class="wizard-input-section">
 					<div class="imgcontainer">
-					<div id="serviceErrorSpan" style="width: 90%"></div>
+						<div id="serviceErrorSpan" style="width: 90%"></div>
 						<div class="main">
 							<div class="view view-first"
 								ng-repeat="svcImg in subServiceImages"
@@ -26,9 +26,9 @@
 								id=service{{svcImg.id}}>
 								<img ng-src="{{svcImg.logoURL}}" />
 								<div class="mask">
-										<p>{{svcImg.desc}}</p>
-										<a class="info"><label>{{svcImg.version}}</label></a>
-									</div>
+									<p>{{svcImg.desc}}</p>
+									<a class="info"><label>{{svcImg.version}}</label></a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -36,28 +36,36 @@
 			</div>
 			<div class="wizard-card" data-cardname="servicecard2">
 				<h3 hidden="true">Machine Configuration</h3>
-				<div class="wizard-input-section">
-					<label>Memory (MB)</label> <input type="text" class="form-control"
-						name="memory" ng-model="serviceDTO.memory" ng-minlength=1
-						ng-maxlength=50 required />
+				<div class="wizard-input-section" style="margin-bottom:70px">
+						<div class="wizard-btn-gp">
+						<button class="btn btn-primary btn-sm" id="tinyConfig"
+							ng-click="setServiceDefaultConfig('Tiny');">Tiny</button>
+						<button class="btn btn-primary btn-sm" id="smallConfig"
+							ng-click="setServiceDefaultConfig('Small');">Small</button>
+						<button class="btn btn-primary btn-sm" id="medConfig"
+							ng-click="setServiceDefaultConfig('Medium');">Medium</button>
+						<button class="btn btn-primary btn-sm" id="largeConfig"
+							ng-click="setServiceDefaultConfig('Large');">Large</button>
+						<button class="btn btn-primary btn-sm" id="veryLargeConfig"
+							ng-click="setServiceDefaultConfig('VeryLarge');">Very
+							Large</button>
+					</div>
 				</div>
-
 				<div class="wizard-input-section">
-					<label>Memory Swap (MB)</label> <input type="text"
-						class="form-control" name="memorySwap"
-						ng-model="serviceDTO.memorySwap" ng-minlength=1 ng-maxlength=50
-						required />
+					<label class="wizard-slider-label">Memory (MB)</label><input id="service_memory"
+						class="form-control" data-slider-id='memorySlider' type="text"
+						data-slider-min="128" data-slider-max="16384" data-slider-step="1" style="width:300px"/>
 				</div>
-
 				<div class="wizard-input-section">
-					<label>CPU Shares</label> <input type="text" class="form-control"
-						name="cpuShares" ng-model="serviceDTO.cpuShares" ng-minlength=1
-						ng-maxlength=50 required />
+					<label class="wizard-slider-label">CPU Shares</label> <input id="service_cpuShares"
+						class="form-control" data-slider-id='cpuSharesSlider' type="text"
+						data-slider-min="1" data-slider-max="8" data-slider-step="1" style="width:300px"/>
 				</div>
 
 			</div>
 
-			<div class="wizard-card" data-cardname="servicecard3" id="serviceFormDiv">
+			<div class="wizard-card" data-cardname="servicecard3"
+				id="serviceFormDiv">
 				<h3 hidden="true">Environment</h3>
 			</div>
 
@@ -118,22 +126,31 @@
 				<div class="wizard-card" data-cardname="card2">
 					<h3 hidden="true">Machine Configuration</h3>
 					<div class="wizard-input-section">
-						<label>Memory (MB)</label> <input type="text" class="form-control"
-							name="memory" id="memory" ng-model="appImageCfgDTO.memory" required />
+						<div class="wizard-btn-gp">
+							<button class="btn btn-primary btn-sm" id="tinyConfig"
+								ng-click="setDefaultConfig('Tiny');">Tiny</button>
+							<button class="btn btn-primary btn-sm" id="smallConfig"
+								ng-click="setDefaultConfig('Small');">Small</button>
+							<button class="btn btn-primary btn-sm" id="medConfig"
+								ng-click="setDefaultConfig('Medium');">Medium</button>
+							<button class="btn btn-primary btn-sm" id="largeConfig"
+								ng-click="setDefaultConfig('Large');">Large</button>
+							<button class="btn btn-primary btn-sm" id="veryLargeConfig"
+								ng-click="setDefaultConfig('VeryLarge');">Very Large</button>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<label class="wizard-slider-label">Memory (MB)</label><input id="memory" class="form-control
+							data-slider-id='memorySlider' type="text" data-slider-min="128"
+							data-slider-max="16384" data-slider-step="128"
+							data-slider-value="{{appImageCfgDTO.memory}}" style="width:400px;"/>
 					</div>
 
 					<div class="wizard-input-section">
-						<label>Memory Swap (MB)</label> <input type="text"
-							class="form-control" name="memorySwap" id="memorySwap"
-							ng-model="appImageCfgDTO.memorySwap" ng-minlength=1
-							ng-maxlength=50 required />
-					</div>
-
-					<div class="wizard-input-section">
-						<label>CPU Shares</label> <input type="text" class="form-control"
-							name="cpuShares" id="cpuShares"
-							ng-model="appImageCfgDTO.cpuShares" ng-minlength=1
-							ng-maxlength=50 required />
+						<label class="wizard-slider-label">CPU Shares</label> <input id="cpuShares"
+							class="form-control" data-slider-id='cpuSharesSlider' type="text"
+							data-slider-min="1" data-slider-max="8" data-slider-step="1"
+							data-slider-value="{{appImageCfgDTO.cpuShares}}" style="width:400px;"/>
 					</div>
 				</div>
 
@@ -147,8 +164,7 @@
 						<label>Init Shell Script</label>
 						<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
 							id="initScript" required="true" ng-required="true"
-							ng-minlength="0" class="form-control"
-							style="height: 300px;"
+							ng-minlength="0" class="form-control" style="height: 300px;"
 							font-size: 14px"
 							spellcheck="false"></textarea>
 						<div align="left" style="margin-bottom: 10px; padding-top: 20px">
@@ -185,7 +201,8 @@
 												class="btn btn-sm" style="width: 100px;">
 												<span class="glyphicon glyphicon-pencil"></span> Edit
 											</button>
-											<button type="submit" ng-click="deleteService(serviceItem.id)"
+											<button type="submit"
+												ng-click="deleteService(serviceItem.id)"
 												class="btn btn-sm btn-delete" style="width: 100px;">
 												<span class="glyphicon glyphicon-remove-circle"></span>
 												Delete

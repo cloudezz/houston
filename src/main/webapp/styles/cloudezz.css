@@ -248,4 +248,12 @@ table th {
 
 .pace-inactive {
   display: none;
-} 
+}
+.wizard-slider-label{
+	margin-left:30px;
+	margin-right:50px;
+}
+.wizard-btn-gp{
+	margin-bottom: 70px;
+    margin-left: 30px;
+}

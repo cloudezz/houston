@@ -219,6 +219,19 @@ houstonApp.directive('upload', ['uploadManager', function factory(uploadManager)
     };
 }]);
 
+houstonApp.constant('defaultConfigs', {
+    TINY_MEMORY:128,
+    TINY_CPU: 1,
+    SMALL_MEMORY:256,
+    SMALL_CPU: 1,
+    MEDIUM_MEMORY:512,
+    MEDIUM_CPU: 1,
+    LARGE_MEMORY:1024,
+    LARGE_CPU: 2,
+    VLARGE_MEMORY:4096,
+    VLARGE_CPU: 2
+});
+
 houstonApp
 .filter(
 		'timeago',

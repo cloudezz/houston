@@ -346,8 +346,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         };
     }]);
 
-houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService',
-	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService){
+houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService','defaultConfigs',
+	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService,defaultConfigs){
 		
 		$scope.service;
 		
@@ -420,7 +420,55 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.restoreDefaultScript=function () {
 			$scope.appImageCfgDTO.initScript=$scope.defaultScript;
 		}
-		
+		$scope.setDefaultConfig=function(configName){
+			switch (configName) {
+			case "Tiny":
+				$("#memory").slider('setValue', defaultConfigs.TINY_MEMORY);
+				$("#cpuShares").slider('setValue', defaultConfigs.TINY_CPU);
+			break;
+			case "Small":
+				$("#memory").slider('setValue', defaultConfigs.SMALL_MEMORY);
+				$("#cpuShares").slider('setValue', defaultConfigs.SMALL_CPU);
+				break;
+			case "Medium":
+				$("#memory").slider('setValue', defaultConfigs.MEDIUM_MEMORY);
+				$("#cpuShares").slider('setValue', defaultConfigs.MEDIUM_CPU);
+				break;
+			case "Large": 
+				$("#memory").slider('setValue', defaultConfigs.LARGE_MEMORY);
+				$("#cpuShares").slider('setValue', defaultConfigs.LARGE_CPU);
+				break;
+            case "VeryLarge": 
+            	$("#memory").slider('setValue', defaultConfigs.VLARGE_MEMORY);
+				$("#cpuShares").slider('setValue', defaultConfigs.VLARGE_CPU);
+				break;
+			};
+		}
+		$scope.setServiceDefaultConfig=function(configName){
+
+			switch (configName) {
+			case "Tiny":
+				$("#service_memory").slider('setValue', defaultConfigs.TINY_MEMORY);
+				$("#service_cpuShares").slider('setValue', defaultConfigs.TINY_CPU);
+			break;
+			case "Small":
+				$("#service_memory").slider('setValue', defaultConfigs.SMALL_MEMORY);
+				$("#service_cpuShares").slider('setValue', defaultConfigs.SMALL_CPU);
+				break;
+			case "Medium":
+				$("#service_memory").slider('setValue', defaultConfigs.MEDIUM_MEMORY);
+				$("#service_cpuShares").slider('setValue', defaultConfigs.MEDIUM_CPU);
+				break;
+			case "Large": 
+				$("#service_memory").slider('setValue', defaultConfigs.LARGE_MEMORY);
+				$("#service_cpuShares").slider('setValue', defaultConfigs.LARGE_CPU);
+				break;
+            case "VeryLarge": 
+            	$("#service_memory").slider('setValue', defaultConfigs.VLARGE_MEMORY);
+				$("#service_cpuShares").slider('setValue', defaultConfigs.VLARGE_CPU);
+				break;
+			};	
+		}
 		/* Wizard validation functions */
 		
 		$scope.validateFirstStep=function(card) {
@@ -565,6 +613,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.openServiceWizard = function () {
 			$scope.serviceDTO = new Object(); 
 			
+			$scope.serviceDTO.memory=128
+			$scope.serviceDTO.cpuShares=1
+			
 			$scope.subServiceImages = {};
 			ServiceImageInfo.query(function(data) {
         		$scope.subServiceImages = data;
@@ -584,6 +635,22 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		serviceWizard.show();
 	       		$('.modal-backdrop').addClass();
 	       		
+	        	/* for sliders in service wizard */
+	       		$("#service_memory").slider(
+	       				{
+	       					formater: function(value) {
+	       					if(value>1024)
+	       						return value/1024+"gb";
+	       					else 
+	       						return value+"mb";
+	       				},
+	       				value:defaultConfigs.SMALL_MEMORY
+	       			});
+	       		
+	       		$("#service_cpuShares").slider({
+	       			value:defaultConfigs.SMALL_CPU
+	       		});
+	       		
             	serviceWizard.on("submit", function(serviceWizard) { 
 	       			for ( var i = 0; i < $scope.currentServiceForm.formElement.length; i++){
         				var item = $scope.currentServiceForm.formElement[i];  
@@ -591,6 +658,8 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         					$scope.serviceFormElementHolder[item.name]=$rootScope.servicefileSelected;
         				}
         			}
+	       			$scope.serviceDTO.memory=$("#service_memory").slider('getValue');
+	       			$scope.serviceDTO.cpuShares=$("#service_cpuShares").slider('getValue');
 	       			$scope.serviceDTO.imageName=$scope.subServiceImg;
 	       			$scope.serviceDTO.environmentMapping=$scope.serviceFormElementHolder;
 
@@ -656,6 +725,21 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		}
 	       		wizard.show();
 	       		
+	       		/* for sliders in service wizard */
+	       		$("#memory").slider(
+	       				{
+	       					formater: function(value) {
+	       						if(value>1024)
+	       							return value/1024+"gb";
+	       						else 
+	       							return value+"mb";
+	       					},
+	       					value:defaultConfigs.SMALL_MEMORY
+	       				});
+	       		$("#cpuShares").slider({
+	       			value:defaultConfigs.SMALL_CPU
+	       		});
+	       		
 	       		wizard.on("submit", function(wizard) { 
 	       			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
         				var item = $scope.currentForm.formElement[i];  
@@ -663,6 +747,8 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         					$scope.formElementHolder[item.name]=$rootScope.fileSelected;
         				}
         			}
+	       			$scope.appImageCfgDTO.memory=$("#memory").slider('getValue');
+	       			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');
 	       			$scope.appImageCfgDTO.imageName=$scope.serviceImg;
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 	       			$scope.appImageCfgDTO.serviceImages=$scope.serviceDTOList;
@@ -745,19 +831,20 @@ $scope.loadDefaultScript=function(serviceId){
         			var htmlCont = "";
         			for ( var i = 0; i < data.formElement.length; i++) {   
         			$scope.formloaded=true;
-        			var item = data.formElement[i];      
+        			var item = data.formElement[i];  
+        			var compId=formId+"_"+item.name;
         			switch (item.type) {
         			case "input":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"text\" class=\"form-control\" id=\""+compId+"\"  name=\""+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         			break;
         			case "password":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+formId+"_"+item.name+"\" name=\""+formId+"_"+item.name+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><input type=\"password\" class=\"form-control\" id=\""+compId+"\" name=\""+compId+"\" value=\""+item.value+"\" ng-model=\""+holdername+"['"+item.name+"']\" required></div>";
         				break;
         			case "checkbox":
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"controls\" style=\"width:70px\"><label class=\"checkbox\"><input type=\"checkbox\" id=\""+compId+"\"  name=\""+item.name+"\" ng-model=\""+holdername+"['"+item.name+"']\"></label></div>";
         				break;
         			case "file-upload": 
-        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+formId+"_"+item.name+"\"  name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";
+        				htmlCont=htmlCont+"<div class=\"wizard-input-section\"  ng-controller=\"FileUploadCtrl\"><label  for=\""+item.name+"\">"+item.displayName+"</label><div class=\"input-group\"><span class=\"input-group-btn\"><span class=\"btn btn-primary btn-file\">Browse<input type=\"file\" data-url=\"app\/rest\/upload\" id=\""+compId+"\"  name=\""+item.name+"\" upload></span></span><input class=\"form-control\" type=\"text\" readonly=\"\" id=\""+item.name+"fileInput\" ng-model=\"fileSelected\" style=\"width:300px\"><label ng-click=\"upload()\" class=\"form-control\">Upload</label></div></div>";
         				break;
         			};}                                                                                                    			
         		     var $el = $(htmlCont).appendTo(comp);
