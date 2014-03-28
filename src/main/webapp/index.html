@@ -41,11 +41,14 @@
 				<ul class="nav navbar-nav navbar-right">
 
 
-					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span class="glyphicon glyphicon-align-justify"></span>
-							<span translate="global.menu.apps">Apps</span>
+					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span
+							class="glyphicon glyphicon-align-justify"></span> <span
+							translate="global.menu.apps">Apps</span>
 					</a></li>
-					<li ng-switch-when="false"><a href="http://cloudezz.tumblr.com"> <span class="glyphicon glyphicon-pencil"></span>
-							<span translate="global.menu.blog">Blog </span>
+					<li ng-switch-when="false"><a
+						href="http://cloudezz.tumblr.com"> <span
+							class="glyphicon glyphicon-pencil"></span> <span
+							translate="global.menu.blog">Blog </span>
 					</a></li>
 					<li ng-show="page == '/login'"><a href="#/signup"> <span
 							class="glyphicon glyphicon-file"></span> <span
@@ -77,6 +80,9 @@
 							<li><a href="#/imageinfo"><span
 									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
 									translate="global.menu.account.imageinfo">Image Config</span></a></li>
+							<li><a href="#/dockerhostmachine"><span
+									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
+									translate="global.menu.account.dockerHostMachine">Docker HostMachine</span></a></li>
 						</ul></li>
 					<li ng-show="authenticated == true"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#"> <span> <span
@@ -122,7 +128,7 @@
         </script>-->
 
 	<!-- build:js scripts/scripts.js -->
-	
+
 
 	<script src="bower_components/modernizr/modernizr.js"></script>
 	<script src="bower_components/jquery/jquery.js"></script>
@@ -142,8 +148,10 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 	<script
 		src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js" charset="utf-8"></script>
-    <script src="scripts/stomp.min.js"></script>
+	<script type="text/javascript"
+		src="http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"
+		charset="utf-8"></script>
+	<script src="scripts/stomp.min.js"></script>
 	<script src="scripts/term.js"></script>
 	<script src="scripts/bootstrap-wizard.js"></script>
 	<script src="scripts/bootstrap-wizard_nomodal.js"></script>
@@ -152,11 +160,11 @@
 	<script src="scripts/services.js"></script>
 	<script src="scripts/controllers.js"></script>
 	<script src="scripts/directives.js"></script>
-	 <script src="scripts/pace.min.js"></script>
+	<script src="scripts/pace.min.js"></script>
 	<script src="scripts/messenger.min.js"></script>
-	<script src="scripts/messenger-theme-flat.js"></script> 
+	<script src="scripts/messenger-theme-flat.js"></script>
 	<!-- <script src="scripts/wizard.js"></script> -->
-	
+
 	<script src="bower_components/sass-bootstrap/js/affix.js"></script>
 	<script src="bower_components/sass-bootstrap/js/alert.js"></script>
 	<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
@@ -172,7 +180,7 @@
 	<script src="bower_components/jquery/jquery.ui.widget.js"></script>
 	<script src="bower_components/jquery/jquery.fileupload.js"></script>
 	<script src="bower_components/jquery/jquery.iframe-transport.js"></script>
-	
+
 	<!-- endbuild -->
 </body>
 </html>

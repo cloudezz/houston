@@ -17,7 +17,8 @@
                 "tracker": "User tracker",
                 "metrics": "Metrics",
                 "logs": "Logs",
-                "imageinfo" : "Image Config" ,
+                "imageinfo" : "Image Config",
+                "dockerHostMachine" : "Docker Host Machine",
                
                 "audits": "Audits",
                 "login": "Authenticate",

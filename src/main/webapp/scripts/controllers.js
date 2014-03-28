@@ -976,8 +976,8 @@ houstonApp.controller('DockerHostMachineController', ['$scope', 'resolvedDockerH
                                                                   });
                                                           };
 
-                                                          $scope.update = function (id) {
-                                                              $scope.dockerhostmachine = DockerHostMachine.get({id: id});
+                                                          $scope.update = function (dockerhostmachine) {
+                                                              $scope.dockerhostmachine = dockerhostmachine;
                                                               $('#saveDockerHostMachineModal').modal('show');
                                                           };
 

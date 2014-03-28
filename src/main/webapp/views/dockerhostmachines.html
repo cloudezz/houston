@@ -1,84 +1,145 @@
 <div>
+	<div class="col-lg-12">
+		<div style="margin-bottom: 10px; margin-top: 30px;">
+			<a href="javascript:" class="btn btn-xxl" data-toggle="modal"
+				style="width: 270px;" data-target="#saveDockerHostMachineModal"><span
+				class="glyphicon glyphicon-flash"></span> &nbsp;<span>Create
+					DockerHostMachine</span></a> <input class="col-lg-4 pull-right search-box"
+				placeholder="Search" type="text" ng-model="search">
+		</div>
 
-    <h2>DockerHostMachines</h2>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>Host Name</th>
+					<th>Cloud Provider Name</th>
+					<th>IP Address</th>
+					<th>Docker Port</th>
+					<th>https</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="dockerhostmachine in dockerhostmachines | filter:search">
+					<td>{{dockerhostmachine.hostName}}</td>
+					<td>{{dockerhostmachine.cloudProviderName}}</td>
+					<td>{{dockerhostmachine.ipAddress}}</td>
+					<td>{{dockerhostmachine.dockerPort}}</td>
+					<td>{{dockerhostmachine.https}}</td>
+					<td>
+						<button type="submit" ng-click="update(dockerhostmachine)"
+							class="btn btn-sm" style="width: 100px;">
+							<span class="glyphicon glyphicon-pencil"></span> Edit
+						</button>
+						<button type="submit" ng-click="delete(dockerhostmachine.id)"
+							style="width: 100px;" class="btn btn-sm btn-delete">
+							<span class="glyphicon glyphicon-remove-circle"></span> Delete
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveDockerHostMachineModal">
-        <span class="glyphicon glyphicon-flash"></span> Create a new DockerHostMachine
-    </button>
-    <div class="modal fade" id="saveDockerHostMachineModal" tabindex="-1" role="dialog" aria-labelledby="myDockerHostMachineLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form name="form" role="form" novalidate
-                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
-                      ng-submit="create()">
+	<div class="modal fade" id="saveDockerHostMachineModal" tabindex="-1"
+		role="dialog" aria-labelledby="myDockerHostMachineLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form name="form" role="form" novalidate
+					class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+					ng-submit="create()">
 
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
-                        <h4 class="modal-title" id="myDockerHostMachineLabel">Create or edit a DockerHostMachine</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" class="form-control" name="id"
-                                   ng-model="dockerhostmachine.id" readonly>
-                        </div>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true" ng-click="clear()">&times;</button>
+						<h4 class="modal-title" ng-if="dockerhostmachine.id"
+							id="myDockerHostMachineLabel">Edit DockerHostMachine</h4>
+						<h4 class="modal-title" ng-if="!dockerhostmachine.id"
+							id="myDockerHostMachineLabel">Create DockerHostMachine</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label>ID</label> <input type="text" class="form-control"
+								name="id" ng-model="dockerhostmachine.id" readonly>
+						</div>
 
-                        <div class="form-group">
-                            <label>Sample text attribute</label>
-                            <input type="text" class="form-control" name="test"
-                                   ng-model="dockerhostmachine.sampleTextAttribute" ng-minlength=1 ng-maxlength=50 required>
-                        </div>
+						<div class="form-group">
+							<label>Host Name</label> <input type="text" class="form-control"
+								name="hostName" ng-model="dockerhostmachine.hostName"
+								ng-minlength=1 ng-maxlength=50 required>
+						</div>
 
-                        <div class="form-group">
-                            <label>Sample date attribute</label>
-                            <input type="date" class="form-control" name="test"
-                                   ng-model="dockerhostmachine.sampleDateAttribute" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
-                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                        </button>
-                        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-save"></span> Save
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+						<div class="form-group">
+							<label>IP Address</label> <input type="text" class="form-control"
+								name="ipAddress" ng-model="dockerhostmachine.ipAddress" required>
+						</div>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sample text</th>
-                    <th>Sample date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="dockerhostmachine in dockerhostmachines">
-                    <td>{{dockerhostmachine.id}}</td>
-                    <td>{{dockerhostmachine.sampleTextAttribute}}</td>
-                    <td>{{dockerhostmachine.sampleDateAttribute}}</td>
-                    <td>
-                        <button type="submit"
-                                ng-click="update(dockerhostmachine.id)"
-                                class="btn">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
-                        <button type="submit"
-                                ng-click="delete(dockerhostmachine.id)"
-                                class="btn btn-danger">
-                            <span class="glyphicon glyphicon-remove-circle"></span> Delete
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+						<div class="form-group">
+							<label>Docker Port</label> <input type="text"
+								class="form-control" name="dockerPort"
+								ng-model="dockerhostmachine.dockerPort" required>
+						</div>
+
+						<div class="form-group">
+							<label>Cloud Provider Name</label> <input type="text"
+								class="form-control" name="cloudProviderName"
+								ng-model="dockerhostmachine.cloudProviderName" required>
+						</div>
+
+						<div class="form-group">
+							<label>Username</label> <input type="text" class="form-control"
+								name="username" ng-model="dockerhostmachine.username" required>
+						</div>
+
+						<div class="form-group">
+							<label>Password</label> <input type="password"
+								class="form-control" name="password"
+								ng-model="dockerhostmachine.password" required>
+						</div>
+
+						<div class="form-group">
+							<label>SSH Port</label> <input type="text" class="form-control"
+								name="sshPort" ng-model="dockerhostmachine.sshPort" required>
+						</div>
+
+						<div class="form-group">
+							<label>SSH Key</label> <input type="text" class="form-control"
+								name="key" ng-model="dockerhostmachine.key" required>
+						</div>
+
+						<div class="form-group">
+							<div class="checkbox">
+								<label> <input type="checkbox"
+									ng-model="dockerhostmachine.https"> https
+								</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="checkbox">
+								<label> <input type="checkbox"
+									ng-model="dockerhostmachine.sudo"> sudo
+								</label>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-sm btn-default"
+							data-dismiss="modal" ng-click="clear()">
+							<span class="glyphicon glyphicon-ban-circle"></span> Cancel
+						</button>
+						<button type="submit" ng-click="create()"
+							class="btn btn-sm btn-primary">
+							<span class="glyphicon glyphicon-save"></span> Save
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 </div>
