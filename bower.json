@@ -20,7 +20,7 @@
     "angular-i18n": "1.2.5",
     "ui-bootstrap": "~0.10.0",
     "angular-bootstrap": "~0.10.0",
-    "seiyria-bootstrap-slider":"3.0.0"
+    "seiyria-bootstrap-slider": "~3.0.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",
