@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The host machine of docker where the docker instances will be started.
  * 
@@ -163,6 +165,7 @@ public class DockerHostMachine extends BaseEntity {
   }
 
 
+  @JsonIgnore
   public String getDockerDaemonURL() {
     String protocol = "http";
     if (https) {
