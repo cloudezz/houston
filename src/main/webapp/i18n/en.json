@@ -18,7 +18,7 @@
                 "metrics": "Metrics",
                 "logs": "Logs",
                 "imageinfo" : "Image Config",
-                "dockerHostMachine" : "Docker Host Machine",
+                "dockerHostMachine" : "Host Machine Config",
                
                 "audits": "Audits",
                 "login": "Authenticate",
