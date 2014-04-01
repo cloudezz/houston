@@ -73,8 +73,6 @@ public class ClusterConfigResourceTest {
 
         clusterconfig = new ClusterConfig();
         clusterconfig.setId(DEFAULT_ID);
-    	clusterconfig.setSampleDateAttribute(DEFAULT_SAMPLE_DATE_ATTR);
-    	clusterconfig.setSampleTextAttribute(DEFAULT_SAMPLE_TEXT_ATTR);
     }
 
     @Test
@@ -95,8 +93,6 @@ public class ClusterConfigResourceTest {
     			.andExpect(jsonPath("$.sampleTextAttribute").value(DEFAULT_SAMPLE_TEXT_ATTR));
 
     	// Update ClusterConfig
-    	clusterconfig.setSampleDateAttribute(UPD_SAMPLE_DATE_ATTR);
-    	clusterconfig.setSampleTextAttribute(UPD_SAMPLE_TEXT_ATTR);
   
     	restClusterConfigMockMvc.perform(post("/app/rest/clusterconfigs")
     			.contentType(TestUtil.APPLICATION_JSON_UTF8)
