@@ -10,7 +10,7 @@ import com.cloudezz.houston.domain.AppImageCfg;
  * @author Thanneer
  * 
  */
-public interface Deployer {
+public interface DeployerService {
 
   /**
    * Start the app image config along with service images it, creates containers and stores

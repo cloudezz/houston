@@ -1,6 +1,8 @@
 package com.cloudezz.houston.domain;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -29,6 +31,8 @@ public class ImageInfo extends BaseEntity {
 
   private static final long serialVersionUID = 8051510635093548094L;
 
+  private static final String DEFAULT_PORT_LIST = "22,4022,7946";
+
   @Id
   @Column(name = "id")
   protected String id;
@@ -42,23 +46,30 @@ public class ImageInfo extends BaseEntity {
   @Column(name = "logo_url")
   private String logoURL;
 
-  @Column(name = "service_image",nullable = false, columnDefinition = "TINYINT")
+  @Column(name = "service_image", nullable = false, columnDefinition = "TINYINT")
   private boolean serviceImage;
 
   @Column(name = "img_settings_block", length = 5000)
   private String imgSettingsBlock;
-  
+
   @Column(name = "init_script", length = 5000)
   private String initScript;
-  
+
   @Column(name = "image_version")
   private String version;
-  
+
   @Column(name = "short_desc")
   private String shortDesc;
-  
+
   @Column(name = "description", length = 5000)
   private String desc;
+  
+  @Column(name = "role")
+  private String role;
+
+  // Comma separated ports
+  @Column(name = "exposed_ports")
+  private String exposedImagePorts;
 
   @Override
   public String getId() {
@@ -144,12 +155,12 @@ public class ImageInfo extends BaseEntity {
     Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader(getImgSettingsBlock());
     ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
-    if(imgSettings.getPortConfig()==null)
+    if (imgSettings.getPortConfig() == null)
       return null;
-    
+
     return imgSettings.getPortConfig().getPort();
   }
-  
+
   @JsonIgnore
   public List<VolumeMapping> getVolumeMapping() throws JAXBException {
     if (getImgSettingsBlock() == null)
@@ -159,9 +170,9 @@ public class ImageInfo extends BaseEntity {
     Unmarshaller unmarshaller = jc.createUnmarshaller();
     StringReader reader = new StringReader(getImgSettingsBlock());
     ImgSettings imgSettings = (ImgSettings) unmarshaller.unmarshal(reader);
-    if(imgSettings.getVolumeConfig()==null)
+    if (imgSettings.getVolumeConfig() == null)
       return null;
-    
+
     return imgSettings.getVolumeConfig().getVolumeMapping();
   }
 
@@ -195,6 +206,30 @@ public class ImageInfo extends BaseEntity {
 
   public void setDesc(String desc) {
     this.desc = desc;
+  }
+
+  public String getExposedImagePorts() {
+    return exposedImagePorts;
+  }
+
+  public void setExposedImagePorts(String exposedImagePorts) {
+    this.exposedImagePorts = exposedImagePorts;
+  }
+
+  public List<String> getExposedPorts() {
+    return new ArrayList<String>(Arrays.asList(exposedImagePorts.split(",")));
+  }
+  
+  public List<String> getDefaultPorts() {
+    return new ArrayList<String>(Arrays.asList(DEFAULT_PORT_LIST.split(",")));
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 
   // public static void main(String args[]) throws JsonProcessingException {

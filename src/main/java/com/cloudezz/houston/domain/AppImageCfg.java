@@ -116,13 +116,12 @@ public class AppImageCfg extends BaseImageCfg {
   }
 
   public List<String> getPorts() {
-    return ports;
+    return this.ports;
   }
 
   public void setPorts(List<String> ports) {
-    this.ports = ports;
+    this.ports=ports;
   }
-
 
   public String[] getDnsAsArray() {
     return dns.toArray(new String[dns.size()]);
@@ -161,37 +160,6 @@ public class AppImageCfg extends BaseImageCfg {
     this.serviceImages.add(serviceImage);
   }
 
-  /**
-   * To verify if the service machines and app machine have same port numbers if so then there might
-   * be a clash or overlap on port that might cause issues when linking the images. The entire lit
-   * of machines exposed port should be unique
-   * 
-   * @param serviceImage
-   * @return
-   * @throws CloudezzDeployException
-   */
-  public boolean hasPortOverLapIssue() throws CloudezzDeployException {
-
-    if (ports == null)
-      throw new CloudezzDeployException("The App instance ports to be exposed are not set");
-
-    List<String> allExposedPorts = new ArrayList<String>();
-    allExposedPorts.addAll(this.ports);
-    for (Iterator<ServiceImageCfg> iterator = serviceImages.iterator(); iterator.hasNext();) {
-      BaseImageCfg baseCloudezzImageConfig = iterator.next();
-      String[] servicePorts = baseCloudezzImageConfig.getPortsAsArray();
-      if (servicePorts != null) {
-        for (int i = 0; i < servicePorts.length; i++) {
-          if (allExposedPorts.contains(servicePorts[i])) {
-            return true;
-          } else {
-            allExposedPorts.add(servicePorts[i]);
-          }
-        }
-      }
-    }
-    return false;
-  }
 
   public User getOwner() {
     return owner;

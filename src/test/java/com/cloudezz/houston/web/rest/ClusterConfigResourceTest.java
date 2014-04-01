@@ -46,7 +46,7 @@ import com.cloudezz.houston.repository.ClusterConfigRepository;
 @ActiveProfiles("dev")
 public class ClusterConfigResourceTest {
 	
-    private static final Long DEFAULT_ID = new Long(1L);
+    private static final String DEFAULT_ID = new String("id1");
 
     private static final LocalDate DEFAULT_SAMPLE_DATE_ATTR = new LocalDate(0L);
 
@@ -88,7 +88,7 @@ public class ClusterConfigResourceTest {
     	restClusterConfigMockMvc.perform(get("/app/rest/clusterconfigs/{id}", DEFAULT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(DEFAULT_ID.intValue()))
+                .andExpect(jsonPath("$.id").value(DEFAULT_ID))
     			.andExpect(jsonPath("$.sampleDateAttribute").value(DEFAULT_SAMPLE_DATE_ATTR.toString()))
     			.andExpect(jsonPath("$.sampleTextAttribute").value(DEFAULT_SAMPLE_TEXT_ATTR));
 
@@ -103,7 +103,7 @@ public class ClusterConfigResourceTest {
     	restClusterConfigMockMvc.perform(get("/app/rest/clusterconfigs/{id}", DEFAULT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(DEFAULT_ID.intValue()))
+                .andExpect(jsonPath("$.id").value(DEFAULT_ID))
     			.andExpect(jsonPath("$.sampleDateAttribute").value(UPD_SAMPLE_DATE_ATTR.toString()))
     			.andExpect(jsonPath("$.sampleTextAttribute").value(UPD_SAMPLE_TEXT_ATTR));
 

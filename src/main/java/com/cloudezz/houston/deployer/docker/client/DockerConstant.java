@@ -13,6 +13,24 @@ public class DockerConstant {
   public static final int STATUS_SERVER_ERROR = 500;
 
   public static final String ENV_TCP_FORWARD = "TCP_FORWARD";
+  
+  public static final String ENV_SERF_NODE_NAME = "SERF_NODE_NAME";
+  
+  public static final String ENV_SERF_HOST_PORT = "SERF_HOST_PORT";
+  
+  public static final String ENV_SERF_CLUSTER_KEY = "SERF_CLUSTER_KEY";
+  
+  public static final String ENV_SERF_CLUSTER_ID = "SERF_CLUSTER_ID";
+  
+  public static final String ENV_SERF_ROLE = "SERF_ROLE";
+  
+  public static final String ENV_IS_SERVICE = "IS_SERVICE";
+  
+  public static final String ENV_DEFAULT_PORT_TO_EXPOSE = "DEFAULT_PORT_TO_EXPOSE";
+  
+  public static final String ENV_HOST_IP = "HOST_IP";
+  
+  public static final String ENV_DEFAULT_HOST_PORT_TO_EXPOSE = "DEFAULT_HOST_PORT_TO_EXPOSE";
 
   public static final String ENV_SSH_ROOT_PASSWORD = "SSH_ROOT_PASSWORD";
 
@@ -30,9 +48,9 @@ public class DockerConstant {
   
   public static final String WEB_SHELL_SERVICE_NAME = "Web Shell";
   
-
-  
   public static final String DEFAULT_WEB_SHELL_PORT = "4022/tcp";
+  
+  public static final String DEFAULT_SERF_PORT = "7946";
   
   public static final String FOLDER_DATA_DOCKER_SIDE = "/cloudezz/data";
   
@@ -51,6 +69,9 @@ public class DockerConstant {
   public static final String VOL_APP_FOLDER_MAPPING_XML_VAR = "$app_folder";
   
   public static final String VOL_DATA_FOLDER_MAPPING_XML_VAR = "$data_folder";
+  
+  
+  
   
 
 }

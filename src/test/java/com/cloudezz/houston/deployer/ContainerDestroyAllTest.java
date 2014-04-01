@@ -12,11 +12,14 @@ public class ContainerDestroyAllTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DockerClient dockerClient;
+  
+  @Autowired
+  private DeployerHelperService deployerHelperService;
 
 
   @Test
   public void destroyAllContainers() throws Exception {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

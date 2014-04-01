@@ -26,7 +26,10 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
   private DockerClient dockerClient;
 
   @Autowired
-  private Deployer deployer;
+  private DeployerService deployer;
+  
+  @Autowired
+  private DeployerHelperService deployerHelperService;
 
   private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
@@ -97,7 +100,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
 
    @After
   public void cleanup() throws CloudezzDeployException {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

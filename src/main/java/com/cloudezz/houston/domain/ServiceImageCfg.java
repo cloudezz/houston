@@ -135,13 +135,12 @@ public class ServiceImageCfg extends BaseImageCfg {
   }
 
   public List<String> getPorts() {
-    return ports;
+    return this.ports;
   }
 
   public void setPorts(List<String> ports) {
-    this.ports = ports;
+    this.ports=ports;
   }
-
 
   public String[] getDnsAsArray() {
     return dns.toArray(new String[dns.size()]);

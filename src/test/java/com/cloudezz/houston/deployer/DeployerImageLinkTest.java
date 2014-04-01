@@ -25,6 +25,9 @@ public class DeployerImageLinkTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DockerClient dockerClient;
+  
+  @Autowired
+  private DeployerHelperService deployerHelperService;
 
   private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
@@ -74,13 +77,13 @@ public class DeployerImageLinkTest extends BaseApplicationContextLoader {
   public void attachAndDeployImage() throws Exception {
 
 
-    boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
+    boolean success = deployerHelperService.startContainer(dockerClient, serviceImageConfig);
     Assert.assertTrue(success);
 
     HostConfig hostConfig =
-        DeployerUtil.linkImage(dockerClient, applicationImageConfig, serviceImageConfig,
+        deployerHelperService.linkImage(dockerClient, applicationImageConfig, serviceImageConfig,
             "dep_base_link");
-    success = DeployerUtil.startContainer(dockerClient, applicationImageConfig, hostConfig);
+    success = deployerHelperService.startContainer(dockerClient, applicationImageConfig, hostConfig);
     Assert.assertTrue(success);
 
     System.out.println("Cont id : " + applicationImageConfig.getContainerId());
@@ -104,7 +107,7 @@ public class DeployerImageLinkTest extends BaseApplicationContextLoader {
 
   @After
   public void cleanup() throws CloudezzDeployException {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

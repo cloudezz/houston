@@ -25,7 +25,10 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
   private DockerClient dockerClient;
 
   @Autowired
-  private Deployer deployer;
+  private DeployerHelperService deployerHelperService;
+  
+  @Autowired
+  private DeployerService deployer;
 
   private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
@@ -81,7 +84,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
 
   @After
   public void cleanup() throws CloudezzDeployException {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

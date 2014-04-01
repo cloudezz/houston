@@ -24,7 +24,11 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
   @Autowired
   private DockerClient dockerClient;
 
+  @Autowired
+  private DeployerHelperService deployerHelperService;
+  
   private ServiceImageCfg serviceImageConfig;
+  
 
   @Before
   public void setup() throws CloudezzDeployException {
@@ -54,7 +58,7 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
 
   @Test
   public void deployImage() throws Exception {
-    boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
+    boolean success = deployerHelperService.startContainer(dockerClient, serviceImageConfig);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
@@ -64,7 +68,7 @@ public class DeployerVolumeAttachTest extends BaseApplicationContextLoader {
 
   @After
   public void cleanup() throws CloudezzDeployException {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

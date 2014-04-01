@@ -1,6 +1,6 @@
 package com.cloudezz.houston.service;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,7 @@ import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.BaseImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
@@ -95,23 +96,44 @@ public class ImageService {
     return exposedService;
   }
 
-  public void setExposedPorts(ServiceImageCfg serviceImageCfg, String imageName) {
+  public void setExposedPorts(BaseImageCfg baseImageCfg, String imageName) {
     ImageInfo imageInfo = imageInfoRepository.findByImageName(imageName);
     if (imageInfo == null)
       return;
-    List<String> ports = new ArrayList<>();
-    try {
-      if (imageInfo.getPortsExposed() == null)
-        return;
 
-      for (Port port : imageInfo.getPortsExposed()) {
-        ports.add(port.getValue());
-      }
-    } catch (JAXBException e) {
-      log.error(e.getMessage(), e);
+    baseImageCfg.setPorts(imageInfo.getDefaultPorts());
+    
+    if (imageInfo.getExposedPorts() == null)
       return;
+    
+    baseImageCfg.getPorts().addAll(imageInfo.getExposedPorts());
+  }
+  
+  public void setDefaultEnvMapping(BaseImageCfg baseImageCfg, String imageName) {
+    ImageInfo imageInfo = imageInfoRepository.findByImageName(imageName);
+    if (imageInfo == null)
+      return;
+
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOST_IP, baseImageCfg.getDockerHostMachine().getIpAddress());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_IS_SERVICE, ((Boolean)(baseImageCfg instanceof ServiceImageCfg)).toString());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_ID,baseImageCfg.getClusterConfig().getId().toString());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_KEY,baseImageCfg.getClusterConfig().getClusterKey());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_HOST_PORT,baseImageCfg.getDockerPortToHostPort().get(DockerConstant.DEFAULT_SERF_PORT));
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_NODE_NAME,baseImageCfg.getName());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_ROLE,imageInfo.getRole());
+
+     
+     if(imageInfo.getExposedPorts()==null || imageInfo.getExposedPorts().size() == 0)
+       return;
+     
+     String hostExpostedPort ="";
+     for (Iterator<String> iterator = imageInfo.getExposedPorts().iterator(); iterator.hasNext();) {
+      String dockerPort = iterator.next();
+      String hostPort = baseImageCfg.getDockerPortToHostPort().get(dockerPort);
+      hostExpostedPort = hostExpostedPort + dockerPort+":"+hostPort+",";
     }
-    serviceImageCfg.setPorts(ports);
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_HOST_PORT_TO_EXPOSE, imageInfo.getExposedImagePorts());
+     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE,hostExpostedPort);
   }
 
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],

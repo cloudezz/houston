@@ -19,6 +19,9 @@ public class ContainerImagePullTest extends BaseApplicationContextLoader {
   @Autowired
   private DockerClient dockerClient;
   
+  @Autowired
+  private DeployerHelperService deployerHelperService;
+  
   private static final String imageName = "busybox";
 
   @Before
@@ -33,7 +36,7 @@ public class ContainerImagePullTest extends BaseApplicationContextLoader {
     List<String> images = dockerClient.getAllImages();
     Assert.assertTrue(!images.contains(imageName));
     
-    DeployerUtil.checkAndPullImage(dockerClient, imageName);
+    deployerHelperService.checkAndPullImage(dockerClient, imageName);
     
     images = dockerClient.getAllImages();
     Assert.assertTrue(images.contains(imageName));

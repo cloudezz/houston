@@ -1,5 +1,6 @@
 package com.cloudezz.houston.domain;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,16 @@ public abstract class BaseImageCfg extends BaseEntity {
   private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
-  
+
   protected String dataContainerName;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cluster_config")
+  protected ClusterConfig clusterConfig;
 
   @Column(name = "image_name")
   protected String imageName;
@@ -57,8 +62,8 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected Integer cpuShares = 0;
 
   @Column(name = "data_volume_from")
-  private String dataVolumeFrom="";
-  
+  private String dataVolumeFrom = "";
+
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean daemon = new Boolean(true);
 
@@ -73,12 +78,15 @@ public abstract class BaseImageCfg extends BaseEntity {
   private LocalDateTime startTime;
 
   @Column(name = "init_script", columnDefinition = "VARCHAR(6000)")
-  private String initScript="";
+  private String initScript = "";
 
   @Transient
   @JsonIgnore
   protected HostConfig hostConfig;
 
+  @Transient
+  @JsonIgnore
+  protected Map<String, String> dockerPortToHostPort = new HashMap<String, String>();
 
   public abstract List<String> getDns();
 
@@ -158,6 +166,7 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   /**
    * Data container name that is used with docker -volume-from option
+   * 
    * @return
    */
   public String getDataContainerName() {
@@ -213,7 +222,7 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.memory = memory;
   }
 
- 
+
 
   /**
    * @return the daemon
@@ -389,7 +398,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   public void setDataVolumeFrom(String dataVolumeFrom) {
     this.dataVolumeFrom = dataVolumeFrom;
   }
-  
+
   /**
    * @return the hostToDockervolumeMapping
    */
@@ -398,7 +407,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   /**
    * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
    */
-  public abstract void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) ;
+  public abstract void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping);
 
   /**
    * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
@@ -413,12 +422,30 @@ public abstract class BaseImageCfg extends BaseEntity {
   /**
    * @param environmentMapping the environmentMapping to set
    */
-  public abstract void setEnvironmentMapping(Map<String, String> environmentMapping) ;
+  public abstract void setEnvironmentMapping(Map<String, String> environmentMapping);
 
   /**
    * @param environmentMapping the environmentMapping to set
    */
   public abstract void addEnvironmentMapping(String envName, String envValue);
+
+  public Map<String, String> getDockerPortToHostPort() {
+    return dockerPortToHostPort;
+  }
+
+  public void setDockerPortToHostPort(Map<String, String> dockerPortToHostPort) {
+    this.dockerPortToHostPort = dockerPortToHostPort;
+  }
+
+  @JsonIgnore
+  public ClusterConfig getClusterConfig() {
+    return clusterConfig;
+  }
+
+  public void setClusterConfig(ClusterConfig clusterConfig) {
+    this.clusterConfig = clusterConfig;
+  }
+
 
 
 }

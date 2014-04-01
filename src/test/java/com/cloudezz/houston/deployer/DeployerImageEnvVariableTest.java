@@ -25,6 +25,9 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DockerClient dockerClient;
+  
+  @Autowired
+  private DeployerHelperService deployerHelperService;
 
   private ServiceImageCfg serviceImageConfig= new ServiceImageCfg();
 
@@ -75,14 +78,14 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
 
   @Test
   public void attachAndDeployImage() throws Exception {
-    boolean success = DeployerUtil.startContainer(dockerClient, serviceImageConfig);
+    boolean success = deployerHelperService.startContainer(dockerClient, serviceImageConfig);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
 
     HostConfig hostConfig = applicationImageConfig.getHostConfig();
     hostConfig.setLinks(new String[] {containerInspectResponse.name+":dep_base"});
-    DeployerUtil.startContainer(dockerClient, applicationImageConfig, hostConfig);
+    deployerHelperService.startContainer(dockerClient, applicationImageConfig, hostConfig);
 
     containerInspectResponse =
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
@@ -91,7 +94,7 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
 
   @After
   public void cleanup() throws CloudezzDeployException {
-    DeployerUtil.destroyAllContainers(dockerClient);
+    deployerHelperService.destroyAllContainers(dockerClient);
     Assert.assertTrue(dockerClient.getContainersSize() == 0);
   }
 

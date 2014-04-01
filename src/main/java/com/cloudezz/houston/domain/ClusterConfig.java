@@ -1,10 +1,7 @@
 package com.cloudezz.houston.domain;
 
-import java.io.Serializable;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_CLUSTERCONFIG")
-public class ClusterConfig implements Serializable {
+public class ClusterConfig extends BaseEntity {
 
   /**
    * 
@@ -21,17 +18,8 @@ public class ClusterConfig implements Serializable {
   private static final long serialVersionUID = 334995451972353684L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE)
-  private long id;
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
+  @Column(name = "id")
+  protected String id;
 
   private String clusterKey;
 
@@ -41,6 +29,17 @@ public class ClusterConfig implements Serializable {
 
   private String port;
 
+
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(String id) {
+    this.id = id;
+  }
+  
   public String getClusterKey() {
     return clusterKey;
   }
@@ -91,9 +90,6 @@ public class ClusterConfig implements Serializable {
     return true;
   }
 
-  @Override
-  public int hashCode() {
-    return (int) (id ^ (id >>> 32));
-  }
+
 
 }

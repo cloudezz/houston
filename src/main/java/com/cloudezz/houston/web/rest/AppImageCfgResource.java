@@ -23,17 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.cloudezz.houston.deployer.Deployer;
+import com.cloudezz.houston.deployer.DeployerService;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.ClusterConfig;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
+import com.cloudezz.houston.repository.ClusterConfigRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
@@ -52,6 +55,9 @@ public class AppImageCfgResource {
 
   @Inject
   private AppImageCfgRepository appimagecfgRepository;
+  
+  @Inject
+  private ClusterConfigRepository clusterConfigRepository;
 
   @Inject
   private UserRepository userRepository;
@@ -60,7 +66,7 @@ public class AppImageCfgResource {
   private DockerHostMachineRepository dockerHostMachineRepository;
 
   @Autowired
-  private Deployer deployer;
+  private DeployerService deployer;
 
   @Autowired
   private ImageService imageService;
@@ -98,6 +104,11 @@ public class AppImageCfgResource {
 
   private AppImageCfg createAppImageCfg(AppImageCfgDTO appimagecfgDto)
       throws CloudezzDeployException {
+    ClusterConfig clusterConfig = new ClusterConfig();
+    clusterConfig.setId(RepositoryUtils.generateBigId());
+    clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
+    clusterConfig.setName(appimagecfgDto.getAppName());
+    clusterConfig = clusterConfigRepository.saveAndFlush(clusterConfig);
     AppImageCfg appCfg = new AppImageCfg();
     appCfg.setAppName(appimagecfgDto.getAppName());
     appCfg.setCpuShares(appimagecfgDto.getCpuShares());
@@ -108,7 +119,11 @@ public class AppImageCfgResource {
     appCfg.setHostName(appimagecfgDto.getHostName());
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
-    appCfg.setPorts(appimagecfgDto.getPorts());
+    appCfg.setClusterConfig(clusterConfig);
+
+    // set the ports that are to be exposed from image info exposer ports.
+    imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
+
     appCfg.setInitScript(appimagecfgDto.getInitScript());
 
     if (appimagecfgDto.getServiceImages() != null) {
@@ -125,8 +140,8 @@ public class AppImageCfgResource {
         serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
         serviceImageCfg.setPorts(appimagecfgDto.getPorts());
         serviceImageCfg.setApplicationImageConfig(appCfg);
-        // set the ports that are to be exposed using the setting xml config details. This is
-        // required for the app image links to work and see the exposed service ports in the app machine from service machines
+        serviceImageCfg.setClusterConfig(clusterConfig);
+        // set the ports that are to be exposed from image info exposer ports.
         imageService.setExposedPorts(serviceImageCfg, serviceImageCfgDTO.getImageName());
         // add the service images to the main app cfg
         appCfg.addServiceImages(serviceImageCfg);
