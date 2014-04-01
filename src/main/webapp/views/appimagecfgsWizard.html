@@ -36,8 +36,8 @@
 			</div>
 			<div class="wizard-card" data-cardname="servicecard2">
 				<h3 hidden="true">Machine Configuration</h3>
-				<div class="wizard-input-section" style="margin-bottom:70px">
-						<div class="wizard-btn-gp">
+				<div class="wizard-input-section" style="margin-bottom: 70px">
+					<div class="wizard-btn-gp">
 						<button class="btn btn-primary btn-sm" id="tinyConfig"
 							ng-click="setServiceDefaultConfig('Tiny');">Tiny</button>
 						<button class="btn btn-primary btn-sm" id="smallConfig"
@@ -52,14 +52,19 @@
 					</div>
 				</div>
 				<div class="wizard-input-section">
-					<label class="wizard-slider-label">Memory (MB)</label><input id="service_memory"
-						class="form-control" data-slider-id='memorySlider' type="text"
-						data-slider-min="128" data-slider-max="16384" data-slider-step="128" style="width:300px"/>
+					<label class="wizard-slider-label">Memory (MB)</label><input
+						id="service_memory" class="form-control"
+						data-slider-id='memorySlider' type="text" data-slider-min="128"
+						data-slider-max="16384" data-slider-step="128"
+						style="width: 300px" /><span style="padding-left: 15px"
+						id="smemorySliderVal">{{serviceDTO.memory}}</span>
 				</div>
 				<div class="wizard-input-section">
-					<label class="wizard-slider-label">CPU Shares</label> <input id="service_cpuShares"
-						class="form-control" data-slider-id='cpuSharesSlider' type="text"
-						data-slider-min="1" data-slider-max="8" data-slider-step="1" style="width:300px"/>
+					<label class="wizard-slider-label">CPU Shares</label> <input
+						id="service_cpuShares" class="form-control"
+						data-slider-id='cpuSharesSlider' type="text" data-slider-min="1"
+						data-slider-max="8" data-slider-step="1" style="width: 300px" /><span
+						style="padding-left: 15px" id="scpuSharesSliderVal">{{serviceDTO.memory}}</span>
 				</div>
 
 			</div>
@@ -126,6 +131,8 @@
 				<div class="wizard-card" data-cardname="card2">
 					<h3 hidden="true">Machine Configuration</h3>
 					<div class="wizard-input-section">
+						<div style="padding-bottom: 20px">Select a pre-defined
+							configuration or use sliders for custom configuration</div>
 						<div class="wizard-btn-gp">
 							<button class="btn btn-primary btn-sm" id="tinyConfig"
 								ng-click="setDefaultConfig('Tiny');">Tiny</button>
@@ -140,17 +147,23 @@
 						</div>
 					</div>
 					<div class="wizard-input-section">
-						<label class="wizard-slider-label">Memory (MB)</label><input id="memory" class="form-control
-							data-slider-id='memorySlider' type="text" data-slider-min="128"
-							data-slider-max="16384" data-slider-step="128"
-							data-slider-value="{{appImageCfgDTO.memory}}" style="width:400px;"/>
+						<label class="wizard-slider-label">Memory (MB)</label><input
+							id="memory" class="form-control" data-slider-id='memorySlider'
+							type="text" data-slider-min="128" data-slider-max="16384"
+							data-slider-step="128"
+							data-slider-value="{{appImageCfgDTO.memory}}"
+							style="width: 400px;"/><label style="padding-left: 15px"
+							id="memorySliderVal"></label>
 					</div>
 
 					<div class="wizard-input-section">
-						<label class="wizard-slider-label">CPU Shares</label> <input id="cpuShares"
-							class="form-control" data-slider-id='cpuSharesSlider' type="text"
-							data-slider-min="1" data-slider-max="8" data-slider-step="1"
-							data-slider-value="{{appImageCfgDTO.cpuShares}}" style="width:400px;"/>
+						<label class="wizard-slider-label">CPU Shares</label> <input
+							id="cpuShares" class="form-control"
+							data-slider-id='cpuSharesSlider' type="text" data-slider-min="1"
+							data-slider-max="8" data-slider-step="1"
+							data-slider-value="{{appImageCfgDTO.cpuShares}}"
+							style="width: 400px;"/><label style="padding-left: 15px"
+							id="cpuSharesSliderVal" ></label>
 					</div>
 				</div>
 

@@ -638,17 +638,25 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	        	/* for sliders in service wizard */
 	       		$("#service_memory").slider(
 	       				{
-	       					formater: function(value) {
-	       					if(value>1024)
-	       						return value/1024+"gb";
-	       					else 
-	       						return value+"mb";
-	       				},
-	       				value:defaultConfigs.SMALL_MEMORY
-	       			});
+	       					value:defaultConfigs.SMALL_MEMORY,
+	       				     tooltip:"hide"
+	       				});
+	       		$("#service_memory").on('slide', function(slideEvt) {
+	       			var val=$("#service_memory").slider('getValue');	       			
+	       			if(val>1024)
+							val= val/1024+"gb";
+	       			else 
+							val= val+" mb";
+	       			$("#smemorySliderVal").text(val);
+	       		});
 	       		
 	       		$("#service_cpuShares").slider({
-	       			value:defaultConfigs.SMALL_CPU
+	       			value:defaultConfigs.SMALL_CPU,
+	       		    tooltip:"hide"
+	       		});
+	       		$("#service_cpuShares").on('slide', function(slideEvt) {
+	       			var val=$("#service_cpuShares").slider('getValue')+" cpu";
+	       			$("#scpuSharesSliderVal").text(val);
 	       		});
 	       		
             	serviceWizard.on("submit", function(serviceWizard) { 
@@ -728,16 +736,25 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		/* for sliders in service wizard */
 	       		$("#memory").slider(
 	       				{
-	       					formater: function(value) {
-	       						if(value>1024)
-	       							return value/1024+"gb";
-	       						else 
-	       							return value+"mb";
-	       					},
-	       					value:defaultConfigs.SMALL_MEMORY
+	       					value:defaultConfigs.SMALL_MEMORY,
+	       				    tooltip:"hide"
 	       				});
+	       		$("#memory").on('slide', function(slideEvt) {
+	       			var val=$("#memory").slider('getValue');
+	       			if(val>1024)
+							val= val/1024+"gb";
+	       			else 
+							val= val+" mb";
+	       			$("#memorySliderVal").text(val);
+	       		});
+	       		
 	       		$("#cpuShares").slider({
-	       			value:defaultConfigs.SMALL_CPU
+	       			value:defaultConfigs.SMALL_CPU,
+	       			 tooltip:"hide"
+	       		});
+	       		$("#cpuShares").on('slide', function(slideEvt) {
+	       			var val=$("#cpuShares").slider('getValue')+" cpu";
+	       			$("#cpuSharesSliderVal").text(val);
 	       		});
 	       		
 	       		wizard.on("submit", function(wizard) { 
