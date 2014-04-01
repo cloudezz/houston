@@ -421,53 +421,69 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.appImageCfgDTO.initScript=$scope.defaultScript;
 		}
 		$scope.setDefaultConfig=function(configName){
+			var id;
 			switch (configName) {
 			case "Tiny":
 				$("#memory").slider('setValue', defaultConfigs.TINY_MEMORY);
 				$("#cpuShares").slider('setValue', defaultConfigs.TINY_CPU);
-			break;
+				id="tinyConfig";
+				break;
 			case "Small":
 				$("#memory").slider('setValue', defaultConfigs.SMALL_MEMORY);
 				$("#cpuShares").slider('setValue', defaultConfigs.SMALL_CPU);
+				id="smallConfig";
 				break;
 			case "Medium":
 				$("#memory").slider('setValue', defaultConfigs.MEDIUM_MEMORY);
 				$("#cpuShares").slider('setValue', defaultConfigs.MEDIUM_CPU);
+				id="medConfig";
 				break;
 			case "Large": 
 				$("#memory").slider('setValue', defaultConfigs.LARGE_MEMORY);
 				$("#cpuShares").slider('setValue', defaultConfigs.LARGE_CPU);
+				id="largeConfig";
 				break;
             case "VeryLarge": 
             	$("#memory").slider('setValue', defaultConfigs.VLARGE_MEMORY);
 				$("#cpuShares").slider('setValue', defaultConfigs.VLARGE_CPU);
+				id="veryLargeConfig";
 				break;
 			};
+			$("#wizardButtons").find(":button").removeClass("active");
+			$("#"+id).addClass("active");
+			
 		}
 		$scope.setServiceDefaultConfig=function(configName){
-
+            var id;
 			switch (configName) {
 			case "Tiny":
 				$("#service_memory").slider('setValue', defaultConfigs.TINY_MEMORY);
 				$("#service_cpuShares").slider('setValue', defaultConfigs.TINY_CPU);
+				id="service_tinyConfig";
 			break;
 			case "Small":
 				$("#service_memory").slider('setValue', defaultConfigs.SMALL_MEMORY);
 				$("#service_cpuShares").slider('setValue', defaultConfigs.SMALL_CPU);
+				id="service_smallConfig";
 				break;
 			case "Medium":
 				$("#service_memory").slider('setValue', defaultConfigs.MEDIUM_MEMORY);
 				$("#service_cpuShares").slider('setValue', defaultConfigs.MEDIUM_CPU);
+				id="service_medConfig";
 				break;
 			case "Large": 
 				$("#service_memory").slider('setValue', defaultConfigs.LARGE_MEMORY);
 				$("#service_cpuShares").slider('setValue', defaultConfigs.LARGE_CPU);
+				id="service_largeConfig";
 				break;
             case "VeryLarge": 
             	$("#service_memory").slider('setValue', defaultConfigs.VLARGE_MEMORY);
 				$("#service_cpuShares").slider('setValue', defaultConfigs.VLARGE_CPU);
+				id="service_veryLargeConfig";
 				break;
 			};	
+			$("#serviceWizardButtons").find(":button").removeClass("active");
+			$("#"+id).addClass("active");
 		}
 		/* Wizard validation functions */
 		
@@ -644,7 +660,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		$("#service_memory").on('slide', function(slideEvt) {
 	       			var val=$("#service_memory").slider('getValue');	       			
 	       			if(val>1024)
-							val= val/1024+"gb";
+							val= val/1024+" gb";
 	       			else 
 							val= val+" mb";
 	       			$("#smemorySliderVal").text(val);
@@ -667,11 +683,19 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         				}
         			}
 	       			$scope.serviceDTO.memory=$("#service_memory").slider('getValue');
-	       			$scope.serviceDTO.cpuShares=$("#service_cpuShares").slider('getValue');
+	       			$scope.serviceDTO.cpuShares=$("#service_cpuShares").slider('getValue');	       			
 	       			$scope.serviceDTO.imageName=$scope.subServiceImg;
 	       			$scope.serviceDTO.environmentMapping=$scope.serviceFormElementHolder;
+	       			
+	       			/*reset slider*/
+	       			$("#service_memory").slider('setValue',128);	       			
+	       			$("#service_cpuShares").slider('setValue',1);
+	       			$("#smemorySliderVal").text("");
+	       			$("#scpuSharesSliderVal").text("");
+	       			$("#serviceWizardButtons").find(":button").removeClass("active");
 
 	       			console.log($scope.serviceDTO );	
+	       			
 	       			$scope.serviceDTOList.push($scope.serviceDTO);
 	            	$scope.$apply();
 	       			$scope.createService();	
@@ -742,7 +766,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		$("#memory").on('slide', function(slideEvt) {
 	       			var val=$("#memory").slider('getValue');
 	       			if(val>1024)
-							val= val/1024+"gb";
+							val= val/1024+" gb";
 	       			else 
 							val= val+" mb";
 	       			$("#memorySliderVal").text(val);
@@ -765,10 +789,17 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         				}
         			}
 	       			$scope.appImageCfgDTO.memory=$("#memory").slider('getValue');
-	       			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');
+	       			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');	       			
 	       			$scope.appImageCfgDTO.imageName=$scope.serviceImg;
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 	       			$scope.appImageCfgDTO.serviceImages=$scope.serviceDTOList;
+	       			
+	       			/*reset slider*/
+	       			$("#memory").slider('setValue',128);
+	       			$("#cpuShares").slider('setValue',1);
+	       			$("#memorySliderVal").text("");
+	       			$("#cpuSharesSliderVal").text("");
+	       			$("#wizardButtons").find(":button").removeClass("active");
 
 	       			console.log( $scope.appImageCfgDTO );	       				       			
 	       			

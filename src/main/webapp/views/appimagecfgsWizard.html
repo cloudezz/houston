@@ -37,16 +37,19 @@
 			<div class="wizard-card" data-cardname="servicecard2">
 				<h3 hidden="true">Machine Configuration</h3>
 				<div class="wizard-input-section" style="margin-bottom: 70px">
-					<div class="wizard-btn-gp">
-						<button class="btn btn-primary btn-sm" id="tinyConfig"
+					<div style="padding-bottom: 20px">Select a pre-defined
+						machine configuration or use sliders for custom configuration</div>
+					<div class="wizard-btn-gp" id="serviceWizardButtons">
+						<button class="btn btn-primary btn-sm" id="service_tinyConfig"
 							ng-click="setServiceDefaultConfig('Tiny');">Tiny</button>
-						<button class="btn btn-primary btn-sm" id="smallConfig"
+						<button class="btn btn-primary btn-sm" id="service_smallConfig"
 							ng-click="setServiceDefaultConfig('Small');">Small</button>
-						<button class="btn btn-primary btn-sm" id="medConfig"
+						<button class="btn btn-primary btn-sm" id="service_medConfig"
 							ng-click="setServiceDefaultConfig('Medium');">Medium</button>
-						<button class="btn btn-primary btn-sm" id="largeConfig"
+						<button class="btn btn-primary btn-sm" id="service_largeConfig"
 							ng-click="setServiceDefaultConfig('Large');">Large</button>
-						<button class="btn btn-primary btn-sm" id="veryLargeConfig"
+						<button class="btn btn-primary btn-sm"
+							id="service_veryLargeConfig"
 							ng-click="setServiceDefaultConfig('VeryLarge');">Very
 							Large</button>
 					</div>
@@ -132,8 +135,8 @@
 					<h3 hidden="true">Machine Configuration</h3>
 					<div class="wizard-input-section">
 						<div style="padding-bottom: 20px">Select a pre-defined
-							configuration or use sliders for custom configuration</div>
-						<div class="wizard-btn-gp">
+							machine configuration or use sliders for custom configuration</div>
+						<div class="wizard-btn-gp" id=wizardButtons>
 							<button class="btn btn-primary btn-sm" id="tinyConfig"
 								ng-click="setDefaultConfig('Tiny');">Tiny</button>
 							<button class="btn btn-primary btn-sm" id="smallConfig"
@@ -152,8 +155,8 @@
 							type="text" data-slider-min="128" data-slider-max="16384"
 							data-slider-step="128"
 							data-slider-value="{{appImageCfgDTO.memory}}"
-							style="width: 400px;"/><label style="padding-left: 15px"
-							id="memorySliderVal"></label>
+							style="width: 400px;" /><span id="memorySliderVal"
+							style="padding-left: 15px"></span>
 					</div>
 
 					<div class="wizard-input-section">
@@ -162,8 +165,8 @@
 							data-slider-id='cpuSharesSlider' type="text" data-slider-min="1"
 							data-slider-max="8" data-slider-step="1"
 							data-slider-value="{{appImageCfgDTO.cpuShares}}"
-							style="width: 400px;"/><label style="padding-left: 15px"
-							id="cpuSharesSliderVal" ></label>
+							style="width: 400px;" /><span id="cpuSharesSliderVal"
+							style="padding-left: 15px"></span>
 					</div>
 				</div>
 
