@@ -137,6 +137,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/app/rest/authenticate").permitAll()
                 .antMatchers("/app/rest/signup").permitAll()
+                .antMatchers("/app/rest/clusterconfigs").permitAll()
                 .antMatchers("/app/signup/accept/**").permitAll()
                 .antMatchers("/app/rest/account/set_password/**").permitAll()
                 .antMatchers("/app/rest/logs/**").hasAuthority(AuthoritiesConstants.ADMIN)

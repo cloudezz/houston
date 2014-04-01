@@ -1,17 +1,12 @@
 package com.cloudezz.houston.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
-import com.cloudezz.houston.domain.util.CustomLocalDateSerializer;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * A ClusterConfig.
@@ -20,72 +15,85 @@ import java.io.Serializable;
 @Table(name = "T_CLUSTERCONFIG")
 public class ClusterConfig implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private long id;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 334995451972353684L;
 
-    @Size(min = 1, max = 50)
-    private String sampleTextAttribute;
+  @Id
+  @GeneratedValue(strategy = GenerationType.TABLE)
+  private long id;
 
-    @NotNull
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = CustomLocalDateSerializer.class)
-    private LocalDate sampleDateAttribute;
+  public long getId() {
+    return id;
+  }
 
-    public long getId() {
-        return id;
+  public void setId(long id) {
+    this.id = id;
+  }
+
+
+  private String clusterKey;
+
+  private String nodeName;
+
+  private String ip;
+
+  private String port;
+
+  public String getClusterKey() {
+    return clusterKey;
+  }
+
+  public void setClusterKey(String clusterKey) {
+    this.clusterKey = clusterKey;
+  }
+
+  public String getNodeName() {
+    return nodeName;
+  }
+
+  public void setNodeName(String nodeName) {
+    this.nodeName = nodeName;
+  }
+
+  public String getIp() {
+    return ip;
+  }
+
+  public void setIp(String ip) {
+    this.ip = ip;
+  }
+
+  public String getPort() {
+    return port;
+  }
+
+  public void setPort(String port) {
+    this.port = port;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    ClusterConfig clusterconfig = (ClusterConfig) o;
+
+    if (id != clusterconfig.id) {
+      return false;
     }
 
-    public String getSampleTextAttribute() {
-        return sampleTextAttribute;
-    }
+    return true;
+  }
 
-    public void setSampleTextAttribute(String sampleTextAttribute) {
-        this.sampleTextAttribute = sampleTextAttribute;
-    }
+  @Override
+  public int hashCode() {
+    return (int) (id ^ (id >>> 32));
+  }
 
-    public LocalDate getSampleDateAttribute() {
-        return sampleDateAttribute;
-    }
-
-    public void setSampleDateAttribute(LocalDate sampleDateAttribute) {
-        this.sampleDateAttribute = sampleDateAttribute;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ClusterConfig clusterconfig = (ClusterConfig) o;
-
-        if (id != clusterconfig.id) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
-    }
-
-    @Override
-    public String toString() {
-        return "ClusterConfig{" +
-                "id=" + id +
-                ", sampleTextAttribute='" + sampleTextAttribute + '\'' +
-                ", sampleDateAttribute=" + sampleDateAttribute +
-                '}';
-    }
 }
