@@ -257,3 +257,7 @@ table th {
 	margin-bottom: 50px;
     margin-left: 30px;
 }
+.wizard-label-div{
+	float: left;
+    width: 160px;
+}
