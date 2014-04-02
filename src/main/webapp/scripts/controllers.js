@@ -1124,6 +1124,6 @@ houstonApp.controller('DockerHostMachineController', ['$scope', 'resolvedDockerH
                                                           };
 
                                                           $scope.clear = function () {
-                                                              $scope.dockerhostmachine = {id: "", sampleTextAttribute: "", sampleDateAttribute: ""};
+                                                              $scope.dockerhostmachine = {};
                                                           };
                                                       }]);
