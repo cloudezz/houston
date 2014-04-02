@@ -254,7 +254,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         		$scope.progressText ="";
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
-        			  Messenger().post({
+        			  msg.update({
                   		  message:'Machine Started!',
                   		  type: 'success',
                   		  showCloseButton: true
@@ -264,8 +264,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        			 Messenger().post({
-                  		  message:'Machine was not started :: Error is : '+data.error+'!',
+        			$rootScope.msg.update({
+                  		  message:'Machine was not started : Error is : '+data.error+'!',
                   		  type: 'error',
                     	  showCloseButton: true
                   		});
@@ -295,7 +295,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
         			
-        			 Messenger().post({
+        			 $rootScope.msg.update({
                  		  message:'Machine Stopped!',
                  		  type: 'success',
                     	  showCloseButton: true
@@ -305,7 +305,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
       			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        			Messenger().post({
+        			$rootScope.msg.update({
                 		  message:'Machine was not stopped :: Error is : '+data.error+'!',
                 		  type: 'error',
                     	  showCloseButton: true
@@ -924,20 +924,20 @@ $scope.loadDefaultScript=function(serviceId){
  * @param $modalInstance
  * @param deal
  */
-function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppImageCfg, id){
+function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance,$rootScope,AppImageCfg, id){
 		
 	$scope.ok = function() {
 		
 		AppImageCfg.delete({id: id},
                 function () {
                     $scope.$parent.appimagecfgs = AppImageCfg.query();
-                    Messenger().post({
+                    $rootScope.msg.update({
               		  message:'Application deleted!',
               		  type: 'success',
                 	  showCloseButton: true
               		});
                 },function(httpResponse){
-                	Messenger().post({
+                	$rootScope.msg.update({
                 		  message:'Could not delete application.Error is : '+httpResponse.data.error+'!',
                 		  type: 'error',
                     	  showCloseButton: true
@@ -954,8 +954,8 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppIma
 
 
 
-houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
-    function ($scope, resolvedServiceImageCfg, ServiceImageCfg) {
+houstonApp.controller('ServiceImageCfgController', ['$scope','$rootScope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
+    function ($scope,$rootScope, resolvedServiceImageCfg, ServiceImageCfg) {
 
         $scope.serviceimagecfgs = resolvedServiceImageCfg;
 
@@ -977,13 +977,13 @@ houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceIm
             ServiceImageCfg.delete({id: id},
                 function () {
                     $scope.serviceimagecfgs = ServiceImageCfg.query();
-                    Messenger().post({
+                    $rootScope.msg.update({
                 		  message:'Deleted service image!',
                 		  type: 'success',
                     	  showCloseButton: true
                 		});
                 },function(httpResponse){
-                	 Messenger().post({
+                	 $rootScope.msg.update({
                		  message:'Could not delete service image.Error is : '+httpResponse.data.error+'!',
                		  type: 'error',
                 	  showCloseButton: true
@@ -1022,8 +1022,8 @@ houstonApp.controller('FileUploadCtrl',
 
 
 
-houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'ImageInfo',
-  function ($scope, resolvedImageInfo, ImageInfo) {
+houstonApp.controller('ImageInfoController', ['$scope','$rootScope', 'resolvedImageInfo', 'ImageInfo',
+  function ($scope,$rootScope, resolvedImageInfo, ImageInfo) {
 
       $scope.imageinfos = resolvedImageInfo;
 
@@ -1044,14 +1044,13 @@ houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'Im
           ImageInfo.delete({id: id},
               function () {
                   $scope.imageinfos = ImageInfo.query();
-                  Messenger().post("Image config deleted! ");
-                  Messenger().post({
+                  $rootScope.msg.update({
               		  message:'Image config deleted!',
               		  type: 'success',
                 	  showCloseButton: true
               		});
               },function (httpResponse) {
-            	  Messenger().post({
+            	  $rootScope.msg.update({
                		  message:'Could not delete image config.Error is :'+httpResponse.data.error+'!',
                		  type: 'error',
                 	  showCloseButton: true
