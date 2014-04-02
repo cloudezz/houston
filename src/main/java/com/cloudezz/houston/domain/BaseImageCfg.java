@@ -35,8 +35,6 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   protected String containerId;
 
-  protected String dataContainerName;
-
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
@@ -163,19 +161,6 @@ public abstract class BaseImageCfg extends BaseEntity {
     }
 
     return imageType;
-  }
-
-  /**
-   * Data container name that is used with docker -volume-from option
-   * 
-   * @return
-   */
-  public String getDataContainerName() {
-    return dataContainerName;
-  }
-
-  public void setDataContainerName(String dataContainer) {
-    this.dataContainerName = dataContainer;
   }
 
   /**

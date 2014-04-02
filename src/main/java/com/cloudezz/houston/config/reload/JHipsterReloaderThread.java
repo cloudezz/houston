@@ -1,8 +1,10 @@
 package com.cloudezz.houston.config.reload;
 
-import com.cloudezz.houston.config.reload.reloader.JacksonReloader;
-import com.cloudezz.houston.config.reload.reloader.LiquibaseReloader;
-import com.cloudezz.houston.config.reload.reloader.SpringReloader;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+
 import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +16,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.Entity;
-import java.util.ArrayList;
-import java.util.List;
+import com.cloudezz.houston.config.reload.reloader.JacksonReloader;
+import com.cloudezz.houston.config.reload.reloader.LiquibaseReloader;
+import com.cloudezz.houston.config.reload.reloader.SpringReloader;
 
 /**
  * This thread stores classes to reload, to reload them all in one batch.

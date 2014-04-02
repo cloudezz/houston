@@ -34,7 +34,6 @@ import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
-import com.cloudezz.houston.repository.ClusterConfigRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
@@ -55,9 +54,6 @@ public class AppImageCfgResource {
 
   @Inject
   private AppImageCfgRepository appimagecfgRepository;
-  
-  @Inject
-  private ClusterConfigRepository clusterConfigRepository;
 
   @Inject
   private UserRepository userRepository;
