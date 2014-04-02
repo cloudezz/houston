@@ -254,13 +254,21 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         		$scope.progressText ="";
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
-        			 Messenger().post("Machine Started!");
+        			  Messenger().post({
+                  		  message:'Machine Started!',
+                  		  type: 'success',
+                  		  showCloseButton: true
+                  		});
         			AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
         			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        			 Messenger().post("Machine was not started :: Error is - " + data.error);
+        			 Messenger().post({
+                  		  message:'Machine was not started :: Error is : '+data.error+'!',
+                  		  type: 'error',
+                    	  showCloseButton: true
+                  		});
         		}
         	});
         };
@@ -286,13 +294,22 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
     			$scope.progressText ="";
         		if(status == 200 ) {
         			$("#progressBar" + appimagecfg.id).css("width", "100%");
-        			Messenger().post("Machine Stopped!");
+        			
+        			 Messenger().post({
+                 		  message:'Machine Stopped!',
+                 		  type: 'success',
+                    	  showCloseButton: true
+                 		});
         			AppImageCfg.query(function (data) {
       				  $scope.appimagecfgs  = data;
       			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        			Messenger().post("Machine was not stopped :: Error is - " + data.error+"!");
+        			Messenger().post({
+                		  message:'Machine was not stopped :: Error is : '+data.error+'!',
+                		  type: 'error',
+                    	  showCloseButton: true
+                		});
         		}
         	});
         };
@@ -687,7 +704,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       			$scope.serviceDTO.imageName=$scope.subServiceImg;
 	       			$scope.serviceDTO.environmentMapping=$scope.serviceFormElementHolder;
 	       			
-	       			/*reset slider*/
+	       			/* reset slider */
 	       			$("#service_memory").slider('setValue',128);	       			
 	       			$("#service_cpuShares").slider('setValue',1);
 	       			$("#smemorySliderVal").text("");
@@ -794,7 +811,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 	       			$scope.appImageCfgDTO.serviceImages=$scope.serviceDTOList;
 	       			
-	       			/*reset slider*/
+	       			/* reset slider */
 	       			$("#memory").slider('setValue',128);
 	       			$("#cpuShares").slider('setValue',1);
 	       			$("#memorySliderVal").text("");
@@ -914,10 +931,18 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance, AppIma
 		AppImageCfg.delete({id: id},
                 function () {
                     $scope.$parent.appimagecfgs = AppImageCfg.query();
-                    Messenger().post("Application deleted!");
+                    Messenger().post({
+              		  message:'Application deleted!',
+              		  type: 'success',
+                	  showCloseButton: true
+              		});
                 },function(httpResponse){
-                	 Messenger().post("Could not delete application.Error is : "+httpResponse.data.error+"!");
-                });		
+                	Messenger().post({
+                		  message:'Could not delete application.Error is : '+httpResponse.data.error+'!',
+                		  type: 'error',
+                    	  showCloseButton: true
+                		});
+                    });		
 		
 		$modalInstance.close();
 	};
@@ -952,9 +977,17 @@ houstonApp.controller('ServiceImageCfgController', ['$scope', 'resolvedServiceIm
             ServiceImageCfg.delete({id: id},
                 function () {
                     $scope.serviceimagecfgs = ServiceImageCfg.query();
-                    Messenger().post("Deleted service image!");
+                    Messenger().post({
+                		  message:'Deleted service image!',
+                		  type: 'success',
+                    	  showCloseButton: true
+                		});
                 },function(httpResponse){
-                	 Messenger().post("Could not delete service image.Error is :"+httpResponse.data.error+" !");
+                	 Messenger().post({
+               		  message:'Could not delete service image.Error is : '+httpResponse.data.error+'!',
+               		  type: 'error',
+                	  showCloseButton: true
+               		});
                 });
         };
 
@@ -1012,8 +1045,17 @@ houstonApp.controller('ImageInfoController', ['$scope', 'resolvedImageInfo', 'Im
               function () {
                   $scope.imageinfos = ImageInfo.query();
                   Messenger().post("Image config deleted! ");
+                  Messenger().post({
+              		  message:'Image config deleted!',
+              		  type: 'success',
+                	  showCloseButton: true
+              		});
               },function (httpResponse) {
-                  Messenger().post("Could not delete image config.Error is :"+httpResponse.data.error+" ! ");
+            	  Messenger().post({
+               		  message:'Could not delete image config.Error is :'+httpResponse.data.error+'!',
+               		  type: 'error',
+                	  showCloseButton: true
+               		});
               });
       };
 
