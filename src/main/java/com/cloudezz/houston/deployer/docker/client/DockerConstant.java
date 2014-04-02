@@ -14,8 +14,6 @@ public class DockerConstant {
 
   public static final String ENV_TCP_FORWARD = "TCP_FORWARD";
   
-  public static final String ENV_SERF_NODE_NAME = "SERF_NODE_NAME";
-  
   public static final String ENV_SERF_HOST_PORT = "SERF_HOST_PORT";
   
   public static final String ENV_SERF_CLUSTER_KEY = "SERF_CLUSTER_KEY";

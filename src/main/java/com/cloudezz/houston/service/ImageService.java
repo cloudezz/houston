@@ -119,7 +119,6 @@ public class ImageService {
      baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_ID,baseImageCfg.getClusterConfig().getId().toString());
      baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_KEY,baseImageCfg.getClusterConfig().getClusterKey());
      baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_HOST_PORT,baseImageCfg.getDockerPortToHostPort().get(DockerConstant.DEFAULT_SERF_PORT));
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_NODE_NAME,baseImageCfg.getName());
      baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_ROLE,imageInfo.getRole());
 
      

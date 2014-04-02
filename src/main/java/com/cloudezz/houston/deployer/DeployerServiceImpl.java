@@ -62,9 +62,9 @@ public class DeployerServiceImpl implements DeployerService {
 
         if (success) {
           containerIdCache.add(serviceImageConfig.getContainerId());
-          // logic to link the correct ports and env between ,machine for them to work as a group
-          deployerHelperService.linkImage(dockerClient, appImageConfig, serviceImageConfig,
-              serviceImageConfig.getLinkName());
+//          // logic to link the correct ports and env between ,machine for them to work as a group
+//          deployerHelperService.linkImage(dockerClient, appImageConfig, serviceImageConfig,
+//              serviceImageConfig.getLinkName());
         } else {
           // if even one service container start fails then stop and delete the old service
           // containers that were started
