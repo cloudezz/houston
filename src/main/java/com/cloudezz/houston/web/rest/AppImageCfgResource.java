@@ -108,7 +108,6 @@ public class AppImageCfgResource {
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
     clusterConfig.setName(appimagecfgDto.getAppName());
-    clusterConfig = clusterConfigRepository.saveAndFlush(clusterConfig);
     AppImageCfg appCfg = new AppImageCfg();
     appCfg.setAppName(appimagecfgDto.getAppName());
     appCfg.setCpuShares(appimagecfgDto.getCpuShares());

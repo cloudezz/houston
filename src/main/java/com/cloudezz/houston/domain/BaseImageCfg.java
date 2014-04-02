@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -40,7 +41,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
   @JoinColumn(name = "cluster_config")
   protected ClusterConfig clusterConfig;
 
