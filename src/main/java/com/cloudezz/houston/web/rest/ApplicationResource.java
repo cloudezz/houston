@@ -1,9 +1,5 @@
 package com.cloudezz.houston.web.rest;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,15 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.cloudezz.houston.deployer.DeployerService;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
@@ -30,7 +22,6 @@ import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.ClusterConfig;
 import com.cloudezz.houston.domain.ExposedService;
-import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.ApplicationRepository;
@@ -48,9 +39,9 @@ import com.codahale.metrics.annotation.Timed;
  */
 @RestController
 @RequestMapping("/app")
-public class AppImageCfgResource {
+public class ApplicationResource {
 
-  private final Logger log = LoggerFactory.getLogger(AppImageCfgResource.class);
+  private final Logger log = LoggerFactory.getLogger(ApplicationResource.class);
 
   @Inject
   private ApplicationRepository applicationRepository;
@@ -68,9 +59,9 @@ public class AppImageCfgResource {
   private ImageService imageService;
 
   /**
-   * POST /rest/appimagecfgs -> Create a new appimagecfg.
+   * POST /rest/application -> Create a new application.
    */
-  @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.POST,
+  @RequestMapping(value = "/rest/application", method = RequestMethod.POST,
       produces = "application/json", consumes = "application/json")
   @Timed
   @Transactional
@@ -144,7 +135,7 @@ public class AppImageCfgResource {
   }
 
 
-  @RequestMapping(value = "/rest/appimagecfgs/start/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/rest/application/start/{id}", method = RequestMethod.POST)
   @Timed
   public boolean start(@PathVariable String id, HttpServletResponse response) {
     Application  application= applicationRepository.findOne(id);
@@ -174,7 +165,7 @@ public class AppImageCfgResource {
   }
 
 
-  @RequestMapping(value = "/rest/appimagecfgs/stop/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/rest/application/stop/{id}", method = RequestMethod.POST)
   @Timed
   public boolean stop(@PathVariable String id, HttpServletResponse response) {
     Application application = applicationRepository.findOne(id);
@@ -196,13 +187,13 @@ public class AppImageCfgResource {
 
 
   /**
-   * GET /rest/appimagecfgs -> get all the appimagecfgs.
+   * GET /rest/application -> get all the application.
    */
-  @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/application", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
   public List<Application> getAllForCurrentUser() {
-    log.debug("REST request to get all AppImageCfgs");
+    log.debug("REST request to get all Application");
     try {
       User currentLoggedInUser = userRepository.getOne(SecurityUtils.getCurrentLogin());
       return applicationRepository.getAllForUser(currentLoggedInUser);
@@ -215,13 +206,13 @@ public class AppImageCfgResource {
 
 
   /**
-   * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
+   * GET /rest/application/:id -> get the "id" application.
    */
-  @RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/application/{id}", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
   public Application get(@PathVariable String id, HttpServletResponse response) {
-    log.debug("REST request to get AppImageCfg : {}", id);
+    log.debug("REST request to get Application : {}", id);
     Application application = applicationRepository.findOne(id);
     if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -231,13 +222,13 @@ public class AppImageCfgResource {
 
 
   /**
-   * GET /rest/appimagecfgs/:id -> get the "id" appimagecfg.
+   * GET /rest/application/:id -> get the "id" application.
    */
-  @RequestMapping(value = "/rest/appimagecfgs/{id}/service", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/application/{id}/service", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
   public List<ExposedService> getServiceExposed(@PathVariable String id, HttpServletResponse response) {
-    log.debug("REST request to get AppImageCfg : {}", id);
+    log.debug("REST request to get Application : {}", id);
     Application application = applicationRepository.findOne(id);
     if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -253,13 +244,13 @@ public class AppImageCfgResource {
 
 
   /**
-   * DELETE /rest/appimagecfgs/:id -> delete the "id" appimagecfg.
+   * DELETE /rest/application/:id -> delete the "id" application.
    */
-  @RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.DELETE,
+  @RequestMapping(value = "/rest/application/{id}", method = RequestMethod.DELETE,
       produces = "application/json")
   @Timed
   public void delete(@PathVariable String id, HttpServletResponse response) {
-    log.debug("REST request to delete AppImageCfg : {}", id);
+    log.debug("REST request to delete application : {}", id);
     try {
       Application application = applicationRepository.findOne(id);
       if (application == null) {
@@ -275,33 +266,5 @@ public class AppImageCfgResource {
 
   }
 
-  LinkedList<FileMeta> files = new LinkedList<FileMeta>();
-  FileMeta fileMeta = null;
-
-  @RequestMapping(value = "/rest/upload", method = RequestMethod.POST)
-  public @ResponseBody
-  LinkedList<FileMeta> upload(MultipartHttpServletRequest request, HttpServletResponse response) {
-    Iterator<String> itr = request.getFileNames();
-    MultipartFile mpf = null;
-    while (itr.hasNext()) {
-      mpf = request.getFile(itr.next());
-      System.out.println((mpf.getOriginalFilename() + "uploaded!" + files.size()));
-      if (files.size() >= 10)
-        files.poll();
-      fileMeta = new FileMeta();
-      fileMeta.setFileName(mpf.getOriginalFilename());
-      fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");
-      fileMeta.setFileType(mpf.getContentType());
-      try {
-        fileMeta.setBytes(mpf.getBytes());
-        FileCopyUtils.copy(mpf.getBytes(),
-            new FileOutputStream(System.getProperty("java.io.tmpdir") + mpf.getOriginalFilename()));
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
-      }
-      files.add(fileMeta);
-    }
-    return files;
-  }
 
 }

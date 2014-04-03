@@ -25,7 +25,7 @@ import com.cloudezz.houston.service.UserService;
  * 
  * @see UserService
  */
-public class AppImageCfgResourceTest extends BaseApplicationContextLoader {
+public class ApplicationResourceTest extends BaseApplicationContextLoader {
 
   @Inject
   private AppImageCfgRepository appimagecfgRepository;
@@ -36,7 +36,7 @@ public class AppImageCfgResourceTest extends BaseApplicationContextLoader {
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
-    AppImageCfgResource accountResource = new AppImageCfgResource();
+    ApplicationResource accountResource = new ApplicationResource();
     ReflectionTestUtils.setField(accountResource, "appimagecfgRepository", appimagecfgRepository);
     this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountResource).build();
   }
