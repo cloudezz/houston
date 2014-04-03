@@ -15,6 +15,7 @@ import com.cloudezz.houston.BaseApplicationContextLoader;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 
@@ -32,10 +33,13 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
 
   private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
-  private AppImageCfg applicationImageConfig = new AppImageCfg();
+  private  Application application = new Application();
+ 
 
   @Before
   public void setup() throws CloudezzDeployException {
+    
+    AppImageCfg applicationImageConfig = new AppImageCfg();
     DockerHostMachine dockerHostMachine = new DockerHostMachine();
     dockerHostMachine.setIpAddress("localhost");
     dockerHostMachine.setDockerPort("4243");
@@ -52,7 +56,8 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    applicationImageConfig.addServiceImages(serviceImageConfig);
+    application.addAppImageCfgs(applicationImageConfig);
+   
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
@@ -71,12 +76,13 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
+    application.addServiceImageCfgs(serviceImageConfig);
 
   }
 
   @Test
   public void deployImage() throws Exception {
-    boolean success = deployer.start(applicationImageConfig);
+    boolean success = deployer.start(application);
     Assert.assertTrue(success);
   }
 

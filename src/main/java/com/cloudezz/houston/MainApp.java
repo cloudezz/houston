@@ -21,9 +21,9 @@ import com.cloudezz.houston.config.Constants;
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class,
     MetricRepositoryAutoConfiguration.class,WebSocketAutoConfiguration.class})
-public class Application {
+public class MainApp {
 
-  private static final Logger log = LoggerFactory.getLogger(Application.class);
+  private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
   @Inject
   private Environment env;
@@ -46,7 +46,7 @@ public class Application {
 
   public static void main(String[] args) {
     SpringApplication app =
-        new SpringApplication(Application.class, "classpath:META-INF/app-context.xml");
+        new SpringApplication(MainApp.class, "classpath:META-INF/app-context.xml");
 
     // SpringApplication app = new SpringApplication(Application.class);
 

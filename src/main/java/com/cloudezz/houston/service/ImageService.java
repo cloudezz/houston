@@ -1,5 +1,6 @@
 package com.cloudezz.houston.service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.BaseImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
@@ -44,56 +46,64 @@ public class ImageService {
   private DockerHostMachineRepository dockHostMachineRepository;
 
 
-  public ExposedService getExposedService(AppImageCfg appImageCfg) throws CloudezzException {
+  public List<ExposedService> getExposedService(Application application) throws CloudezzException {
 
-    Preconditions.checkNotNull(appImageCfg, "App Image cfg arg cannot be null");
+    Preconditions.checkNotNull(application, "Application arg cannot be null");
 
-    if (appImageCfg.getContainerId() == null && !appImageCfg.isRunning()) {
-      throw new CloudezzException(
-          "Cannot get exposed service information from a instance that is not running");
-    }
+    List<ExposedService> exposedServices = new ArrayList<>();
 
-    ExposedService exposedService = new ExposedService();
-    try {
-      ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getImageName());
-      if (imageInfo == null) {
-        throw new CloudezzException("Image info not available");
+    for (AppImageCfg appImageCfg : application.getAppImageCfgs()) {
+     
+      if (appImageCfg.getContainerId() == null && !application.isRunning()) {
+        throw new CloudezzException(
+            "Cannot get exposed service information from a instance that is not running");
       }
-      List<Port> ports = imageInfo.getPortsExposed();
-      // need to create proper pojo for img settings to get port
-      exposedService.setContainerId(appImageCfg.getContainerId());
-      exposedService.setName(appImageCfg.getAppName());
-      DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
-      DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
-      ContainerInspectResponse containerInspectResponse =
-          dockerClient.inspectContainer(appImageCfg.getContainerId());
-      Map<String, HostPortBinding[]> hostPortBindings =
-          containerInspectResponse.networkSettings.ports;
-      if (hostPortBindings != null) {
-        for (String dockerPort : hostPortBindings.keySet()) {
-          HostPortBinding[] hostPortBinds = hostPortBindings.get(dockerPort);
-          if (hostPortBinds != null && hostPortBinds.length > 0) {
-            checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, appImageCfg,
-                exposedService);
-            for (Port port : ports) {
-              String portValue = port.getValue() + "/tcp";
-              if (dockerPort.equals(portValue)) {
-                String url = "http://";
-                if (dockerHostMachine.isHttps()) {
-                  url = "https://";
+
+      try {
+        ImageInfo imageInfo = imageInfoRepository.findByImageName(appImageCfg.getImageName());
+        if (imageInfo == null) {
+          throw new CloudezzException("Image info not available");
+        }
+        ExposedService exposedService = new ExposedService();
+        List<Port> ports = imageInfo.getPortsExposed();
+        // need to create proper pojo for img settings to get port
+        exposedService.setContainerId(appImageCfg.getContainerId());
+        exposedService.setName(appImageCfg.getAppName());
+        DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
+        DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
+        ContainerInspectResponse containerInspectResponse =
+            dockerClient.inspectContainer(appImageCfg.getContainerId());
+        Map<String, HostPortBinding[]> hostPortBindings =
+            containerInspectResponse.networkSettings.ports;
+        if (hostPortBindings != null) {
+          for (String dockerPort : hostPortBindings.keySet()) {
+            HostPortBinding[] hostPortBinds = hostPortBindings.get(dockerPort);
+            if (hostPortBinds != null && hostPortBinds.length > 0) {
+              checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, appImageCfg,
+                  exposedService);
+              for (Port port : ports) {
+                String portValue = port.getValue() + "/tcp";
+                if (dockerPort.equals(portValue)) {
+                  String url = "http://";
+                  if (dockerHostMachine.isHttps()) {
+                    url = "https://";
+                  }
+                  url =
+                      url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
+                  exposedService.addServiceToURL(port.getDisplayName(), url);
                 }
-                url = url + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort();
-                exposedService.addServiceToURL(port.getDisplayName(), url);
               }
             }
           }
         }
+        exposedServices.add(exposedService);
+      } catch (CloudezzDeployException | JAXBException e) {
+        throw new CloudezzException(e);
       }
-    } catch (CloudezzDeployException | JAXBException e) {
-      throw new CloudezzException(e);
     }
 
-    return exposedService;
+    return exposedServices;
+
   }
 
   public void setExposedPorts(BaseImageCfg baseImageCfg, String imageName) {
@@ -102,37 +112,43 @@ public class ImageService {
       return;
 
     baseImageCfg.setPorts(imageInfo.getDefaultPorts());
-    
+
     if (imageInfo.getExposedPorts() == null)
       return;
-    
+
     baseImageCfg.getPorts().addAll(imageInfo.getExposedPorts());
   }
-  
+
   public void setDefaultEnvMapping(BaseImageCfg baseImageCfg, String imageName) {
     ImageInfo imageInfo = imageInfoRepository.findByImageName(imageName);
     if (imageInfo == null)
       return;
 
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOST_IP, baseImageCfg.getDockerHostMachine().getIpAddress());
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_IS_SERVICE, ((Boolean)(baseImageCfg instanceof ServiceImageCfg)).toString());
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_ID,baseImageCfg.getClusterConfig().getId().toString());
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_KEY,baseImageCfg.getClusterConfig().getClusterKey());
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_HOST_PORT,baseImageCfg.getDockerPortToHostPort().get(DockerConstant.DEFAULT_SERF_PORT));
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_ROLE,imageInfo.getRole());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOST_IP, baseImageCfg
+        .getDockerHostMachine().getIpAddress());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_IS_SERVICE,
+        ((Boolean) (baseImageCfg instanceof ServiceImageCfg)).toString());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_ID, baseImageCfg
+        .getApplication().getClusterConfig().getId().toString());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_CLUSTER_KEY, baseImageCfg
+        .getApplication().getClusterConfig().getClusterKey());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_HOST_PORT, baseImageCfg
+        .getDockerPortToHostPort().get(DockerConstant.DEFAULT_SERF_PORT));
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_ROLE, imageInfo.getRole());
 
-     
-     if(imageInfo.getExposedPorts()==null || imageInfo.getExposedPorts().size() == 0)
-       return;
-     
-     String hostExpostedPort ="";
-     for (Iterator<String> iterator = imageInfo.getExposedPorts().iterator(); iterator.hasNext();) {
+
+    if (imageInfo.getExposedPorts() == null || imageInfo.getExposedPorts().size() == 0)
+      return;
+
+    String hostExpostedPort = "";
+    for (Iterator<String> iterator = imageInfo.getExposedPorts().iterator(); iterator.hasNext();) {
       String dockerPort = iterator.next();
       String hostPort = baseImageCfg.getDockerPortToHostPort().get(dockerPort);
-      hostExpostedPort = hostExpostedPort + dockerPort+":"+hostPort+",";
+      hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort + ",";
     }
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_HOST_PORT_TO_EXPOSE, imageInfo.getExposedImagePorts());
-     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE,hostExpostedPort);
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_HOST_PORT_TO_EXPOSE,
+        imageInfo.getExposedImagePorts());
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE, hostExpostedPort);
   }
 
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],

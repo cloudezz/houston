@@ -6,8 +6,9 @@ import java.util.Map;
 
 public class BaseImageCfgDTO {
 
-
   protected String appName;
+  
+  protected Integer noOfInstance=1;
 
   protected String imageName;
 
@@ -44,6 +45,14 @@ public class BaseImageCfgDTO {
 
   public void setImageName(String imageName) {
     this.imageName = imageName;
+  }
+
+  public Integer getNoOfInstance() {
+    return noOfInstance;
+  }
+
+  public void setNoOfInstance(Integer noOfInstance) {
+    this.noOfInstance = noOfInstance;
   }
 
   public String getGitURL() {

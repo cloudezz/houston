@@ -1,7 +1,7 @@
 package com.cloudezz.houston.deployer;
 
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
-import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.Application;
 
 /**
  * Main interface to start cloudezz app instance along with the service instance that is embedded
@@ -13,41 +13,41 @@ import com.cloudezz.houston.domain.AppImageCfg;
 public interface DeployerService {
 
   /**
-   * Start the app image config along with service images it, creates containers and stores
+   * Start the Application config along with service images it, creates containers and stores
    * them inside image config and they are started
    * 
-   * @param appImageConfig
+   * @param application
    * @return
    */
-  public boolean start(AppImageCfg appImageConfig) throws CloudezzDeployException;
+  public boolean start(Application application) throws CloudezzDeployException;
 
   /**
    * ReStart the containers contained inside the app image config and service images that were
    * created during deploy
    * 
-   * @param appImageConfig
+   * @param application
    * @return
    */
 
-  public boolean restart(AppImageCfg appImageConfig) throws CloudezzDeployException;
+  public boolean restart(Application application) throws CloudezzDeployException;
 
   /**
    * Stop the containers contained inside the app image config and service images that were created
    * during deploy
    * 
-   * @param appImageConfig
+   * @param application
    * @return
    */
-  public boolean stop(AppImageCfg appImageConfig) throws CloudezzDeployException;
+  public boolean stop(Application application) throws CloudezzDeployException;
 
   /**
    * Delete only the containers contained inside the app image config and service images that were
    * created during deploy. The config is not deleted .
    * 
-   * @param appImageConfig
+   * @param application
    * @return
    */
-  public boolean delete(AppImageCfg appImageConfig) throws CloudezzDeployException;
+  public boolean delete(Application application) throws CloudezzDeployException;
 
 
 }

@@ -1,11 +1,11 @@
 package com.cloudezz.houston.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,13 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Preconditions;
 
 /**
  * App image info object that hold information related to application like tomcat web app or php app
@@ -34,9 +30,14 @@ import com.google.common.base.Preconditions;
  */
 @Entity
 @Table(name = "T_APP_IMAGE_CONFIG")
-public class AppImageCfg extends BaseImageCfg {
+public class AppImageCfg extends BaseImageCfg implements Cloneable {
 
   private static final long serialVersionUID = 6647698228363181877L;
+
+
+  @Id
+  @Column(name = "app_name")
+  private String appName;
 
   @ElementCollection(targetClass = String.class)
   @CollectionTable(name = "T_APP_IMAGE_DNS", joinColumns = @JoinColumn(name = "app_img_dns_id"))
@@ -61,25 +62,11 @@ public class AppImageCfg extends BaseImageCfg {
       joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
 
-  @Id
-  @Column(name = "app_name")
-  private String appName;
-
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationImageConfig")
-  private List<ServiceImageCfg> serviceImages;
-
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
-      unique = true)
-  protected ExposedService exposedService;
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_user_id", nullable = false)
-  private User owner;
-
-  @Column(name = "data_container_id")
-  private String dataContainerId;
+  @JoinColumn(name = "app_id", nullable = false)
+  private Application application;
 
   @Override
   public String getId() {
@@ -118,7 +105,7 @@ public class AppImageCfg extends BaseImageCfg {
   }
 
   public void setPorts(List<String> ports) {
-    this.ports=ports;
+    this.ports = ports;
   }
 
   public String[] getDnsAsArray() {
@@ -128,51 +115,6 @@ public class AppImageCfg extends BaseImageCfg {
 
   public String[] getPortsAsArray() {
     return ports.toArray(new String[ports.size()]);
-  }
-
-
-  public ExposedService getExposedService() {
-    return exposedService;
-  }
-
-  public void setExposedService(ExposedService exposedService) {
-    this.exposedService = exposedService;
-  }
-
-  /**
-   * @return the serviceImages
-   */
-  public List<ServiceImageCfg> getServiceImages() {
-    return serviceImages;
-  }
-
-  /**
-   * @param serviceImages the serviceImages to set
-   * @throws CloudezzDeployException
-   */
-  public void addServiceImages(ServiceImageCfg serviceImage) throws CloudezzDeployException {
-    Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
-    if (serviceImages == null) {
-      serviceImages = new LinkedList<ServiceImageCfg>();
-    }
-    this.serviceImages.add(serviceImage);
-  }
-
-
-  public User getOwner() {
-    return owner;
-  }
-
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  public String getDataContainerId() {
-    return dataContainerId;
-  }
-
-  public void setDataContainerId(String dataContainerId) {
-    this.dataContainerId = dataContainerId;
   }
 
   /**
@@ -217,6 +159,35 @@ public class AppImageCfg extends BaseImageCfg {
     this.environmentMapping.put(envName, envValue);
   }
 
+  @JsonIgnore
+  public Application getApplication() {
+    return application;
+  }
 
+  public void setApplication(Application application) {
+    this.application = application;
+  }
 
+  @Override
+  public AppImageCfg clone() {
+    AppImageCfg appImageCfg = new AppImageCfg();
+    appImageCfg.setApplication(this.application);
+    appImageCfg.setAppName(this.appName);
+    appImageCfg.setHostName(this.hostName);
+    appImageCfg.setCpuShares(this.cpuShares);
+    appImageCfg.setImageName(this.imageName);
+    appImageCfg.setInitScript(this.initScript);
+    appImageCfg.setMemory(this.memory);
+    appImageCfg.setMemorySwap(this.memorySwap);
+    appImageCfg.setPorts(new ArrayList<String>(this.ports));
+    appImageCfg.setTty(this.tty);
+    appImageCfg.setDaemon(this.daemon);
+    appImageCfg.setDataVolumeFrom(this.dataVolumeFrom);
+    appImageCfg.setDns(new ArrayList<String>(this.dns));
+    appImageCfg.setDockerHostMachine(this.dockerHostMachine);
+    appImageCfg.setEnvironmentMapping(new HashMap<String, String>(this.environmentMapping));
+    appImageCfg.setHostToDockerVolumeMapping(new HashMap<String, String>(
+        this.hostToDockerVolumeMapping));
+    return appImageCfg;
+  }
 }

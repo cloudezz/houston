@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
@@ -34,14 +30,13 @@ public abstract class BaseImageCfg extends BaseEntity {
   private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
+  
+  @Column(name = "instance_no")
+  private Integer instanceNo;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "docker_host")
   protected DockerHostMachine dockerHostMachine;
-
-  @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
-  @JoinColumn(name = "cluster_config")
-  protected ClusterConfig clusterConfig;
 
   @Column(name = "image_name")
   protected String imageName;
@@ -61,7 +56,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected Integer cpuShares = 0;
 
   @Column(name = "data_volume_from")
-  private String dataVolumeFrom = "";
+  protected String dataVolumeFrom = "";
 
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean daemon = new Boolean(true);
@@ -69,15 +64,8 @@ public abstract class BaseImageCfg extends BaseEntity {
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean tty = new Boolean(true);
 
-  @Column(name = "running", nullable = false, columnDefinition = "TINYINT")
-  protected Boolean running = new Boolean(false);
-
-  @Column(name = "start_time")
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-  private LocalDateTime startTime;
-
   @Column(name = "init_script", columnDefinition = "VARCHAR(6000)")
-  private String initScript = "";
+  protected String initScript = "";
 
   @Transient
   @JsonIgnore
@@ -224,16 +212,6 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.daemon = daemon;
   }
 
-  public Boolean isRunning() {
-    return running;
-  }
-
-  public void setRunning(Boolean running) {
-    this.running = running;
-    if (running)
-      this.startTime = LocalDateTime.now();
-  }
-
   /**
    * @return the tty
    */
@@ -360,22 +338,6 @@ public abstract class BaseImageCfg extends BaseEntity {
     return hostConfig;
   }
 
-  @JsonIgnore
-  public LocalDateTime getStartTime() {
-    return startTime;
-  }
-
-  @JsonGetter
-  public String getFormattedStartTime() {
-    if (startTime == null)
-      return null;
-
-    return startTime.toString("yyyy-MM-dd'T'HH:mm:ssZ");
-  }
-
-  public void setStartTime(LocalDateTime startTime) {
-    this.startTime = startTime;
-  }
 
   public String getDataVolumeFrom() {
     return dataVolumeFrom;
@@ -414,6 +376,18 @@ public abstract class BaseImageCfg extends BaseEntity {
    * @param environmentMapping the environmentMapping to set
    */
   public abstract void addEnvironmentMapping(String envName, String envValue);
+  
+  /**
+   * Get application
+   * @return
+   */
+  public abstract Application getApplication() ;
+
+  /**
+   * Set application
+   * @param application
+   */
+  public abstract void setApplication(Application application) ;
 
   public Map<String, String> getDockerPortToHostPort() {
     return dockerPortToHostPort;
@@ -423,15 +397,13 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.dockerPortToHostPort = dockerPortToHostPort;
   }
 
-  @JsonIgnore
-  public ClusterConfig getClusterConfig() {
-    return clusterConfig;
+  public Integer getInstanceNo() {
+    return instanceNo;
   }
 
-  public void setClusterConfig(ClusterConfig clusterConfig) {
-    this.clusterConfig = clusterConfig;
+  public void setInstanceNo(Integer instanceNo) {
+    this.instanceNo = instanceNo;
   }
-
 
 
 }

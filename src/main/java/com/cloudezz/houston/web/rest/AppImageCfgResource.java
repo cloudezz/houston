@@ -27,13 +27,13 @@ import com.cloudezz.houston.deployer.DeployerService;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.domain.AppImageCfg;
+import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.ClusterConfig;
-import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.FileMeta;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
-import com.cloudezz.houston.repository.AppImageCfgRepository;
+import com.cloudezz.houston.repository.ApplicationRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
@@ -53,7 +53,7 @@ public class AppImageCfgResource {
   private final Logger log = LoggerFactory.getLogger(AppImageCfgResource.class);
 
   @Inject
-  private AppImageCfgRepository appimagecfgRepository;
+  private ApplicationRepository applicationRepository;
 
   @Inject
   private UserRepository userRepository;
@@ -78,19 +78,13 @@ public class AppImageCfgResource {
     log.debug("REST request to save AppImageCfg : {}", appimagecfgDto);
 
     try {
-      AppImageCfg appImageCfg = createAppImageCfg(appimagecfgDto);
+      Application application = createApplication(appimagecfgDto);
 
       // set owner
       String email = SecurityUtils.getCurrentLogin();
       User currentUser = userRepository.getOne(email);
-      appImageCfg.setOwner(currentUser);
-
-      if (appImageCfg.getDockerHostMachine() == null) {
-        DockerHostMachine dockerHostMachine = dockerHostMachineRepository.getOne("127.0.0.1");
-        appImageCfg.setDockerHostMachine(dockerHostMachine);
-
-        appImageCfg = appimagecfgRepository.saveAndFlush(appImageCfg);
-      }
+      application.setOwner(currentUser);
+      
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -98,12 +92,16 @@ public class AppImageCfgResource {
   }
 
 
-  private AppImageCfg createAppImageCfg(AppImageCfgDTO appimagecfgDto)
+  private Application createApplication(AppImageCfgDTO appimagecfgDto)
       throws CloudezzDeployException {
+    Application application = new Application();
+
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
     clusterConfig.setName(appimagecfgDto.getAppName());
+    application.setClusterConfig(clusterConfig);
+
     AppImageCfg appCfg = new AppImageCfg();
     appCfg.setAppName(appimagecfgDto.getAppName());
     appCfg.setCpuShares(appimagecfgDto.getCpuShares());
@@ -114,7 +112,8 @@ public class AppImageCfgResource {
     appCfg.setHostName(appimagecfgDto.getHostName());
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
-    appCfg.setClusterConfig(clusterConfig);
+    appCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
+    application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
 
     // set the ports that are to be exposed from image info exposer ports.
     imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
@@ -134,41 +133,39 @@ public class AppImageCfgResource {
         serviceImageCfg.setMemory(serviceImageCfgDTO.getMemory());
         serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
         serviceImageCfg.setPorts(appimagecfgDto.getPorts());
-        serviceImageCfg.setApplicationImageConfig(appCfg);
-        serviceImageCfg.setClusterConfig(clusterConfig);
+        serviceImageCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
         // set the ports that are to be exposed from image info exposer ports.
         imageService.setExposedPorts(serviceImageCfg, serviceImageCfgDTO.getImageName());
-        // add the service images to the main app cfg
-        appCfg.addServiceImages(serviceImageCfg);
+        application.addServiceImageCfgs(serviceImageCfg, serviceImageCfgDTO.getNoOfInstance());
       }
     }
 
-    return appCfg;
+    return application;
   }
 
 
   @RequestMapping(value = "/rest/appimagecfgs/start/{id}", method = RequestMethod.POST)
   @Timed
   public boolean start(@PathVariable String id, HttpServletResponse response) {
-    AppImageCfg appImageCfg = appimagecfgRepository.findOne(id);
-    if (appImageCfg == null) {
+    Application  application= applicationRepository.findOne(id);
+    if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean success = false;
     try {
-      success = deployer.start(appImageCfg);
+      success = deployer.start(application);
       if (!success)
         return false;
 
-      appImageCfg.setRunning(true);
+      application.setRunning(true);
       // set the exposed service after start of the image
       try {
-        ExposedService exposedService = imageService.getExposedService(appImageCfg);
-        appImageCfg.setExposedService(exposedService);
+        List<ExposedService> exposedService = imageService.getExposedService(application);
+        application.setExposedServices(exposedService);
       } catch (CloudezzException e) {
         log.error(e.getMessage());
       }
-      appImageCfg = appimagecfgRepository.save(appImageCfg);
+      application = applicationRepository.save(application);
 
     } catch (CloudezzDeployException e) {
       log.error(e.getMessage(), e);
@@ -180,16 +177,16 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs/stop/{id}", method = RequestMethod.POST)
   @Timed
   public boolean stop(@PathVariable String id, HttpServletResponse response) {
-    AppImageCfg appImageCfg = appimagecfgRepository.findOne(id);
-    if (appImageCfg == null) {
+    Application application = applicationRepository.findOne(id);
+    if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     boolean success = false;
     try {
-      success = deployer.stop(appImageCfg);
+      success = deployer.stop(application);
       if (success) {
-        appImageCfg.setRunning(false);
-        appimagecfgRepository.save(appImageCfg);
+        application.setRunning(false);
+        applicationRepository.save(application);
       }
     } catch (CloudezzDeployException e) {
       log.error(e.getMessage(), e);
@@ -204,11 +201,11 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public List<AppImageCfg> getAllForCurrentUser() {
+  public List<Application> getAllForCurrentUser() {
     log.debug("REST request to get all AppImageCfgs");
     try {
       User currentLoggedInUser = userRepository.getOne(SecurityUtils.getCurrentLogin());
-      return appimagecfgRepository.getAllForUser(currentLoggedInUser);
+      return applicationRepository.getAllForUser(currentLoggedInUser);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -223,13 +220,13 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs/{id}", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public AppImageCfg get(@PathVariable String id, HttpServletResponse response) {
+  public Application get(@PathVariable String id, HttpServletResponse response) {
     log.debug("REST request to get AppImageCfg : {}", id);
-    AppImageCfg appimagecfg = appimagecfgRepository.findOne(id);
-    if (appimagecfg == null) {
+    Application application = applicationRepository.findOne(id);
+    if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
-    return appimagecfg;
+    return application;
   }
 
 
@@ -239,14 +236,14 @@ public class AppImageCfgResource {
   @RequestMapping(value = "/rest/appimagecfgs/{id}/service", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public ExposedService getServiceExposed(@PathVariable String id, HttpServletResponse response) {
+  public List<ExposedService> getServiceExposed(@PathVariable String id, HttpServletResponse response) {
     log.debug("REST request to get AppImageCfg : {}", id);
-    AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
-    if (appImgCfg == null) {
+    Application application = applicationRepository.findOne(id);
+    if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
     try {
-      return imageService.getExposedService(appImgCfg);
+      return imageService.getExposedService(application);
     } catch (CloudezzException e) {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
@@ -264,12 +261,12 @@ public class AppImageCfgResource {
   public void delete(@PathVariable String id, HttpServletResponse response) {
     log.debug("REST request to delete AppImageCfg : {}", id);
     try {
-      AppImageCfg appImgCfg = appimagecfgRepository.findOne(id);
-      if (appImgCfg == null) {
+      Application application = applicationRepository.findOne(id);
+      if (application == null) {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       } else {
-        deployer.delete(appImgCfg);
-        appimagecfgRepository.delete(id);
+        deployer.delete(application);
+        applicationRepository.delete(id);
       }
     } catch (CloudezzDeployException e) {
       log.error("Failed during delete app cfg", e);
