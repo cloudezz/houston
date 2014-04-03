@@ -16,8 +16,10 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
+import com.cloudezz.houston.domain.ClusterConfig;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.repository.RepositoryUtils;
 
 
 public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
@@ -27,23 +29,36 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DeployerHelperService deployerHelperService;
-  
+
+
   @Autowired
   private DeployerService deployer;
 
-  private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
+  private Application application = new Application();
 
-  private  Application application = new Application();
- 
 
   @Before
   public void setup() throws CloudezzDeployException {
-    
+
     AppImageCfg applicationImageConfig = new AppImageCfg();
+
+    ClusterConfig clusterConfig = new ClusterConfig();
+    clusterConfig.setId(RepositoryUtils.generateBigId());
+    clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
+    clusterConfig.setName("test123");
+    application.setClusterConfig(clusterConfig);
+
     DockerHostMachine dockerHostMachine = new DockerHostMachine();
-    dockerHostMachine.setIpAddress("localhost");
+    dockerHostMachine.setIpAddress("127.0.0.1");
     dockerHostMachine.setDockerPort("4243");
-    dockerHostMachine.setCloudProviderName("my local machine");
+    dockerHostMachine.setName("localhost");
+    dockerHostMachine.setCloudProviderName("local");
+    dockerHostMachine.setHttps(false);
+    dockerHostMachine.setSshPort("2222");
+    dockerHostMachine.setSudo(true);
+    dockerHostMachine.setUsername("vagrant");
+    dockerHostMachine.setPassword("vagrant");
+
 
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
@@ -57,16 +72,17 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
     application.addAppImageCfgs(applicationImageConfig);
-   
+
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
+    ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
 
 
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
-    serviceImageConfig.setImageName("cloudezz/base");
+    serviceImageConfig.setImageName("cloudezz/redis");
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);
