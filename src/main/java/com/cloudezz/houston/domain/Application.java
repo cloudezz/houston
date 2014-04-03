@@ -155,6 +155,7 @@ public class Application extends BaseEntity {
     if (this.appImageCfgs == null) {
       this.appImageCfgs = new LinkedList<AppImageCfg>();
     }
+    appImageCfg.setApplication(this);
     int instanceNo = this.appImageCfgs.size() + 1;
     appImageCfg.setInstanceNo(instanceNo);
     appImageCfg.setAppName(appName + "_app" + instanceNo);
