@@ -86,6 +86,7 @@ public class ApplicationResource {
   private Application createApplication(AppImageCfgDTO appimagecfgDto)
       throws CloudezzDeployException {
     Application application = new Application();
+    application.setAppName(appimagecfgDto.getAppName());
 
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
