@@ -40,25 +40,26 @@ public class DeployerServiceImpl implements DeployerService {
 
   @Override
   public boolean start(Application application) throws CloudezzDeployException {
-    boolean success = true;
+    boolean successServiceStart = true;
+    boolean successAppStart = true;
 
     try {
-      success = success && startServiceImages(application);
+      successServiceStart = startServiceImages(application);
 
-      success = success && startAppImages(application);
+      successAppStart = startAppImages(application);
     } catch (CloudezzDeployException e) {
       // call stop to stop any running or hanging container in the service or app img list
       stop(application);
       throw e;
     }
 
-    return success;
+    return successServiceStart && successAppStart;
   }
 
 
   private boolean startAppImages(Application application) throws CloudezzDeployException {
     List<String> containerIdCache = new ArrayList<String>();
-    boolean success = false;
+    boolean success = true;
 
     try {
       for (AppImageCfg appImageConfig : application.getAppImageCfgs()) {
@@ -93,7 +94,7 @@ public class DeployerServiceImpl implements DeployerService {
 
   private boolean startServiceImages(Application application) throws CloudezzDeployException {
     List<String> containerIdCache = new ArrayList<String>();
-    boolean success = false;
+    boolean success = true;
     try {
       for (ServiceImageCfg serviceImageConfig : application.getServiceImages()) {
         DockerClient dockerClient =
