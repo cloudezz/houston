@@ -341,7 +341,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 			modalInstance.result.then(function(selectedItem) {
 				$scope.selected = selectedItem;
 			}, function() {
-				$log.info('Modal dismissed at: ' + new Date());
+				//$log.info('Modal dismissed at: ' + new Date());
 			});
         };
     }]);

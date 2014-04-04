@@ -220,7 +220,7 @@ houstonApp.factory('ServiceImageInfo', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('AppImageCfg', [ '$resource', function($resource) {
-	return $resource('app/rest/appimagecfgs/:id', {
+	return $resource('app/rest/application/:id', {
 		id : '@id'
 	}, {
 		'query' : {
@@ -238,7 +238,7 @@ houstonApp.factory('AppImageService', [
 		function($http) {
 			return {
 				start : function(id, callback) {
-					var url = 'app/rest/appimagecfgs/start/' + id
+					var url = 'app/rest/application/start/' + id
 					$http.post(url).success(function(data, status) {
 						callback(data, status)
 					}).error(function(data, status) {
@@ -247,7 +247,7 @@ houstonApp.factory('AppImageService', [
 				},
 
 				stop : function(id, callback) {
-					var url = 'app/rest/appimagecfgs/stop/' + id
+					var url = 'app/rest/application/stop/' + id
 					$http.post(url).success(function(data, status) {
 						callback(data, status)
 					}).error(function(data, status) {
@@ -273,7 +273,7 @@ houstonApp.factory('AppImageService', [
 				},
 
 				listServices : function(appName, callback) {
-					var url = "app/rest/appimagecfgs/" + appName + "/service"
+					var url = "app/rest/application/" + appName + "/service"
 					$http.get(url).success(function(data) {
 						callback(data);
 					});
