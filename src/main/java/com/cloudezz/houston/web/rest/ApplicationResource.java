@@ -76,6 +76,9 @@ public class ApplicationResource {
       User currentUser = userRepository.getOne(email);
       application.setOwner(currentUser);
       
+      application = applicationRepository.saveAndFlush(application);
+      log.debug("Saved the Application : " + application.getAppName());
+      
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
