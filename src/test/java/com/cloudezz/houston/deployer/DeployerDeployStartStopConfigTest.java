@@ -17,8 +17,10 @@ import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
+import com.cloudezz.houston.domain.ClusterConfig;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.repository.RepositoryUtils;
 
 
 public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoader {
@@ -39,10 +41,24 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
 
   @Before
   public void setup() throws CloudezzDeployException {
+ 
+    ClusterConfig clusterConfig = new ClusterConfig();
+    clusterConfig.setId(RepositoryUtils.generateBigId());
+    clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
+    clusterConfig.setName("test123");
+    application.setClusterConfig(clusterConfig);
+
     DockerHostMachine dockerHostMachine = new DockerHostMachine();
-    dockerHostMachine.setIpAddress("localhost");
+    dockerHostMachine.setIpAddress("127.0.0.1");
     dockerHostMachine.setDockerPort("4243");
-    dockerHostMachine.setCloudProviderName("my local machine");
+    dockerHostMachine.setName("localhost");
+    dockerHostMachine.setCloudProviderName("local");
+    dockerHostMachine.setHttps(false);
+    dockerHostMachine.setSshPort("2222");
+    dockerHostMachine.setSudo(true);
+    dockerHostMachine.setUsername("vagrant");
+    dockerHostMachine.setPassword("vagrant");
+   
 
     AppImageCfg applicationImageConfig = new AppImageCfg();
 
@@ -66,7 +82,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
-    serviceImageConfig.setImageName("cloudezz/base");
+    serviceImageConfig.setImageName("cloudezz/redis");
     serviceImageConfig.setHostName("testmachine");
     serviceImageConfig.setMemory(512L);
     serviceImageConfig.setMemorySwap(1024L);

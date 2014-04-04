@@ -40,8 +40,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
   @Before
   public void setup() throws CloudezzDeployException {
 
-    AppImageCfg applicationImageConfig = new AppImageCfg();
-
+   
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
@@ -59,7 +58,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     dockerHostMachine.setUsername("vagrant");
     dockerHostMachine.setPassword("vagrant");
 
-
+    AppImageCfg applicationImageConfig = new AppImageCfg();
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
     applicationImageConfig.setDaemon(false);
