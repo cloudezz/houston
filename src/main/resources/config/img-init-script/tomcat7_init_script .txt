@@ -1,0 +1,12 @@
+
+#!/bin/sh
+
+# sample script to get a war file copy to webapps and start tomcat
+wget http://gwt-examples.googlecode.com/files/Calendar.war
+rm /opt/tomcat7/webapps/ROOT.war
+rm -r /opt/tomcat7/webapps/ROOT
+mkdir -p /opt/tomcat7/webapps/
+chmod 777 Calendar.war
+mv Calendar.war /opt/tomcat7/webapps/ROOT.war
+service tomcat7 start  
+tail -f /opt/tomcat7/logs/catalina.out
