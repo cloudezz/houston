@@ -2,9 +2,11 @@ package com.cloudezz.houston.deployer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,6 @@ import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.logstream.ContainerLogExecutor;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 @Service
 public class DeployerServiceImpl implements DeployerService {
@@ -45,8 +46,8 @@ public class DeployerServiceImpl implements DeployerService {
 
     try {
       successServiceStart = startServiceImages(application);
-
       successAppStart = startAppImages(application);
+      application.setStartTime(LocalDateTime.now());
     } catch (CloudezzDeployException e) {
       // call stop to stop any running or hanging container in the service or app img list
       stop(application);
@@ -96,7 +97,7 @@ public class DeployerServiceImpl implements DeployerService {
     List<String> containerIdCache = new ArrayList<String>();
     boolean success = true;
     try {
-      for (ServiceImageCfg serviceImageConfig : application.getServiceImages()) {
+      for (ServiceImageCfg serviceImageConfig : application.getServiceImageCfgs()) {
         DockerClient dockerClient =
             DockerUtil.getDockerClient(serviceImageConfig.getDockerHostMachine());
         // setup vol mapping based on img setting vol config info
@@ -141,7 +142,7 @@ public class DeployerServiceImpl implements DeployerService {
     List<String> containerIdFailList = new ArrayList<String>();
 
     // stop service imgs
-    List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(application.getServiceImages());
+    Set<ServiceImageCfg> serviceImageConfigs = application.getServiceImageCfgs();
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
       DockerClient dockerClient =
           DockerUtil.getDockerClient(serviceImageConfig.getDockerHostMachine());
@@ -155,7 +156,7 @@ public class DeployerServiceImpl implements DeployerService {
     }
 
     // stop app imgs
-    List<AppImageCfg> appImageConfigs = Lists.reverse(application.getAppImageCfgs());
+    Set<AppImageCfg> appImageConfigs = application.getAppImageCfgs();
     for (AppImageCfg appImageConfig : appImageConfigs) {
       DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
       boolean done = deployerHelperService.stopContainer(dockerClient, appImageConfig);
@@ -184,7 +185,7 @@ public class DeployerServiceImpl implements DeployerService {
     }
 
     List<String> containerIdFailList = new ArrayList<String>();
-    List<ServiceImageCfg> serviceImageConfigs = Lists.reverse(application.getServiceImages());
+    Set<ServiceImageCfg> serviceImageConfigs = application.getServiceImageCfgs();
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
       DockerClient dockerClient =
           DockerUtil.getDockerClient(serviceImageConfig.getDockerHostMachine());
@@ -197,7 +198,7 @@ public class DeployerServiceImpl implements DeployerService {
 
     }
 
-    List<AppImageCfg> appImageCfgs = Lists.reverse(application.getAppImageCfgs());
+    Set<AppImageCfg> appImageCfgs = application.getAppImageCfgs();
     for (AppImageCfg appImageConfig : appImageCfgs) {
       DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
       if (appImageConfig.getContainerId() != null) {

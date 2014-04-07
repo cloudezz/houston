@@ -49,7 +49,7 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping", nullable = true)
+  @Column(name = "env_value", nullable = true)
   @CollectionTable(name = "T_APP_ENV_VARIABLE_MAPPING", joinColumns = @JoinColumn(
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
@@ -57,7 +57,7 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping", nullable = true)
+  @Column(name = "container_value", nullable = true)
   @CollectionTable(name = "T_APP_VOLUME_MAPPING",
       joinColumns = @JoinColumn(name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
@@ -65,7 +65,6 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "app_id", nullable = false)
   private Application application;
 
   @Override

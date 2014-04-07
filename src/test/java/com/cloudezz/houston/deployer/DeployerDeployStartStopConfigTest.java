@@ -73,7 +73,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addAppImageCfgs(applicationImageConfig);
+    application.addAppImageCfgs(applicationImageConfig,1);
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
@@ -92,7 +92,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig);
+    application.addServiceImageCfgs(serviceImageConfig,1);
 
   }
 
@@ -105,14 +105,14 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     success = deployer.start(application);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
-        dockerClient.inspectContainer(application.getAppImageCfgs().get(0).getContainerId());
+        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next().getContainerId());
     Assert.assertTrue(containerInspectResponse.state.running);
 
     success = deployer.stop(application);
     Assert.assertTrue(success);
 
     containerInspectResponse =
-        dockerClient.inspectContainer(application.getAppImageCfgs().get(0).getContainerId());
+        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next().getContainerId());
     Assert.assertTrue(!containerInspectResponse.state.running);
 
   }

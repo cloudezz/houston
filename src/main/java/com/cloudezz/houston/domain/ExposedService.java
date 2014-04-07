@@ -35,7 +35,7 @@ public class ExposedService extends BaseEntity {
 
 
   public String getContainerId() {
-    return containerId;
+    return this.containerId;
   }
 
   public void setContainerId(String containerId) {

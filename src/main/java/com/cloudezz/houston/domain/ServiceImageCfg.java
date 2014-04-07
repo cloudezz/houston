@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -17,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -55,7 +53,7 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping", nullable = true)
+  @Column(name = "env_value", nullable = true)
   @CollectionTable(name = "T_SERVICE_ENV_VARIABLE_MAPPING", joinColumns = @JoinColumn(
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
@@ -63,7 +61,7 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping", nullable = true)
+  @Column(name = "container_value", nullable = true)
   @CollectionTable(name = "T_SERVICE_VOLUME_MAPPING", joinColumns = @JoinColumn(
       name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
@@ -71,13 +69,8 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "app_id", nullable = false)
-  private Application application;
+  private Application app;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
-      unique = true)
-  protected ExposedService exposedService;
 
   @Override
   public String getId() {
@@ -153,15 +146,6 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
     return ports.toArray(new String[ports.size()]);
   }
 
-
-  public ExposedService getExposedService() {
-    return exposedService;
-  }
-
-  public void setExposedService(ExposedService exposedService) {
-    this.exposedService = exposedService;
-  }
-
   /**
    * @return the hostToDockervolumeMapping
    */
@@ -206,17 +190,17 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
 
   @JsonIgnore
   public Application getApplication() {
-    return application;
+    return app;
   }
 
   public void setApplication(Application application) {
-    this.application = application;
+    this.app = application;
   }
 
   @Override
   public ServiceImageCfg clone() {
     ServiceImageCfg serviceImgCfg = new ServiceImageCfg();
-    serviceImgCfg.setApplication(this.application);
+    serviceImgCfg.setApplication(this.app);
     serviceImgCfg.setServiceName(this.serviceName);
     serviceImgCfg.setHostName(this.hostName);
     serviceImgCfg.setCpuShares(this.cpuShares);

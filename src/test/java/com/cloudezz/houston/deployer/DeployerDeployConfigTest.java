@@ -70,7 +70,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addAppImageCfgs(applicationImageConfig);
+    application.addAppImageCfgs(applicationImageConfig,1);
 
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
@@ -91,7 +91,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig);
+    application.addServiceImageCfgs(serviceImageConfig,1);
 
   }
 

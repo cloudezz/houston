@@ -1,8 +1,9 @@
 package com.cloudezz.houston.domain;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,11 +34,13 @@ public class Application extends BaseEntity {
   @Column(name = "app_name")
   private String appName;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "application")
-  private List<AppImageCfg> appImageCfgs;
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name="app_img_cfg")
+  private Set<AppImageCfg> appImageCfgs = new LinkedHashSet<AppImageCfg>();
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "application")
-  private List<ServiceImageCfg> serviceImageCfgs;
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name="service_img_cfg")
+  private Set<ServiceImageCfg> serviceImageCfgs = new LinkedHashSet<ServiceImageCfg>();
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "cluster_config")
@@ -80,38 +83,15 @@ public class Application extends BaseEntity {
     this.appName = appName;
   }
 
-  public List<ServiceImageCfg> getServiceImageCfgs() {
+  public Set<ServiceImageCfg> getServiceImageCfgs() {
     return serviceImageCfgs;
   }
 
-  public void setServiceImageCfgs(List<ServiceImageCfg> serviceImageCfgs) {
+  public void setServiceImageCfgs(Set<ServiceImageCfg> serviceImageCfgs) {
     this.serviceImageCfgs = serviceImageCfgs;
   }
 
-  /**
-   * @return the serviceImages
-   */
-  public List<ServiceImageCfg> getServiceImages() {
-    return serviceImageCfgs;
-  }
 
-  /**
-   * Add service imgs
-   * 
-   * @param serviceImage
-   * @throws CloudezzDeployException
-   */
-  public void addServiceImageCfgs(ServiceImageCfg serviceImage) throws CloudezzDeployException {
-    Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
-    if (this.serviceImageCfgs == null) {
-      this.serviceImageCfgs = new LinkedList<ServiceImageCfg>();
-    }
-    serviceImage.setApplication(this);
-    int instanceNo = this.serviceImageCfgs.size() + 1;
-    serviceImage.setInstanceNo(instanceNo);
-    serviceImage.setServiceName(appName + "_serv" + instanceNo);
-    this.serviceImageCfgs.add(serviceImage);
-  }
 
   /**
    * Set the designated no of copies
@@ -123,10 +103,7 @@ public class Application extends BaseEntity {
   public void addServiceImageCfgs(ServiceImageCfg serviceImage, Integer noOfInstances)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(serviceImage, "Service Image cannot be null");
-    if (this.serviceImageCfgs == null) {
-      this.serviceImageCfgs = new LinkedList<ServiceImageCfg>();
-    }
-    for (int i = 0; i < noOfInstances; i++) {
+    for (int i = 1; i < noOfInstances + 1; i++) {
       serviceImage = serviceImage.clone();
       serviceImage.setApplication(this);
       serviceImage.setInstanceNo(i);
@@ -136,31 +113,14 @@ public class Application extends BaseEntity {
 
   }
 
-  public List<AppImageCfg> getAppImageCfgs() {
+  public Set<AppImageCfg> getAppImageCfgs() {
     return appImageCfgs;
   }
 
-  public void setAppImageCfgs(List<AppImageCfg> appImageCfgs) {
+  public void setAppImageCfgs(Set<AppImageCfg> appImageCfgs) {
     this.appImageCfgs = appImageCfgs;
   }
 
-  /**
-   * Add app imgs
-   * 
-   * @param appImageCfg
-   * @throws CloudezzDeployException
-   */
-  public void addAppImageCfgs(AppImageCfg appImageCfg) throws CloudezzDeployException {
-    Preconditions.checkNotNull(appImageCfg, "App Image cannot be null");
-    if (this.appImageCfgs == null) {
-      this.appImageCfgs = new LinkedList<AppImageCfg>();
-    }
-    appImageCfg.setApplication(this);
-    int instanceNo = this.appImageCfgs.size() + 1;
-    appImageCfg.setInstanceNo(instanceNo);
-    appImageCfg.setAppName(appName + "_app" + instanceNo);
-    this.appImageCfgs.add(appImageCfg);
-  }
 
   /**
    * Set the designated no of copies
@@ -172,10 +132,7 @@ public class Application extends BaseEntity {
   public void addAppImageCfgs(AppImageCfg appImageCfg, Integer noOfInstances)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(appImageCfg, "App Image cannot be null");
-    if (this.appImageCfgs == null) {
-      this.appImageCfgs = new LinkedList<AppImageCfg>();
-    }
-    for (int i = 0; i < noOfInstances; i++) {
+    for (int i = 1; i < noOfInstances + 1; i++) {
       appImageCfg = appImageCfg.clone();
       appImageCfg.setApplication(this);
       appImageCfg.setInstanceNo(i);

@@ -57,8 +57,8 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addServiceImageCfgs(serviceImageConfig);
-    application.addAppImageCfgs(applicationImageConfig);
+    application.addServiceImageCfgs(serviceImageConfig,1);
+    application.addAppImageCfgs(applicationImageConfig,1);
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
@@ -78,7 +78,7 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig);
+    application.addServiceImageCfgs(serviceImageConfig,1);
   }
 
   @Test
