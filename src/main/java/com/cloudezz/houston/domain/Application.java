@@ -2,11 +2,14 @@ package com.cloudezz.houston.domain;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -32,24 +35,31 @@ public class Application extends BaseEntity {
 
   @Id
   @Column(name = "app_name")
-  private String appName;
+  protected String appName;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name="app_img_cfg")
-  private Set<AppImageCfg> appImageCfgs = new LinkedHashSet<AppImageCfg>();
+  @JoinColumn(name = "app_img_cfg")
+  protected Set<AppImageCfg> appImageCfgs = new LinkedHashSet<AppImageCfg>();
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name="service_img_cfg")
-  private Set<ServiceImageCfg> serviceImageCfgs = new LinkedHashSet<ServiceImageCfg>();
+  @JoinColumn(name = "service_img_cfg")
+  protected Set<ServiceImageCfg> serviceImageCfgs = new LinkedHashSet<ServiceImageCfg>();
+
+  @ElementCollection(targetClass = String.class)
+  @CollectionTable(name = "T_APP_TAGS", joinColumns = @JoinColumn(name = "app_tags_id"))
+  protected List<String> tags = new LinkedList<String>();
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "cluster_config")
   protected ClusterConfig clusterConfig;
 
+  @Column(name = "app_desc", columnDefinition = "VARCHAR(1500)")
+  protected String desc = "";
+  
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_user_id", nullable = false)
-  private User owner;
+  protected User owner;
 
   @Column(name = "running", nullable = false, columnDefinition = "TINYINT")
   protected Boolean running = new Boolean(false);
@@ -194,6 +204,23 @@ public class Application extends BaseEntity {
 
   public void setStartTime(LocalDateTime startTime) {
     this.startTime = startTime;
+  }
+
+
+  public List<String> getTags() {
+    return tags;
+  }
+
+  public void setTags(List<String> tags) {
+    this.tags = tags;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
   }
 
 }
