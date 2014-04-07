@@ -1,4 +1,4 @@
-package com.cloudezz.houston.repository;
+package com.cloudezz.houston.util;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -18,5 +18,6 @@ public class RepositoryUtils {
     String id = RandomStringUtils.randomAlphabetic(64);
     return id;
   }
+  
   
 }

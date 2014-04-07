@@ -2,6 +2,8 @@ package com.cloudezz.houston.repository;
 
 import com.cloudezz.houston.config.audit.AuditEventConverter;
 import com.cloudezz.houston.domain.PersistentAuditEvent;
+import com.cloudezz.houston.util.RepositoryUtils;
+
 import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;

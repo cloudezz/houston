@@ -18,10 +18,10 @@ import com.cloudezz.houston.domain.Authority;
 import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
-import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.AuthoritiesConstants;
 import com.cloudezz.houston.security.SecurityUtils;
+import com.cloudezz.houston.util.RepositoryUtils;
 
 /**
  * Service class for managing users.

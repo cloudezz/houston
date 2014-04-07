@@ -20,7 +20,7 @@ import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.ClusterConfig;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ServiceImageCfg;
-import com.cloudezz.houston.repository.RepositoryUtils;
+import com.cloudezz.houston.util.RepositoryUtils;
 
 
 public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoader {

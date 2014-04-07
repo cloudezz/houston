@@ -26,10 +26,11 @@ import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.ApplicationRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
-import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
+import com.cloudezz.houston.util.RepositoryUtils;
+import com.cloudezz.houston.util.SecretKeyUtil;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.cloudezz.houston.web.rest.dto.ServiceImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
@@ -93,7 +94,7 @@ public class ApplicationResource {
 
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
-    clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
+    clusterConfig.setClusterKey(SecretKeyUtil.getSerfSecretKey());
     clusterConfig.setName(appimagecfgDto.getAppName());
     application.setClusterConfig(clusterConfig);
 

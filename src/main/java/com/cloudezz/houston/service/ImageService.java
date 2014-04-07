@@ -70,6 +70,7 @@ public class ImageService {
         exposedService.setContainerId(appImageCfg.getContainerId());
         exposedService.setName(appImageCfg.getAppName());
         exposedService.setServiceImage(false);
+        exposedService.setInstanceNo(appImageCfg.getInstanceNo());
         DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
         DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
         ContainerInspectResponse containerInspectResponse =
