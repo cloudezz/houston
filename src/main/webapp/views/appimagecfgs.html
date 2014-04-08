@@ -41,13 +41,12 @@
 							</span>
 							</a>
 							<ul class="dropdown-menu">
-								<li
-									ng-repeat="(key, value) in appimagecfg.exposedService.serviceToURL"
-									ng-click="openService(value)"><a><span
-										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{key}}</span></a>
+								<li ng-repeat="serviceToURLs in (getServiceToURLs(appimagecfg.exposedServices))"
+									ng-click="openService(serviceToURLs.value)"><a><span
+										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{serviceToURLs.key}}_{{serviceToURLs.instanceNo}}</span></a>
 								</li>
-								<li ng-click="openTerminal(appimagecfg.containerId)"><a><span
-										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>Logs</span></a> 
+								<li ng-repeat="exposedService in appimagecfg.exposedServices" ng-click="openTerminal(exposedService.containerId)"><a><span
+										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>Logs_{{exposedService.instanceNo}}</span></a> 
 								</li>
 							</ul>
 						</div>
@@ -67,6 +66,7 @@
 			</tbody>
 		</table>
 	</div>
+
 	<script type="text/ng-template" id="deleteConfirm.html">
 		<div id="confirmDeleteApp">	
 			<div class="modal-header">

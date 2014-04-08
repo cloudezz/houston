@@ -231,7 +231,33 @@ function QueryStringToJSON(queryStr) {
 
 houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$location', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
     function ($rootScope,$scope, $location, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
-        $scope.appimagecfgs = AppImageCfg.query();		
+		$scope.appimagecfgsRows = [];
+
+
+		$scope.appimagecfgs = AppImageCfg.query();
+		
+		
+	    $scope.getServiceToURLs = function(exposedServices) {
+	    	var serviceToURLs = [];
+	    	for(var i=0; i<exposedServices.length; i++){
+	    		var instanceNo = exposedServices[i].instanceNo;
+	    		var serviceToURL = exposedServices[i].serviceToURL;
+	    		for(var key in serviceToURL){
+	    			serviceToURLs.push({key : key, value : serviceToURL[key], instanceNo : instanceNo});
+	    		}
+	    	}
+	    	return serviceToURLs;
+	    };
+		
+		$scope.$watchCollection('appimagecfgs', function(newValue, oldValue) {
+		    var appimagecfgsRows = [];
+		    for (var i = 0; i < newValue.length; i++ ) {
+		        if (i % 4 == 0) appimagecfgsRows.push([]);
+		        appimagecfgsRows[appimagecfgsRows.length-1].push(newValue[i]);
+		    }
+		    $scope.appimagecfgsRows = appimagecfgsRows;
+		});
+		
         console.log($scope.appimagecfgs);
 
         $scope.start = function (appimagecfg) {
