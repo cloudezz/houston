@@ -229,9 +229,12 @@ function QueryStringToJSON(queryStr) {
 }
 
 
-houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$location', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo', 
-    function ($rootScope,$scope, $location, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo) {
-        $scope.appimagecfgs = AppImageCfg.query();		
+houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$location', '$modal' ,'$compile', '$window', '$timeout', 'resolvedAppImageCfg', 'AppImageCfg','AppImageService','ImageInfo','AppConfigCommunicationService', 
+    function ($rootScope,$scope, $location, $modal,$compile,$window, $timeout, resolvedAppImageCfg, AppImageCfg, AppImageService, ImageInfo,AppConfigCommunicationService) {
+        AppImageCfg.query(function (data) {
+			  $scope.appimagecfgs  = data;
+			  AppConfigCommunicationService.setAppImgConfigs(data);
+		});	
         console.log($scope.appimagecfgs);
 
         $scope.start = function (appimagecfg) {
@@ -259,8 +262,9 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
                   		  type: 'success',
                   		  showCloseButton: true
                   		});
-        			AppImageCfg.query(function (data) {
+        			  AppImageCfg.query(function (data) {
         				  $scope.appimagecfgs  = data;
+        				  AppConfigCommunicationService.setAppImgConfigs(data);
         			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
@@ -300,9 +304,10 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
                  		  type: 'success',
                     	  showCloseButton: true
                  		});
-        			AppImageCfg.query(function (data) {
-      				  $scope.appimagecfgs  = data;
-      			});
+        			 AppImageCfg.query(function (data) {
+        				  $scope.appimagecfgs  = data;
+        				  AppConfigCommunicationService.setAppImgConfigs(data);
+        			});
         		} else {
         			$("#progressBar" + appimagecfg.id).css("width", "0%");
         			$rootScope.msg.update({
@@ -314,6 +319,10 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	});
         };
         
+        $scope.editConfig=function(config){
+        	AppConfigCommunicationService.setConfigToEdit(config);
+        	location.href = "#/appImgConfigWizard";
+        }
 
 		$scope.openService = function (url) {
 			  var win=$window.open(url, '_blank');
@@ -330,13 +339,6 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
             $scope.appimagecfg = AppImageCfg.get({id: id});
             $('#saveAppImageCfgModal').modal('show');
         };
-
-// $scope.delete = function (id) {
-// AppImageCfg.delete({id: id},
-// function () {
-// $scope.appimagecfgs = AppImageCfg.query();
-// });
-// };
         
         $scope.delete = function (id) {
         	
@@ -363,8 +365,8 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         };
     }]);
 
-houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService','defaultConfigs',
-	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService,defaultConfigs){
+houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService','AppConfigCommunicationService','defaultConfigs',
+	function($rootScope,$scope,$compile,AppImageCfg,ImageInfo,ServiceImageInfo,AppImageService,AppConfigCommunicationService,defaultConfigs){
 		
 		$scope.service;
 		
@@ -372,6 +374,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         
         $scope.appImageCfgDTO = {};
         
+        if(AppConfigCommunicationService.getConfigToEdit()!=null){
+        	 $scope.appImageCfgDTO=AppConfigCommunicationService.getConfigToEdit();
+        	 $scope.setServiceWithName($scope.appImageCfgDTO.imageName);
+        }	
         var wizard;
         
         var serviceWizard;
@@ -379,6 +385,16 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         $scope.$on('$viewContentLoaded', function(){
         	$scope.openWizard();
         	});
+        $scope.setServiceWithName=function(serviceName){
+			var serviceId;
+			angular.forEach(AppConfigCommunicationService.getConfigToEdit(), function(item) {
+				if(item.imageName==serviceName){
+					serviceId=item.id;
+				}
+			});
+			$scope.setService(serviceId,serviceName);
+		
+        }
 		$scope.setService = function(serviceId,serviceName) {
 		
 		/* Marking image selection by adding grey border */
@@ -429,7 +445,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         $scope.create = function (callback) {
             AppImageCfg.save($scope.appImageCfgDTO,
                 function () {
-                    $scope.appimagecfgs = AppImageCfg.query();
+            	AppImageCfg.query(function (data) {
+      			  AppConfigCommunicationService.setAppImgConfigs(data);
+            	});
                     callback();
                 });
         };
@@ -556,7 +574,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		    	service=$scope.service;
 		    	wizardCard= card.nwizard;
 		    	errorSpan=$("#errorSpan");
-		    	list=$scope.appimagecfgs;
+		    	list=AppConfigCommunicationService.getAppImgConfigs();
 		    	input=card.el.find("#appName");
 		    	}		           
 		    	else{
@@ -688,6 +706,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		
 		$scope.openServiceWizard = function (isEdit) {
 		$scope.isEditContext=isEdit;
+		if(!$scope.isEditContext){
+			$scope.serviceDTO={};
+		}
 			$scope.serviceFormElementHolder=new Object(); 
 			if($scope.isEditContext){
 				if($scope.serviceDTO!=null){
@@ -751,7 +772,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       			}
 	       			$scope.serviceDTOList.push($scope.serviceDTO);
 	            	$scope.$apply();
-	       			$scope.createService();		
+	       			$scope.createService();	
+	       			$scope.serviceDTO=null;
+	       			$scope.subService=null;
 				});
             	
             	serviceWizard.on("incrementCard", function(serviceWizard) {
@@ -776,8 +799,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
             	serviceWizard.el.find(".wizard-success .create-another-server").click(function() {
             		serviceWizard.reset();
-            		resetServiceWizard(serviceWizard);
-            		
+            		resetServiceWizard(serviceWizard);            		
 				});
             	
             	/* service wizard validation */
@@ -789,11 +811,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.serviceFormElementHolder=new Object();
 			$scope.serviceDTO = new Object();
 			if(serviceWizard!=null){
-				if($scope.subService!=null)
-					serviceWizard.find("#service"+$scope.subService+"").css('border-color', 'white');
+				serviceWizard.find(".view-first").css('border-color', 'white');
 				serviceWizard.find(":input").val("");
 	          }
-			$scope.subService=null;
 		}
 		function createServiceMemSlider(){
 			$("#service_memory").slider(
@@ -855,29 +875,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         		}
 	       		wizard.show();
 	       		
-	       		/* for sliders in service wizard */
-	       		$("#memory").slider(
-	       				{
-	       					value:defaultConfigs.SMALL_MEMORY,
-	       				    tooltip:"hide"
-	       				});
-	       		$("#memory").on('slide', function(slideEvt) {
-	       			var val=$("#memory").slider('getValue');
-	       			if(val>1024)
-							val= val/1024+" gb";
-	       			else 
-							val= val+" mb";
-	       			$("#memorySliderVal").text(val);
-	       		});
-	       		
-	       		$("#cpuShares").slider({
-	       			value:defaultConfigs.SMALL_CPU,
-	       			 tooltip:"hide"
-	       		});
-	       		$("#cpuShares").on('slide', function(slideEvt) {
-	       			var val=$("#cpuShares").slider('getValue')+" cpu";
-	       			$("#cpuSharesSliderVal").text(val);
-	       		});
+	       		createWizardSliders();
 	       		
 	       		wizard.on("submit", function(wizard) { 
 	       			for ( var i = 0; i < $scope.currentForm.formElement.length; i++){
@@ -898,8 +896,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       			$("#memorySliderVal").text("");
 	       			$("#cpuSharesSliderVal").text("");
 	       			$("#wizardButtons").find(":button").removeClass("active");
-	       			
-	       			$(".wizard").remove();
 
 	       			console.log( $scope.appImageCfgDTO );	       				       			
 	       			
@@ -935,14 +931,17 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				wizard.el.find(".wizard-success .im-done").click(function() {
 					wizard.reset().close();
        				$('.modal-backdrop').remove();
+       				$(".wizard").remove();
 				});
 
 				wizard.el.find(".wizard-success .create-another-server").click(function() {
 					wizard.reset();
 					initializeWizard();
 				});
-               $scope.appimagecfgs = AppImageCfg.query();	
-				
+				 AppImageCfg.query(function (data) {
+					  $scope.appimagecfgs  = data;
+					  AppConfigCommunicationService.setAppImgConfigs(data);
+				});					
 				
 				 /* App wizard validation */				
 				wizard.cards["card1"].on("validate", $scope.validateFirstStep);
@@ -951,10 +950,12 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		    	// wizard.cards["card4"].on("validate",$scope.validateFn);
 				   		
 		}	
+		/* App wizard creation ends */
 		
 		function initializeWizard(){
 			$scope.serviceDTOList = [];
-			$scope.appImageCfgDTO = new Object();
+			if(!$scope.isEditContext)
+				$scope.appImageCfgDTO = new Object();
 			$scope.formElementHolder=new Object();
         	$scope.serviceImages = {};
         	$scope.service=null;
@@ -962,8 +963,33 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         	ImageInfo.query(function(data) {
         		$scope.serviceImages = data;
         	});
+        	createWizardSliders();
 		}
-		/* App wizard creation ends */
+		function createWizardSliders(){
+			/* for sliders in wizard */
+			$("#memory").slider(
+				{
+					value:defaultConfigs.SMALL_MEMORY,
+				    tooltip:"hide"
+				});
+			$("#memory").on('slide', function(slideEvt) {
+			var val=$("#memory").slider('getValue');
+			if(val>1024)
+				val= val/1024+" gb";
+			else 
+				val= val+" mb";
+			$("#memorySliderVal").text(val);
+			});
+		
+			$("#cpuShares").slider({
+				value:defaultConfigs.SMALL_CPU,
+				tooltip:"hide"
+			});
+			$("#cpuShares").on('slide', function(slideEvt) {
+				var val=$("#cpuShares").slider('getValue')+" cpu";
+				$("#cpuSharesSliderVal").text(val);
+			});
+}
 		
 $scope.loadDefaultScript=function(serviceId){
 	AppImageService.loadScript(serviceId).then(function(data){
