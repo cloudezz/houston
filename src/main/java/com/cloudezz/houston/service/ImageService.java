@@ -53,7 +53,7 @@ public class ImageService {
     List<ExposedService> exposedServices = new ArrayList<>();
 
     for (AppImageCfg appImageCfg : application.getAppImageCfgs()) {
-     
+
       if (appImageCfg.getContainerId() == null && !application.isRunning()) {
         throw new CloudezzException(
             "Cannot get exposed service information from a instance that is not running");
@@ -143,14 +143,22 @@ public class ImageService {
       return;
 
     String hostExpostedPort = "";
+    int size = imageInfo.getExposedPorts().size();
+    int counter = 0;
     for (Iterator<String> iterator = imageInfo.getExposedPorts().iterator(); iterator.hasNext();) {
       String dockerPort = iterator.next();
       String hostPort = baseImageCfg.getDockerPortToHostPort().get(dockerPort);
-      hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort + ",";
+      counter++;
+      if (counter == size)
+        hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort;
+      else
+        hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort + ",";
+      
     }
-    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_HOST_PORT_TO_EXPOSE,
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE,
         imageInfo.getExposedImagePorts());
-    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE, hostExpostedPort);
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_HOST_PORT_TO_EXPOSE,
+        hostExpostedPort);
   }
 
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],

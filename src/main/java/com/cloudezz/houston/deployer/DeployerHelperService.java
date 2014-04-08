@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import com.cloudezz.houston.deployer.docker.client.DockerHostSSHConnection;
 import com.cloudezz.houston.deployer.docker.model.Container;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
-import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse.NetworkSettings;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.deployer.docker.model.Image;
@@ -28,7 +26,6 @@ import com.cloudezz.houston.domain.BaseImageCfg;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ImgSettings.VolumeConfig.VolumeMapping;
-import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.service.ImageService;
 import com.cloudezz.houston.util.SocketUtil;
 import com.google.common.base.Preconditions;
@@ -287,64 +284,6 @@ public class DeployerHelperService {
     } else {
       return false;
     }
-  }
-
-
-  /**
-   * Link image as parent child with link name and return the host config to be used to start the
-   * parent image.
-   * 
-   * @param dockerClient
-   * @param applicationImageConfig
-   * @param serviceImageConfig
-   * @param linkName
-   * @return
-   * @throws CloudezzDeployException
-   */
-  public HostConfig linkImage(DockerClient dockerClient, AppImageCfg applicationImageConfig,
-      ServiceImageCfg serviceImageConfig, String linkName) throws CloudezzDeployException {
-    Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    Preconditions.checkNotNull(applicationImageConfig, "applicationImageConfig arg cannot be null");
-    Preconditions.checkNotNull(serviceImageConfig, "serviceImageConfig arg cannot be null");
-    Preconditions.checkNotNull(linkName, "linkName arg cannot be null");
-
-    // allow link only when we have the contaier ready as we have to know the ip address and exposed
-    // ports
-    Preconditions.checkNotNull(serviceImageConfig.getContainerId(),
-        "Cannot link a service image that doesnt have a container yet");
-
-    ContainerInspectResponse containerInspectResponse =
-        dockerClient.inspectContainer(serviceImageConfig.getContainerId());
-
-
-    HostConfig hostConfig = applicationImageConfig.getHostConfig();
-    hostConfig.setLinks(new String[] {containerInspectResponse.name + ":" + linkName});
-    applicationImageConfig.setHostConfig(hostConfig);
-    NetworkSettings networkSettings = containerInspectResponse.networkSettings;
-    if (networkSettings != null) {
-      String[] servicePorts = serviceImageConfig.getPortsAsArray();
-      String serviceMachineIp = containerInspectResponse.networkSettings.ipAddress;
-      Map<String, HostPortBinding[]> ports = networkSettings.ports;
-      String tcpForwards = "";
-      if (ports != null) {
-        Set<String> serviceNetworkPorts = ports.keySet();
-        for (int i = 0; i < servicePorts.length; i++) {
-          // apply tcp forwards from localhost
-          // sample : TCP_FORWARD =
-          // "127.0.0.1 3306 172.3.0.4 3306, 127.0.0.1 3000 172.3.0.4 3000"
-          if (serviceNetworkPorts.contains(servicePorts[i] + "/tcp")) {
-            tcpForwards =
-                tcpForwards + "127.0.0.1" + " " + servicePorts[i] + " " + serviceMachineIp + " "
-                    + servicePorts[i] + ",";
-          }
-        }
-        if (!tcpForwards.isEmpty())
-          applicationImageConfig.addEnvironmentMapping(DockerConstant.ENV_TCP_FORWARD, tcpForwards);
-      }
-    }
-
-    serviceImageConfig.setLinkName(linkName);
-    return hostConfig;
   }
 
   /**

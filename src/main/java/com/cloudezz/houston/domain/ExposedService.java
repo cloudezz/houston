@@ -36,7 +36,6 @@ public class ExposedService extends BaseEntity {
       name = "container_id"))
   private Map<String, String> serviceToURL = new LinkedHashMap<String, String>();
 
-
   public String getContainerId() {
     return this.containerId;
   }

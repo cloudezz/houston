@@ -76,10 +76,10 @@ public class ApplicationResource {
       String email = SecurityUtils.getCurrentLogin();
       User currentUser = userRepository.getOne(email);
       application.setOwner(currentUser);
-      
+
       application = applicationRepository.saveAndFlush(application);
       log.debug("Saved the Application : " + application.getAppName());
-      
+
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
@@ -108,13 +108,15 @@ public class ApplicationResource {
     appCfg.setHostName(appimagecfgDto.getHostName());
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
+    appCfg.setInitScript(appimagecfgDto.getInitScript());
     appCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
-    application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
-
     // set the ports that are to be exposed from image info exposer ports.
     imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
+    // application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
+    // testing purpose
+    application.addAppImageCfgs(appCfg, 3);
 
-    appCfg.setInitScript(appimagecfgDto.getInitScript());
+   
 
     if (appimagecfgDto.getServiceImages() != null) {
       for (ServiceImageCfgDTO serviceImageCfgDTO : appimagecfgDto.getServiceImages()) {
@@ -143,7 +145,7 @@ public class ApplicationResource {
   @RequestMapping(value = "/rest/application/start/{id}", method = RequestMethod.POST)
   @Timed
   public boolean start(@PathVariable String id, HttpServletResponse response) {
-    Application  application= applicationRepository.findOne(id);
+    Application application = applicationRepository.findOne(id);
     if (application == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
@@ -232,7 +234,8 @@ public class ApplicationResource {
   @RequestMapping(value = "/rest/application/{id}/service", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public List<ExposedService> getServiceExposed(@PathVariable String id, HttpServletResponse response) {
+  public List<ExposedService> getServiceExposed(@PathVariable String id,
+      HttpServletResponse response) {
     log.debug("REST request to get Application : {}", id);
     Application application = applicationRepository.findOne(id);
     if (application == null) {

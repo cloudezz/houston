@@ -38,7 +38,7 @@ public class Application extends BaseEntity {
   protected String appName;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "app_img_cfg")
+  
   protected Set<AppImageCfg> appImageCfgs = new LinkedHashSet<AppImageCfg>();
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -69,8 +69,7 @@ public class Application extends BaseEntity {
   protected LocalDateTime startTime;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "exposed_service_id", insertable = true, updatable = true, nullable = true,
-      unique = true)
+  @JoinColumn(name = "exposed_service_id")
   protected List<ExposedService> exposedServices = new ArrayList<ExposedService>();
 
 
