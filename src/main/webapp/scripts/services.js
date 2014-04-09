@@ -281,6 +281,25 @@ houstonApp.factory('AppImageService', [
 			}
 		} ]);
 
+houstonApp.factory('AppConfigCommunicationService', [ '$http', function($http) {
+	var configToEdit;
+	var apImgConfigs;
+	return {
+		setConfigToEdit : function(config) {
+			configToEdit = config;
+		},
+		getConfigToEdit : function() {
+			return configToEdit;
+		},
+		setAppImgConfigs:function(imgConfigs){
+			apImgConfigs=imgConfigs;
+		} ,
+		getAppImgConfigs:function(){
+			return apImgConfigs;
+		} 
+	}
+} ]);
+
 houstonApp.factory('ServiceImageCfg', [ '$resource', function($resource) {
 	return $resource('app/rest/serviceimagecfgs/:id', {}, {
 		'query' : {

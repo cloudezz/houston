@@ -135,10 +135,12 @@ houstonApp
 
                 return $rootScope.account.roles[role];
             };
+ /*for notification(growl) messages.*/
             Messenger.options = {
             	    extraClasses: 'messenger-fixed messenger-on-top',
             	    theme: 'air'
             	};
+ $rootScope.msg = Messenger().run();
             	$rootScope.$on("$routeChangeStart", function(event, next, current) {
 
             	if(current) {
@@ -189,26 +191,41 @@ houstonApp
             });
         }]);
 
-houstonApp.directive('upload', ['uploadManager', function factory(uploadManager) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            $(element).fileupload({
-                dataType: 'text',
-                add: function (e, data) {
-                    uploadManager.add(data);
-                },
-                progressall: function (e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    uploadManager.setProgress(progress);
-                },
-                done: function (e, data) {
-                    uploadManager.setProgress(0);
-                }
-            });
-        }
-    };
-}]);
+houstonApp.directive('upload', ['uploadManager',
+    function factory(uploadManager) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                $(element).fileupload({
+                    dataType: 'text',
+                    add: function (e, data) {
+                        uploadManager.add(data);
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        uploadManager.setProgress(progress);
+                    },
+                    done: function (e, data) {
+                        uploadManager.setProgress(0);
+                    }
+                });
+            }
+        };
+    }
+]);
+
+houstonApp.constant('defaultConfigs', {
+    TINY_MEMORY: 128,
+    TINY_CPU: 1,
+    SMALL_MEMORY: 256,
+    SMALL_CPU: 1,
+    MEDIUM_MEMORY: 512,
+    MEDIUM_CPU: 1,
+    LARGE_MEMORY: 1024,
+    LARGE_CPU: 2,
+    VLARGE_MEMORY: 4096,
+    VLARGE_CPU: 2
+});
 
 houstonApp
 .filter(
