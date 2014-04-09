@@ -79,7 +79,7 @@ li.wizard-nav-item {
 
 li.wizard-nav-item>a {
 	background-color: #F5F5F5;
-	color: #B4B4B4;
+	color: #8E8E8E;
 	cursor: default;
 	padding: 3px 15px 3px 20px;
 }
@@ -152,11 +152,14 @@ li.wizard-nav-item.active>a {
 /* WIZARD CARDS */
 .wizard-error,.wizard-failure,.wizard-success,.wizard-loading,.wizard-card
 	{
-	border-top: 1px solid #EEE;
+	background-color: #F9F9F9;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	color: #8E8E8E;
 	display: none;
-	padding: 35px;
-	padding-top: 20px;
 	overflow-y: auto;
+	padding: 20px 35px 35px;
 
 	/*
 	position:relative;
