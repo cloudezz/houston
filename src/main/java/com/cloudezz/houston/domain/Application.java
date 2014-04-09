@@ -116,7 +116,7 @@ public class Application extends BaseEntity {
       serviceImage = serviceImage.clone();
       serviceImage.setApplication(this);
       serviceImage.setInstanceNo(i);
-      serviceImage.setServiceName(appName + "_serv" + i);
+      serviceImage.setServiceName(serviceImage.getServiceName() + "_serv" + i);
       this.serviceImageCfgs.add(serviceImage);
     }
 
@@ -145,7 +145,7 @@ public class Application extends BaseEntity {
       appImageCfg = appImageCfg.clone();
       appImageCfg.setApplication(this);
       appImageCfg.setInstanceNo(i);
-      appImageCfg.setAppName(appName + "_app" + i);
+      appImageCfg.setAppName(appImageCfg.getAppName() + "_app" + i);
       this.appImageCfgs.add(appImageCfg);
     }
   }
