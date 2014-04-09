@@ -1,5 +1,7 @@
 package com.cloudezz.houston.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +12,7 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +47,9 @@ public class ImageService {
 
   @Autowired
   private DockerHostMachineRepository dockHostMachineRepository;
+
+  @Autowired
+  private Environment env;
 
 
   public List<ExposedService> getExposedService(Application application) throws CloudezzException {
@@ -138,6 +144,28 @@ public class ImageService {
         .getDockerPortToHostPort().get(DockerConstant.DEFAULT_SERF_PORT));
     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_SERF_ROLE, imageInfo.getRole());
 
+    // setting the houston ip address and port as env variable for machine to query the cluster
+    // leader
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOUSTON_PORT,
+        env.getProperty(DockerConstant.PROP_HOUSTON_PORT));
+    baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOUSTON_PROTOCOL,
+        DockerConstant.ENV_HOUSTON_PROTOCOL_VALUE);
+
+    if ("0.0.0.0".equals(env.getProperty(DockerConstant.PROP_HOUSTON_IP))) {
+      try {
+        baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOUSTON_HOST_IP, InetAddress
+            .getLocalHost().getHostAddress());
+      } catch (UnknownHostException e) {
+        log.error(e.getMessage());
+        baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOUSTON_HOST_IP,
+            env.getProperty(DockerConstant.PROP_HOUSTON_IP));
+      }
+    } else {
+      baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_HOUSTON_HOST_IP,
+          env.getProperty(DockerConstant.PROP_HOUSTON_IP));
+    }
+
+
 
     if (imageInfo.getExposedPorts() == null || imageInfo.getExposedPorts().size() == 0)
       return;
@@ -153,7 +181,7 @@ public class ImageService {
         hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort;
       else
         hostExpostedPort = hostExpostedPort + dockerPort + ":" + hostPort + ",";
-      
+
     }
     baseImageCfg.addEnvironmentMapping(DockerConstant.ENV_DEFAULT_PORT_TO_EXPOSE,
         imageInfo.getExposedImagePorts());
