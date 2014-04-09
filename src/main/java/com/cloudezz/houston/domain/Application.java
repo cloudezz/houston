@@ -38,11 +38,9 @@ public class Application extends BaseEntity {
   protected String appName;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  
   protected Set<AppImageCfg> appImageCfgs = new LinkedHashSet<AppImageCfg>();
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_img_cfg")
   protected Set<ServiceImageCfg> serviceImageCfgs = new LinkedHashSet<ServiceImageCfg>();
 
   @ElementCollection(targetClass = String.class)
