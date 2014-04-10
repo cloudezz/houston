@@ -2,6 +2,7 @@ package com.cloudezz.houston.logstream;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -20,24 +21,24 @@ import org.springframework.stereotype.Service;
 import com.cloudezz.houston.domain.DockerHostMachine;
 
 @Service
-public class ContainerLogExecutor implements RejectedExecutionHandler {
+public class ContainerLogManager implements RejectedExecutionHandler {
 
-  private final Logger log = LoggerFactory.getLogger(ContainerLogExecutor.class);
+  private final Logger log = LoggerFactory.getLogger(ContainerLogManager.class);
 
   private Map<String, ContainerLogStreamWorker> containerIdToLogStreamer;
 
   private BlockingQueue<Runnable> worksQueue;
-  
+
   @Inject
   private LogCacheHolder logCacheHolder;
-  
+
   @Inject
-  private SimpMessageSendingOperations  messagingTemplate;
+  private SimpMessageSendingOperations messagingTemplate;
 
   // Create the ThreadPoolExecutor
   private ThreadPoolExecutor executor;
 
-  public ContainerLogExecutor() {
+  public ContainerLogManager() {
     containerIdToLogStreamer = new HashMap<String, ContainerLogStreamWorker>();
     worksQueue = new ArrayBlockingQueue<Runnable>(2);
     executor = new ThreadPoolExecutor(3, 50, 10, TimeUnit.SECONDS, worksQueue, this);
@@ -48,7 +49,8 @@ public class ContainerLogExecutor implements RejectedExecutionHandler {
 
   public boolean startLog(String containerId, DockerHostMachine dockerHostMachine) {
     ContainerLogStreamWorker logStreamer =
-        new ContainerLogStreamWorker(containerId, dockerHostMachine,logCacheHolder,messagingTemplate);
+        new ContainerLogStreamWorker(containerId, dockerHostMachine, logCacheHolder,
+            messagingTemplate);
     containerIdToLogStreamer.put(containerId, logStreamer);
     executor.execute(logStreamer);
     return true;
@@ -62,6 +64,15 @@ public class ContainerLogExecutor implements RejectedExecutionHandler {
     // request exit
     logStreamer.requestExit();
     return true;
+  }
+
+  public boolean stopLog(List<String> containerIds) {
+    boolean success = true;
+    for (String containerId : containerIds) {
+      boolean state = stopLog(containerId);
+      success = success && state;
+    }
+    return success;
   }
 
   @Override

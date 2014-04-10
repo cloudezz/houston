@@ -20,7 +20,7 @@ import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ServiceImageCfg;
-import com.cloudezz.houston.logstream.ContainerLogExecutor;
+import com.cloudezz.houston.logstream.ContainerLogManager;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.google.common.base.Preconditions;
 
@@ -33,7 +33,7 @@ public class DeployerServiceImpl implements DeployerService {
   private DeployerHelperService deployerHelperService;
 
   @Inject
-  private ContainerLogExecutor containerLogManager;
+  private ContainerLogManager containerLogManager;
 
   @Inject
   private ImageInfoRepository imageInfoRepository;
@@ -75,12 +75,16 @@ public class DeployerServiceImpl implements DeployerService {
         if (success) {
           containerIdCache.add(appImageConfig.getContainerId());
         } else {
-          // if even one app container start fails then stop and delete the old service
+          // if even one app container start fails then stop and delete the old app
           // containers that were started
+          containerLogManager.stopLog(containerIdCache);
           deployerHelperService.destroyContainers(dockerClient, containerIdCache);
           throw new DockerImageStartException("Cloudn't start container with id "
               + appImageConfig.getContainerId());
         }
+        
+        // start log
+        containerLogManager.startLog(appImageConfig.getContainerId(),appImageConfig.getDockerHostMachine());
       }
 
     } catch (DockerImageStartException e) {

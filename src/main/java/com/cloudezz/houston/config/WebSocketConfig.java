@@ -18,8 +18,7 @@ import com.cloudezz.houston.logstream.TopicSubscriptionInterceptor;
     type = FilterType.ANNOTATION, value = Configuration.class))
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
-
-
+  
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/log/register/").withSockJS();

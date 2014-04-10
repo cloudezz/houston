@@ -1272,12 +1272,17 @@ houstonApp.controller('TerminalController', ['$rootScope','$scope', '$location',
             term.on('title', function(title) {
      	       document.title = title;
      	     });
+            
+           
      	
      	     var divTerminal = document.getElementById("terminal");
      	     term.open(divTerminal);
      	     
      	     term.write('Waiting for log from server..\r\n');
-     	     
+     	    
+     	     stompClient.subscribe('/sockjs/log/init/'+$scope.containerId, function(msg){
+            	term.write(JSON.parse(msg.body));
+            });
      	     
                  
             var onLogMessage = function(log) {

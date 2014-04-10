@@ -112,11 +112,8 @@ public class ApplicationResource {
     appCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
     // set the ports that are to be exposed from image info exposer ports.
     imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
-    // application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
-    // testing purpose
-    application.addAppImageCfgs(appCfg, 3);
+    application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
 
-   
 
     if (appimagecfgDto.getServiceImages() != null) {
       for (ServiceImageCfgDTO serviceImageCfgDTO : appimagecfgDto.getServiceImages()) {

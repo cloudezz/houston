@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 
 
@@ -24,17 +24,17 @@ public class TopicSubscriptionInterceptor extends ChannelInterceptorAdapter impl
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
     if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())
-        && headerAccessor.getUser() != null
-        && headerAccessor.getUser() instanceof UsernamePasswordAuthenticationToken) {
-      if (!loggedIn((UsernamePasswordAuthenticationToken) headerAccessor.getUser())) {
+        && headerAccessor.getUser() != null && headerAccessor.getUser() instanceof Authentication) {
+
+      if (!loggedIn((Authentication) headerAccessor.getUser())) {
         throw new IllegalArgumentException("Login to view log message");
       }
-      UsernamePasswordAuthenticationToken userToken =
-          (UsernamePasswordAuthenticationToken) headerAccessor.getUser();
+      Authentication userToken = (Authentication) headerAccessor.getUser();
       if (!validateSubscription((User) userToken.getPrincipal(), headerAccessor.getDestination())) {
         throw new IllegalArgumentException("No permission to view log message");
       }
     }
+
     return message;
   }
 
@@ -46,7 +46,7 @@ public class TopicSubscriptionInterceptor extends ChannelInterceptorAdapter impl
   }
 
 
-  private boolean loggedIn(UsernamePasswordAuthenticationToken authToken) {
+  private boolean loggedIn(Authentication authToken) {
     if (authToken == null)
       return false;
 
