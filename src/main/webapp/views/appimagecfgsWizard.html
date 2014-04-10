@@ -163,7 +163,7 @@
 							data-slider-max="16384" data-slider-step="128"
 							data-slider-value="{{appImageCfgDTO.memory}}"
 							style="width: 400px;" /><span id="memorySliderVal"
-							style="padding-left: 15px"></span>
+							class="slider-val-style"></span>
 					</div>
 
 					<div class="wizard-input-section">
@@ -175,7 +175,35 @@
 							data-slider-max="8" data-slider-step="1"
 							data-slider-value="{{appImageCfgDTO.cpuShares}}"
 							style="width: 400px;" /><span id="cpuSharesSliderVal"
-							style="padding-left: 15px"></span>
+							class="slider-val-style"></span>
+					</div>
+					<div class="wizard-input-section">
+						<div style="padding: 10px">No of instances</div>
+						<div class=wizard-label-div>
+							<label class="wizard-slider-label">Instance Count</label>
+						</div>
+						<input id="noOfInstance" class="form-control"
+							data-slider-id='noOfInstanceSlider' type="text"
+							data-slider-min="1" data-slider-max="25" data-slider-step="1"
+							data-slider-value="{{appImageCfgDTO.noOfInstance}}"
+							style="width: 400px" /><span class="slider-val-style"
+							id="noOfInstanceSliderVal"></span>
+					</div>
+				</div>
+
+				<div class="wizard-card" data-cardname="card6">
+					<h3 hidden="true">Additional Information</h3>
+					<div class="wizard-input-section">
+						<label>Description</label>
+						<textarea ng-model="appImageCfgDTO.desc" name="desc" id="desc"
+							required="true" ng-required="true" ng-minlength="0"
+							class="form-control" style="height: 300px;"
+							font-size: 14px"
+							spellcheck="false"></textarea>
+					</div>
+					<div class="wizard-input-section ">
+						<label>Tags</label><select multiple data-role="tagsinput"
+							id="tags" name="tags" class="form-control"></select>
 					</div>
 				</div>
 
@@ -223,8 +251,8 @@
 										<td>{{serviceItem.appName}}</td>
 										<td>
 											<button type="submit"
-												ng-click="updateService(serviceItem.appName)" class="btn btn-sm"
-												style="width: 100px;">
+												ng-click="updateService(serviceItem.appName)"
+												class="btn btn-sm" style="width: 100px;">
 												<span class="glyphicon glyphicon-pencil"></span> Edit
 											</button>
 											<button type="submit"

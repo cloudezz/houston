@@ -259,5 +259,10 @@ table th {
 }
 .wizard-label-div{
 	float: left;
-    width: 160px;
+    width: 165px;
 }
+.slider-val-style{
+	padding-left: 15px;
+	font-size:20px;
+}
+

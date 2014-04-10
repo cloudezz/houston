@@ -388,7 +388,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 			modalInstance.result.then(function(selectedItem) {
 				$scope.selected = selectedItem;
 			}, function() {
-				//$log.info('Modal dismissed at: ' + new Date());
+				// $log.info('Modal dismissed at: ' + new Date());
 			});
         };
     }]);
@@ -604,7 +604,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 			console.log($scope.serviceDTOList);
 			angular.forEach(list, function(item) {		    	
-				if(item!=editItem && item.appName==name){		    		
+				if(item.id!=editItem.id && item.appName==name){		    		
 					wizardCard.errorPopover(input, "Name is not unique.Please use a different name");
 					valid= false;		    	
 				}});}
@@ -772,7 +772,8 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 	       		
 		/* for sliders in service wizard */	
 		createServiceMemSlider();
-		createServiceCpuSlider();  
+		createServiceCpuSlider();
+		
 		if($scope.isServiceEditCtxt){
 			enableDefaultConfig($scope.serviceDTO.memory,$scope.serviceDTO.cpuShares);
 		}	
@@ -920,7 +921,9 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 				}
 			}
 			$scope.appImageCfgDTO.memory=$("#memory").slider('getValue');
-			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');	       			
+			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');	
+			$scope.appImageCfgDTO.noOfInstance=$("#noOfInstance").slider('getValue');	
+			$scope.appImageCfgDTO.tags=$("#tags").val();
 			$scope.appImageCfgDTO.imageName=$scope.serviceImg;
 			$scope.appImageCfgDTO.environmentMapping=$scope.formElementHolder;
 			$scope.appImageCfgDTO.serviceImages=$scope.serviceDTOList;
@@ -928,8 +931,10 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			/* reset slider */
 			$("#memory").slider('setValue',128);
 			$("#cpuShares").slider('setValue',1);
+			$("#noOfInstance").slider('setValue',1);
 			$("#memorySliderVal").text("");
 			$("#cpuSharesSliderVal").text("");
+			$("#noOfInstanceSliderVal").text("");
 			$("#wizardButtons").find(":button").removeClass("active");
 
 			console.log( $scope.appImageCfgDTO );	       				       			
@@ -999,21 +1004,17 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			$scope.serviceImages = data;
 		});
 		createWizardSliders();
+		$('#tags').tagsinput(); 
 	}
 	function createWizardSliders(){
 		/* for sliders in wizard */
 		$("#memory").slider(
 				{
-					value:defaultConfigs.SMALL_MEMORY,
 					tooltip:"hide"
 				});
 		$("#memory").on('slide', function(slideEvt) {
-			var val=$("#memory").slider('getValue');
-			if(val>1024)
-				val= val/1024+" gb";
-			else 
-				val= val+" mb";
-			$("#memorySliderVal").text(val);
+			var val=$("#memory").slider('getValue');			
+			$("#memorySliderVal").text(getMemDisplayVal(val));
 		});
 
 		$("#cpuShares").slider({
@@ -1024,8 +1025,29 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			var val=$("#cpuShares").slider('getValue')+" cpu";
 			$("#cpuSharesSliderVal").text(val);
 		});
+		$("#noOfInstance").slider({
+			value:1,
+			tooltip:"hide"
+		});
+		$("#noOfInstance").on('slide', function(slideEvt) {
+			var val=$("#noOfInstance").slider('getValue');
+			$("#noOfInstanceSliderVal").text(val);
+		});
+		$("#memory").slider('setValue',defaultConfigs.TINY_MEMORY);
+		$("#cpuShares").slider('setValue',defaultConfigs.TINY_CPU);
+		$("#noOfInstance").slider('setValue',1);
+		
+		$("#memorySliderVal").text(getMemDisplayVal($("#memory").slider('getValue')));
+		$("#cpuSharesSliderVal").text($("#cpuShares").slider('getValue')+" cpu");
+		$("#noOfInstanceSliderVal").text($("#noOfInstance").slider('getValue'));
 	}
-
+	function getMemDisplayVal(val){
+		if(val>1024)
+			val= val/1024+" gb";
+		else 
+			val= val+" mb";
+		return val;
+	}
 	$scope.loadDefaultScript=function(serviceId){
 		AppImageService.loadScript(serviceId).then(function(data){
 			$scope.defaultScript=data;
