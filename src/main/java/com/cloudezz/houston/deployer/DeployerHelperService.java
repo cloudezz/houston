@@ -87,7 +87,7 @@ public class DeployerHelperService {
     // image specific ports
     String[] ports = cloudezzImageConfig.getPortsAsArray();
     String[] availableHostPort =
-        SocketUtil.nextAvailablePort(cloudezzImageConfig.getDockerHostMachine().getIpAddress(),
+        SocketUtil.nextAvailablePorts(cloudezzImageConfig.getDockerHostMachine().getIpAddress(),
             ports.length);
 
     if (ports != null && ports.length > 0) {

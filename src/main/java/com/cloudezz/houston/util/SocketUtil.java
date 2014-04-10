@@ -22,6 +22,17 @@ public class SocketUtil {
   private static Logger log = LoggerFactory.getLogger(SocketUtil.class);
 
   /**
+   * The minimum number of server port number.
+   */
+  public static final int MIN_PORT_NUMBER = 49152;
+
+  /**
+   * The maximum number of server port number.
+   */
+  public static final int MAX_PORT_NUMBER = 65535;
+
+
+  /**
    * Finds free or available ports . The portsNo is the number of free ports that has to be
    * returned.
    * 
@@ -29,18 +40,21 @@ public class SocketUtil {
    * @param portsNo
    * @return
    */
-  public static String[] nextAvailablePort(String host, int portsNo) {
-    log.debug("Finding "+  portsNo+ " free ports in host " + host);
+  public static String[] nextAvailablePorts(String host, int portsNo) {
+    log.debug("Finding " + portsNo + " free ports in host " + host);
     String[] result = new String[portsNo];
     List<ServerSocket> servers = new ArrayList<ServerSocket>();
     ServerSocket tempServer = null;
 
     for (int i = 0; i < portsNo; i++) {
       try {
-        tempServer = new ServerSocket();
-        tempServer.bind(new InetSocketAddress(host, 0));
-        tempServer.setReuseAddress(true);
-        servers.add(tempServer);
+        while (tempServer.getLocalPort() > MIN_PORT_NUMBER) {
+          tempServer = new ServerSocket();
+          tempServer.bind(new InetSocketAddress(host, 0));
+          tempServer.setReuseAddress(true);
+          servers.add(tempServer);
+        }
+        log.debug(tempServer.getLocalPort() + " port is available on host " + host);
         result[i] = tempServer.getLocalPort() + "";
       } catch (Exception e) {
         // do nothing
@@ -56,6 +70,5 @@ public class SocketUtil {
     }
     return result;
   }
-
 
 }
