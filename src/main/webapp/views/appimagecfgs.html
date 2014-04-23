@@ -58,7 +58,9 @@
 						<button class="btn btn-sm btn-stop" ng-if="appimagecfg.running"
 							value="btn btn-primary" style="width: 60px;"
 							ng-click="stop(appimagecfg)" type="button" name="color"><span class="glyphicon glyphicon-stop"></span>Stop</button>
-						
+						<button class="btn btn-sm" value="btn btn-primary"
+ 							style="width: 60px;" ng-click="editConfig(appimagecfg)"
+							type="button" name="color"><span class="glyphicon glyphicon glyphicon-pencil"></span>Edit</button>
 						<button class="btn btn-sm btn-delete" value="btn btn-primary"
 							style="width: 60px;" ng-click="delete(appimagecfg.id)"
 							type="button" name="color"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button>

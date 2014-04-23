@@ -40,7 +40,8 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
   @Before
   public void setup() throws CloudezzDeployException {
 
-   
+    application.setAppName("test123");
+
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
@@ -70,7 +71,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addAppImageCfgs(applicationImageConfig,1);
+    application.addAppImageCfgs(applicationImageConfig, 1, application.getAppName());
 
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
@@ -91,7 +92,7 @@ public class DeployerDeployConfigTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig,1);
+    application.addServiceImageCfgs(serviceImageConfig, 1);
 
   }
 

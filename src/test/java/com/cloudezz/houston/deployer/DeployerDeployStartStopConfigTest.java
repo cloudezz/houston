@@ -41,7 +41,9 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
 
   @Before
   public void setup() throws CloudezzDeployException {
- 
+
+    application.setAppName("test123");
+
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(RepositoryUtils.generateBigRandomAlphabetic());
@@ -58,7 +60,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     dockerHostMachine.setSudo(true);
     dockerHostMachine.setUsername("vagrant");
     dockerHostMachine.setPassword("vagrant");
-   
+
 
     AppImageCfg applicationImageConfig = new AppImageCfg();
 
@@ -73,7 +75,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addAppImageCfgs(applicationImageConfig,1);
+    application.addAppImageCfgs(applicationImageConfig, 1, application.getAppName());
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
@@ -92,7 +94,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig,1);
+    application.addServiceImageCfgs(serviceImageConfig, 1);
 
   }
 
@@ -105,14 +107,16 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     success = deployer.start(application);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
-        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next().getContainerId());
+        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next()
+            .getContainerId());
     Assert.assertTrue(containerInspectResponse.state.running);
 
     success = deployer.stop(application);
     Assert.assertTrue(success);
 
     containerInspectResponse =
-        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next().getContainerId());
+        dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next()
+            .getContainerId());
     Assert.assertTrue(!containerInspectResponse.state.running);
 
   }

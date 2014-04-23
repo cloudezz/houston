@@ -1,8 +1,15 @@
 package com.cloudezz.houston.web.rest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
+import javax.security.auth.login.AppConfigurationEntry;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -32,6 +39,7 @@ import com.cloudezz.houston.service.ImageService;
 import com.cloudezz.houston.util.RepositoryUtils;
 import com.cloudezz.houston.util.SecretKeyUtil;
 import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
+import com.cloudezz.houston.web.rest.dto.ApplicationDTO;
 import com.cloudezz.houston.web.rest.dto.ServiceImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
 
@@ -66,11 +74,11 @@ public class ApplicationResource {
       produces = "application/json", consumes = "application/json")
   @Timed
   @Transactional
-  public void create(@RequestBody AppImageCfgDTO appimagecfgDto) {
-    log.debug("REST request to save AppImageCfg : {}", appimagecfgDto);
+  public void create(@RequestBody ApplicationDTO appDto) {
+    log.debug("REST request to save AppImageCfg : {}", appDto);
 
     try {
-      Application application = createApplication(appimagecfgDto);
+      Application application = createApplication(appDto);
 
       // set owner
       String email = SecurityUtils.getCurrentLogin();
@@ -83,23 +91,158 @@ public class ApplicationResource {
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
-
   }
 
-
-  private Application createApplication(AppImageCfgDTO appimagecfgDto)
-      throws CloudezzDeployException {
+  private Application createApplication(ApplicationDTO appDto) throws CloudezzDeployException {
     Application application = new Application();
-    application.setAppName(appimagecfgDto.getAppName());
+    application = createOrUpdateApplicationFromDto(appDto, application, false);
+    return application;
+  }
+
+  private Application createOrUpdateApplicationFromDto(ApplicationDTO appDto,
+      Application application, boolean isUpdate) throws CloudezzDeployException {
+
+    application.setAppName(appDto.getAppName());
 
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
     clusterConfig.setClusterKey(SecretKeyUtil.getSerfSecretKey());
-    clusterConfig.setName(appimagecfgDto.getAppName());
+    clusterConfig.setName(appDto.getAppName());
     application.setClusterConfig(clusterConfig);
 
+    Set<AppImageCfg> appImgCfgs = new HashSet<AppImageCfg>();
+    appImgCfgs.addAll(application.getAppImageCfgs());
+    application.getAppImageCfgs().clear();
+
+    if (isUpdate) {
+      for (AppImageCfgDTO appCfgDto : appDto.getAppImages()) {
+        String groupName = appCfgDto.getGroupName();
+        List<AppImageCfg> configs = getAppConfigsWithGroupName(appImgCfgs, groupName);
+        int gpConfigCount = 0;
+        if (configs != null && !configs.isEmpty()) {
+          for (AppImageCfg appCfg : configs) {
+            setValuesFromDTO(appCfgDto, appCfg);
+            application.getAppImageCfgs().add(appCfg);
+            gpConfigCount++;
+            if (gpConfigCount >= appCfgDto.getNoOfInstance()) {
+              break;
+            }
+          }
+          if (gpConfigCount < appCfgDto.getNoOfInstance()) {
+            int additionalInstanceCount = appCfgDto.getNoOfInstance() - gpConfigCount;
+            appCfgDto.setNoOfInstance(additionalInstanceCount);
+            addNewConfig(application, appCfgDto);
+          }
+        } else {
+          addNewConfig(application, appCfgDto);
+        }
+      }
+    } else {
+      for (AppImageCfgDTO appCfgDto : appDto.getAppImages()) {
+        addNewConfig(application, appCfgDto);
+      }
+    }
+    application.setDesc(appDto.getDesc());
+    application.setTags(appDto.getTags());
+
+    if (appDto.getServiceImages() != null) {
+      Set<ServiceImageCfg> serviceImgCfgs = new HashSet<ServiceImageCfg>();
+      serviceImgCfgs.addAll(application.getServiceImageCfgs());
+      application.getServiceImageCfgs().clear();
+
+      if (isUpdate && serviceImgCfgs != null) {
+        for (ServiceImageCfgDTO serviceCfgDto : appDto.getServiceImages()) {
+          String groupName = serviceCfgDto.getGroupName();
+          List<ServiceImageCfg> serviceConfigs =
+              getServiceConfigsWithGroupName(serviceImgCfgs, groupName);
+          int gpConfigCount = 0;
+          if (serviceConfigs != null) {
+            for (ServiceImageCfg serviceImageCfg : serviceConfigs) {
+              setServiceConfigValuesFromDTO(serviceImageCfg, serviceCfgDto);
+              imageService.setExposedPorts(serviceImageCfg, serviceCfgDto.getImageName());
+              application.getServiceImageCfgs().add(serviceImageCfg);
+              gpConfigCount++;
+              if (gpConfigCount >= serviceCfgDto.getNoOfInstance()) {
+                break;
+              }
+            }
+            if (gpConfigCount < serviceCfgDto.getNoOfInstance()) {
+              int additionalInstanceCount = serviceCfgDto.getNoOfInstance() - gpConfigCount;
+              serviceCfgDto.setNoOfInstance(additionalInstanceCount);
+              addNewServiceConfig(application, serviceCfgDto);
+            }
+          } else {
+            addNewServiceConfig(application, serviceCfgDto);
+          }
+        }
+      } else {
+        for (ServiceImageCfgDTO serviceCfgDto : appDto.getServiceImages()) {
+          addNewServiceConfig(application, serviceCfgDto);
+        }
+      }
+
+    }
+    return application;
+  }
+
+  private void addNewServiceConfig(Application application, ServiceImageCfgDTO serviceCfgDto)
+      throws CloudezzDeployException {
+    ServiceImageCfg serviceImageCfg = new ServiceImageCfg();
+    setServiceConfigValuesFromDTO(serviceImageCfg, serviceCfgDto);
+    imageService.setExposedPorts(serviceImageCfg, serviceCfgDto.getImageName());
+    application.addServiceImageCfgs(serviceImageCfg, serviceCfgDto.getNoOfInstance());
+  }
+
+  private List<ServiceImageCfg> getServiceConfigsWithGroupName(Set<ServiceImageCfg> serviceImgCfgs,
+      String groupName) {
+    List<ServiceImageCfg> configsWithGpName = new ArrayList<ServiceImageCfg>();
+    Iterator<ServiceImageCfg> serviceImgCfgsItr = serviceImgCfgs.iterator();
+    while (serviceImgCfgsItr.hasNext()) {
+      ServiceImageCfg serCfg = serviceImgCfgsItr.next();
+      if (serCfg.getGroupName() != null && serCfg.getGroupName().equals(groupName)) {
+        configsWithGpName.add(serCfg);
+      }
+    }
+    return configsWithGpName;
+  }
+
+
+  private void addNewConfig(Application application, AppImageCfgDTO appCfgDto)
+      throws CloudezzDeployException {
     AppImageCfg appCfg = new AppImageCfg();
-    appCfg.setAppName(appimagecfgDto.getAppName());
+    setValuesFromDTO(appCfgDto, appCfg);
+    application.addAppImageCfgs(appCfg, appCfgDto.getNoOfInstance(), application.getAppName());
+  }
+
+  private List<AppImageCfg> getAppConfigsWithGroupName(Set<AppImageCfg> appImgCfgs, String groupName) {
+    List<AppImageCfg> configsWithGpName = new ArrayList<AppImageCfg>();
+    Iterator<AppImageCfg> appImgCfgsItr = appImgCfgs.iterator();
+    while (appImgCfgsItr.hasNext()) {
+      AppImageCfg appConfig = appImgCfgsItr.next();
+      if (appConfig.getGroupName() != null && appConfig.getGroupName().equals(groupName)) {
+        configsWithGpName.add(appConfig);
+      }
+    }
+    return configsWithGpName;
+  }
+
+  private void setServiceConfigValuesFromDTO(ServiceImageCfg serviceImageCfg,
+      ServiceImageCfgDTO serviceImageCfgDTO) {
+    serviceImageCfg.setServiceName(serviceImageCfgDTO.getAppName());
+    serviceImageCfg.setCpuShares(serviceImageCfgDTO.getCpuShares());
+    serviceImageCfg.setDaemon(serviceImageCfgDTO.getDaemon());
+    serviceImageCfg.setImageName(serviceImageCfgDTO.getImageName());
+    serviceImageCfg.setDomainName(serviceImageCfgDTO.getDomainName());
+    serviceImageCfg.setEnvironmentMapping(serviceImageCfgDTO.getEnvironmentMapping());
+    serviceImageCfg.setHostName(serviceImageCfgDTO.getHostName());
+    serviceImageCfg.setMemory(serviceImageCfgDTO.getMemory());
+    serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
+    serviceImageCfg.setPorts(serviceImageCfg.getPorts());
+    serviceImageCfg.setGroupName(serviceImageCfgDTO.getGroupName());
+    serviceImageCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
+  }
+
+  private void setValuesFromDTO(AppImageCfgDTO appimagecfgDto, AppImageCfg appCfg) {
     appCfg.setCpuShares(appimagecfgDto.getCpuShares());
     appCfg.setDaemon(appimagecfgDto.getDaemon());
     appCfg.setImageName(appimagecfgDto.getImageName());
@@ -109,35 +252,10 @@ public class ApplicationResource {
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
     appCfg.setInitScript(appimagecfgDto.getInitScript());
+    appCfg.setGroupName(appimagecfgDto.getGroupName());
     appCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
-    // set the ports that are to be exposed from image info exposer ports.
     imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
-    application.addAppImageCfgs(appCfg, appimagecfgDto.getNoOfInstance());
-
-
-    if (appimagecfgDto.getServiceImages() != null) {
-      for (ServiceImageCfgDTO serviceImageCfgDTO : appimagecfgDto.getServiceImages()) {
-        ServiceImageCfg serviceImageCfg = new ServiceImageCfg();
-        serviceImageCfg.setServiceName(serviceImageCfgDTO.getAppName());
-        serviceImageCfg.setCpuShares(serviceImageCfgDTO.getCpuShares());
-        serviceImageCfg.setDaemon(serviceImageCfgDTO.getDaemon());
-        serviceImageCfg.setImageName(serviceImageCfgDTO.getImageName());
-        serviceImageCfg.setDomainName(serviceImageCfgDTO.getDomainName());
-        serviceImageCfg.setEnvironmentMapping(serviceImageCfgDTO.getEnvironmentMapping());
-        serviceImageCfg.setHostName(serviceImageCfgDTO.getHostName());
-        serviceImageCfg.setMemory(serviceImageCfgDTO.getMemory());
-        serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
-        serviceImageCfg.setPorts(appimagecfgDto.getPorts());
-        serviceImageCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
-        // set the ports that are to be exposed from image info exposer ports.
-        imageService.setExposedPorts(serviceImageCfg, serviceImageCfgDTO.getImageName());
-        application.addServiceImageCfgs(serviceImageCfg, serviceImageCfgDTO.getNoOfInstance());
-      }
-    }
-
-    return application;
   }
-
 
   @RequestMapping(value = "/rest/application/start/{id}", method = RequestMethod.POST)
   @Timed
@@ -224,6 +342,34 @@ public class ApplicationResource {
     return application;
   }
 
+  /**
+   * PUT /rest/application/:id -> get the "id" application.
+   */
+  @RequestMapping(value = "/rest/application/{id}", method = RequestMethod.POST,
+      produces = "application/json")
+  @Timed
+  public Application update(@PathVariable String id, HttpServletResponse response,
+      @RequestBody ApplicationDTO cfgDto) {
+    Application application = applicationRepository.findOne(id);
+    application = updateApplication(cfgDto, application);
+    log.debug("REST request to get Application : {}", id);
+    if (application == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    } else {
+      applicationRepository.saveAndFlush(application);
+    }
+    return application;
+  }
+
+  private Application updateApplication(ApplicationDTO cfgDto, Application application) {
+    try {
+      application = createOrUpdateApplicationFromDto(cfgDto, application, true);
+    } catch (CloudezzDeployException e) {
+      e.printStackTrace();
+    }
+    return application;
+  }
+
 
   /**
    * GET /rest/application/:id -> get the "id" application.
@@ -271,5 +417,93 @@ public class ApplicationResource {
 
   }
 
+  /**
+   * Get DTO for application.
+   */
+  @RequestMapping(value = "/rest/application/dto/{id}", method = RequestMethod.GET,
+      produces = "application/json")
+  @Timed
+  public ApplicationDTO getDTO(@PathVariable String id, HttpServletResponse response) {
+    log.debug("REST request to get DTO for application : {}", id);
+    Application application = applicationRepository.findOne(id);
+    if (application == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    } else {
+      ApplicationDTO appCfgDTO = getDTOForApplication(application);
+      return appCfgDTO;
+    }
+    return null;
+  }
 
+  private ApplicationDTO getDTOForApplication(Application application) {
+
+    ApplicationDTO appDto = new ApplicationDTO();
+    appDto.setAppName(application.getAppName());
+
+    List<AppImageCfgDTO> appImgs = new ArrayList<AppImageCfgDTO>();
+    Map<String, Integer> addedAppImages = new HashMap<String, Integer>();
+
+    if (application.getAppImageCfgs() != null) {
+      for (AppImageCfg appImgCfgs : application.getAppImageCfgs()) {
+        if (!addedAppImages.containsKey(appImgCfgs.getGroupName())) {
+          addedAppImages.put(appImgCfgs.getGroupName(), 1);
+          AppImageCfgDTO appImageCfgDTO = new AppImageCfgDTO();
+          appImageCfgDTO.setAppName(appImgCfgs.getAppName());
+          appImageCfgDTO.setId(appImgCfgs.getId());
+          appImageCfgDTO.setCpuShares(appImgCfgs.getCpuShares());
+          appImageCfgDTO.setDaemon(appImgCfgs.isDaemon());
+          appImageCfgDTO.setImageName(appImgCfgs.getImageName());
+          appImageCfgDTO.setDomainName(appImgCfgs.getDomainName());
+          appImageCfgDTO.setEnvironmentMapping(appImgCfgs.getEnvironmentMapping());
+          appImageCfgDTO.setHostName(appImgCfgs.getHostName());
+          appImageCfgDTO.setMemory(appImgCfgs.getMemory());
+          appImageCfgDTO.setMemorySwap(appImgCfgs.getMemorySwap());
+          appImageCfgDTO.setInitScript(appImgCfgs.getInitScript());
+          appImageCfgDTO.setGroupName(appImgCfgs.getGroupName());
+          appImgs.add(appImageCfgDTO);
+        } else {
+          int newCount = addedAppImages.get(appImgCfgs.getGroupName()).intValue() + 1;
+          addedAppImages.put(appImgCfgs.getGroupName(), newCount);
+        }
+      }
+      for (AppImageCfgDTO appImageCfgDTO : appImgs) {
+        appImageCfgDTO.setNoOfInstance(addedAppImages.get(appImageCfgDTO.getGroupName()));
+      }
+      appDto.setAppImages(appImgs);
+    }
+    appDto.setDesc(application.getDesc());
+    appDto.setTags(application.getTags());
+
+    List<ServiceImageCfgDTO> serImgs = new ArrayList<ServiceImageCfgDTO>();
+    Map<String, Integer> addedImages = new HashMap<String, Integer>();
+
+    if (application.getServiceImageCfgs() != null) {
+      for (ServiceImageCfg servImg : application.getServiceImageCfgs()) {
+        if (!addedImages.containsKey(servImg.getGroupName())) {
+          addedImages.put(servImg.getGroupName(), 1);
+          ServiceImageCfgDTO serviceImageCfgDTO = new ServiceImageCfgDTO();
+          serviceImageCfgDTO.setAppName(servImg.getServiceName());
+          serviceImageCfgDTO.setId(servImg.getId());
+          serviceImageCfgDTO.setCpuShares(servImg.getCpuShares());
+          serviceImageCfgDTO.setDaemon(servImg.isDaemon());
+          serviceImageCfgDTO.setImageName(servImg.getImageName());
+          serviceImageCfgDTO.setDomainName(servImg.getDomainName());
+          serviceImageCfgDTO.setEnvironmentMapping(servImg.getEnvironmentMapping());
+          serviceImageCfgDTO.setHostName(servImg.getHostName());
+          serviceImageCfgDTO.setMemory(servImg.getMemory());
+          serviceImageCfgDTO.setMemorySwap(servImg.getMemorySwap());
+          serviceImageCfgDTO.setGroupName(servImg.getGroupName());
+          serImgs.add(serviceImageCfgDTO);
+        } else {
+          Integer count = addedImages.get(servImg.getGroupName());
+          addedImages.put(servImg.getGroupName(), count++);
+        }
+      }
+      for (ServiceImageCfgDTO serviceImageCfgDTO : serImgs) {
+        serviceImageCfgDTO.setNoOfInstance(addedImages.get(serviceImageCfgDTO.getGroupName()));
+      }
+      appDto.setServiceImages(serImgs);
+    }
+    return appDto;
+  }
 }

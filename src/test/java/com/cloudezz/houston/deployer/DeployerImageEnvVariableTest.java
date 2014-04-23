@@ -28,17 +28,19 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
 
   @Autowired
   private DockerClient dockerClient;
-  
+
   @Autowired
   private DeployerHelperService deployerHelperService;
 
-  private ServiceImageCfg serviceImageConfig= new ServiceImageCfg();
+  private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
 
   private Application application = new Application();
 
-  
+
   @Before
   public void setup() throws CloudezzDeployException {
+
+    application.setAppName("test123");
 
     ClusterConfig clusterConfig = new ClusterConfig();
     clusterConfig.setId(RepositoryUtils.generateBigId());
@@ -56,8 +58,8 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     dockerHostMachine.setSudo(true);
     dockerHostMachine.setUsername("vagrant");
     dockerHostMachine.setPassword("vagrant");
-    
-    AppImageCfg applicationImageConfig= new AppImageCfg();
+
+    AppImageCfg applicationImageConfig = new AppImageCfg();
     applicationImageConfig.setDockerHostMachine(dockerHostMachine);
     applicationImageConfig.setCpuShares(2);
     applicationImageConfig.setDaemon(false);
@@ -72,12 +74,12 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     Map<String, String> environmentMapping = new HashMap<String, String>();
     environmentMapping.put("MYSQL_ROOT_PASSWORD", "test123");
     applicationImageConfig.setEnvironmentMapping(environmentMapping);
-    application.addAppImageCfgs(applicationImageConfig,1);
+    application.addAppImageCfgs(applicationImageConfig, 1, application.getAppName());
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
 
-   
+
     serviceImageConfig.setDockerHostMachine(dockerHostMachine);
     serviceImageConfig.setCpuShares(2);
     serviceImageConfig.setDaemon(false);
@@ -91,7 +93,7 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig,1);
+    application.addServiceImageCfgs(serviceImageConfig, 1);
   }
 
   @Test
@@ -102,11 +104,11 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
         dockerClient.inspectContainer(serviceImageConfig.getContainerId());
 
     HostConfig hostConfig = application.getAppImageCfgs().iterator().next().getHostConfig();
-    hostConfig.setLinks(new String[] {containerInspectResponse.name+":dep_base"});
-    deployerHelperService.startContainer(dockerClient, application.getAppImageCfgs().iterator().next(), hostConfig);
+    hostConfig.setLinks(new String[] {containerInspectResponse.name + ":dep_base"});
+    deployerHelperService.startContainer(dockerClient, application.getAppImageCfgs().iterator()
+        .next(), hostConfig);
 
-    containerInspectResponse =
-        dockerClient.inspectContainer(serviceImageConfig.getContainerId());
+    containerInspectResponse = dockerClient.inspectContainer(serviceImageConfig.getContainerId());
 
   }
 

@@ -30,7 +30,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
-  
+
   @Column(name = "instance_no")
   private Integer instanceNo;
 
@@ -46,6 +46,9 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   @Column(name = "domain_name")
   protected String domainName = "";
+
+  @Column(name = "group_name")
+  protected String groupName = "";
 
   protected Long memory = 0L;
 
@@ -181,6 +184,14 @@ public abstract class BaseImageCfg extends BaseEntity {
     }
   }
 
+
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
 
   /**
    * @return the memory
@@ -376,18 +387,20 @@ public abstract class BaseImageCfg extends BaseEntity {
    * @param environmentMapping the environmentMapping to set
    */
   public abstract void addEnvironmentMapping(String envName, String envValue);
-  
+
   /**
    * Get application
+   * 
    * @return
    */
-  public abstract Application getApplication() ;
+  public abstract Application getApplication();
 
   /**
    * Set application
+   * 
    * @param application
    */
-  public abstract void setApplication(Application application) ;
+  public abstract void setApplication(Application application);
 
   public Map<String, String> getDockerPortToHostPort() {
     return dockerPortToHostPort;

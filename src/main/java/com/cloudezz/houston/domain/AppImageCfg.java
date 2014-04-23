@@ -172,6 +172,7 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
     AppImageCfg appImageCfg = new AppImageCfg();
     appImageCfg.setApplication(this.application);
     appImageCfg.setAppName(this.appName);
+    appImageCfg.setGroupName(this.groupName);
     appImageCfg.setHostName(this.hostName);
     appImageCfg.setCpuShares(this.cpuShares);
     appImageCfg.setImageName(this.imageName);
@@ -189,4 +190,21 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
         this.hostToDockerVolumeMapping));
     return appImageCfg;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || !(obj instanceof AppImageCfg)) {
+      return false;
+    }
+    return this.appName.equals(((AppImageCfg) obj).appName);
+  }
+
+  @Override
+  public int hashCode() {
+    return this.appName.hashCode();
+  }
+
 }

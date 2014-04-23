@@ -201,7 +201,8 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
   public ServiceImageCfg clone() {
     ServiceImageCfg serviceImgCfg = new ServiceImageCfg();
     serviceImgCfg.setApplication(this.app);
-    serviceImgCfg.setServiceName(this.serviceName);
+    serviceImgCfg.setServiceName(this.serviceName);  
+    serviceImgCfg.setGroupName(this.groupName);
     serviceImgCfg.setHostName(this.hostName);
     serviceImgCfg.setCpuShares(this.cpuShares);
     serviceImgCfg.setImageName(this.imageName);
@@ -219,5 +220,22 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
         this.hostToDockerVolumeMapping));
     return serviceImgCfg;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || !(obj instanceof ServiceImageCfg)) {
+      return false;
+    }
+    return this.serviceName.equals(((ServiceImageCfg) obj).serviceName);
+  }
+
+  @Override
+  public int hashCode() {
+    return this.serviceName.hashCode();
+  }
+
 
 }

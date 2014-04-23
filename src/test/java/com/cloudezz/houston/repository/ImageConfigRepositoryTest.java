@@ -27,18 +27,20 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
 
   @Autowired
   private ApplicationRepository applicationRepository;
-  
+
   @Autowired
   private DockerHostMachineRepository dockerHostMachineRepository;
 
   private ServiceImageCfg serviceImageConfig = new ServiceImageCfg();
-  
+
   private Application application = new Application();
-  
-  private  DockerHostMachine dockerHostMachine = new DockerHostMachine();
+
+  private DockerHostMachine dockerHostMachine = new DockerHostMachine();
 
   @Before
   public void setup() throws CloudezzDeployException {
+
+    application.setAppName("testApp");
 
     dockerHostMachine.setIpAddress("localhost");
     dockerHostMachine.setDockerPort("4243");
@@ -57,8 +59,8 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
     ports.add("8990");
     applicationImageConfig.setPorts(ports);
     applicationImageConfig.setTty(true);
-    application.addServiceImageCfgs(serviceImageConfig,1);
-    application.addAppImageCfgs(applicationImageConfig,1);
+    application.addServiceImageCfgs(serviceImageConfig, 1);
+    application.addAppImageCfgs(applicationImageConfig, 1, application.getAppName());
     Map<String, String> hostToDockervolumeMapping = new HashMap<String, String>();
     hostToDockervolumeMapping.put("/opt/bbytes", "cloudezz/data");
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
@@ -78,14 +80,14 @@ public class ImageConfigRepositoryTest extends BaseApplicationContextLoader {
     serviceImageConfig.setPorts(servicePorts);
     serviceImageConfig.setTty(true);
     serviceImageConfig.setHostToDockerVolumeMapping(hostToDockervolumeMapping);
-    application.addServiceImageCfgs(serviceImageConfig,1);
+    application.addServiceImageCfgs(serviceImageConfig, 1);
   }
 
   @Test
   public void testRemoveOldPersistentData() {
-    
+
     dockerHostMachine = dockerHostMachineRepository.save(dockerHostMachine);
-    
+
     application = applicationRepository.saveAndFlush(application);
     Assert.assertNotNull(application);
   }

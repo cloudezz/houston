@@ -53,7 +53,7 @@ public class Application extends BaseEntity {
 
   @Column(name = "app_desc", columnDefinition = "VARCHAR(1500)")
   protected String desc = "";
-  
+
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_user_id", nullable = false)
@@ -134,16 +134,18 @@ public class Application extends BaseEntity {
    * 
    * @param appImageCfg
    * @param noOfInstances no of clone copies
+   * @param string
    * @throws CloudezzDeployException
    */
-  public void addAppImageCfgs(AppImageCfg appImageCfg, Integer noOfInstances)
+  public void addAppImageCfgs(AppImageCfg appImageCfg, Integer noOfInstances, String appName)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(appImageCfg, "App Image cannot be null");
     for (int i = 1; i < noOfInstances + 1; i++) {
       appImageCfg = appImageCfg.clone();
       appImageCfg.setApplication(this);
       appImageCfg.setInstanceNo(i);
-      appImageCfg.setAppName(appImageCfg.getAppName() + "_app" + i);
+      appImageCfg.setAppName(appName + "_app" + (this.appImageCfgs.size() + 1));
+      appImageCfg.setGroupName(appName);
       this.appImageCfgs.add(appImageCfg);
     }
   }

@@ -262,10 +262,11 @@ houstonApp.factory('AppImageService', [
 					return form;
 				},
 				loadScript : function(id) {
-					var initScript=$http.get('app/rest/imageInfos/'+id+'/initscript')
-					.then(function(response) {
-						return response.data;
-					});
+					var initScript = $http.get(
+							'app/rest/imageInfos/' + id + '/initscript').then(
+							function(response) {
+								return response.data;
+							});
 					return initScript;
 				},
 				saveFormValues : function(formData) {
@@ -285,18 +286,26 @@ houstonApp.factory('AppConfigCommunicationService', [ '$http', function($http) {
 	var configToEdit;
 	var apImgConfigs;
 	return {
-		setConfigToEdit : function(config) {
-			configToEdit = config;
+		setConfigToEdit : function(config, callback) {
+			if (config != null) {
+				var url = "app/rest/application/dto/" + config.id
+				$http.get(url).success(function(data) {
+					configToEdit = data;
+					callback(data);
+				});
+			} else {
+				configToEdit = null;
+			}
 		},
 		getConfigToEdit : function() {
 			return configToEdit;
 		},
-		setAppImgConfigs:function(imgConfigs){
-			apImgConfigs=imgConfigs;
-		} ,
-		getAppImgConfigs:function(){
+		setAppImgConfigs : function(imgConfigs) {
+			apImgConfigs = imgConfigs;
+		},
+		getAppImgConfigs : function() {
 			return apImgConfigs;
-		} 
+		}
 	}
 } ]);
 
