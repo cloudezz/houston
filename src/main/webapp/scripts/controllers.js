@@ -613,18 +613,14 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		var service;
 		var list;
 		var editItem;
-		if($scope.isServiceEditCtxt){
-			editItem=$scope.serviceDTO;
-		}
-		else if($scope.isAppEditCtxt){
-			editItem=$scope.appDTO;
-		}
+		
 		if(card.nwizard!=undefined){
 			service=$scope.service;
 			wizardCard= card.nwizard;
 			errorSpan=$("#errorSpan");
 			list=AppConfigCommunicationService.getAppImgConfigs();
 			input=card.el.find("#appName");
+			editItem=$scope.appDTO;
 		}		           
 		else{
 			service=$scope.subService;
@@ -632,6 +628,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			errorSpan=serviceWizard.find("#serviceErrorSpan");
 			list=$scope.serviceDTOList;
 			input=card.el.find("#serviceAppName");
+			editItem=$scope.serviceDTO;
 		}
 		var name = input.val();
 		if (name == "") {
@@ -642,10 +639,17 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			input.popover("destroy");
 
 			console.log($scope.serviceDTOList);
-			angular.forEach(list, function(item) {		    	
+			angular.forEach(list, function(item) {
+				if($scope.isAppEditCtxt ||$scope.isServiceEditCtxt ){
 				if(item.id!=editItem.id && item.appName==name){		    		
 					wizardCard.errorPopover(input, "Name is not unique.Please use a different name");
 					valid= false;		    	
+				}}
+				else{
+					if(item.appName==name){		    		
+						wizardCard.errorPopover(input, "Name is not unique.Please use a different name");
+						valid= false;		    	
+					}	
 				}});}
 		if(valid){ 
 			input.popover("destroy");
@@ -786,7 +790,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.serviceFormElementHolder=new Object(); 
 		if($scope.isServiceEditCtxt){
 			if($scope.serviceDTO!=null){
-				$scope.serviceDTO.appName=$scope.serviceDTO.serviceName;
 				var envMapping=$scope.serviceDTO.environmentMapping;
 				angular.forEach(envMapping,function(value,key){
 					$scope.serviceFormElementHolder[key]=value;
