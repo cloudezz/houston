@@ -273,7 +273,7 @@ public class ApplicationResource {
       application.setRunning(true);
       // set the exposed service after start of the image
       try {
-        List<ExposedService> exposedService = imageService.getExposedService(application);
+        Set<ExposedService> exposedService = imageService.getExposedService(application);
         application.setExposedServices(exposedService);
       } catch (CloudezzException e) {
         log.error(e.getMessage());
@@ -377,7 +377,7 @@ public class ApplicationResource {
   @RequestMapping(value = "/rest/application/{id}/service", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public List<ExposedService> getServiceExposed(@PathVariable String id,
+  public Set<ExposedService> getServiceExposed(@PathVariable String id,
       HttpServletResponse response) {
     log.debug("REST request to get Application : {}", id);
     Application application = applicationRepository.findOne(id);

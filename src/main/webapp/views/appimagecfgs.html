@@ -1,75 +1,4 @@
 <div>
-	<div class="col-lg-12">
-		<div style="margin-bottom: 10px; margin-top: 30px;">
-			<a href="#/appImgConfigWizard" class="btn btn-xxl"><span
-				class="glyphicon glyphicon-flash"></span> &nbsp;<span>Create
-					Application</span></a> <input class="col-lg-4 pull-right search-box"
-				placeholder="Search" type="text" ng-model="search">
-		</div>
-
-		<table class="table table-hover table-bordered" id="appconfigTable">
-			<thead>
-				<tr>
-					<th>App name</th>
-					<th>Image type</th>
-					<th>Uptime</th>
-					<th>Status</th>
-					<th>Services</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="appimagecfg in appimagecfgs | filter:search">
-					<td>{{appimagecfg.appName}}</td>
-					<td>{{appimagecfg.imageType}}</td>
-					<td>{{appimagecfg.formattedStartTime | timeago}}</td>
-					<td ng-if="appimagecfg.running == true && !appimagecfg.starting">Running</td>
-					<td ng-if="appimagecfg.running == false && !appimagecfg.starting">Stopped</td>
-					<td ng-if="appimagecfg.starting"><div
-							class="progress progress-striped active">
-							<div class="progress-bar progress-bar-success" id='progressBar{{appimagecfg.id}}'
-								style="width: 0%">
-								<span style="font-size: 8pt; float: left;">{{progressText}}</span>
-							</div>
-						</div></td>
-					<td ng-if="!appimagecfg.running">-</td>
-					<td ng-if="appimagecfg.running">
-						<div class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown"> <span>
-									<span class="glyphicon glyphicon-th-list"></span> <span
-									class="hidden-tablet">Links</span> <b class="caret"></b>
-							</span>
-							</a>
-							<ul class="dropdown-menu">
-								<li ng-repeat="serviceToURLs in (getServiceToURLs(appimagecfg.exposedServices))"
-									ng-click="openService(serviceToURLs.value)"><a><span
-										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>{{serviceToURLs.key}}_{{serviceToURLs.instanceNo}}</span></a>
-								</li>
-								<li ng-repeat="exposedService in appimagecfg.exposedServices" ng-click="openTerminal(exposedService.containerId)"><a><span
-										class="glyphicon glyphicon glyphicon-new-window"> </span>&nbsp;<span>Logs_{{exposedService.instanceNo}}</span></a> 
-								</li>
-							</ul>
-						</div>
-					</td>
-					<td style="width: 225px;">
-						<button class="btn btn-sm btn-start" ng-if="!appimagecfg.running"
-							value="btn btn-primary" style="width: 60px;"
-							ng-click="start(appimagecfg)" type="button" name="color"><span class="glyphicon glyphicon-play"></span>Start</button>
-						<button class="btn btn-sm btn-stop" ng-if="appimagecfg.running"
-							value="btn btn-primary" style="width: 60px;"
-							ng-click="stop(appimagecfg)" type="button" name="color"><span class="glyphicon glyphicon-stop"></span>Stop</button>
-						<button class="btn btn-sm" value="btn btn-primary"
- 							style="width: 60px;" ng-click="editConfig(appimagecfg)"
-							type="button" name="color"><span class="glyphicon glyphicon glyphicon-pencil"></span>Edit</button>
-						<button class="btn btn-sm btn-delete" value="btn btn-primary"
-							style="width: 60px;" ng-click="delete(appimagecfg.id)"
-							type="button" name="color"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
 	<script type="text/ng-template" id="deleteConfirm.html">
 		<div id="confirmDeleteApp">	
 			<div class="modal-header">
@@ -84,4 +13,87 @@
 			</div>
 		</div>
 	</script>
+	<div class="col-lg-12">
+		<div style="margin-bottom: 10px; margin-top: 30px;">
+			<a href="#/appImgConfigWizard" class="btn btn-xxl"><span
+				class="glyphicon glyphicon-flash"></span> &nbsp;<span>Create
+					Application</span></a> <input class="col-lg-4 pull-right search-box"
+				placeholder="Search" type="text" ng-model="search">
+		</div>
+		<div class="row"
+			ng-repeat="(index, appimagecfgsRow) in appimagecfgsRows">
+			<div class="col-lg-3" ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
+				<div class="card">
+					<div class="card-heading simple"
+						style="font-size: 15px; height: 30px; text-align: center; font-weight: bold">{{appimagecfg.appName}}</div>
+					<div class="card-body">
+						<div class="card_desc">{{appimagecfg.desc}}</div>
+					</div>
+
+					<div class="card_bar">
+						<span ng-repeat="appImageCfg in appimagecfg.appImageCfgs"
+							class="dropdown" style="margin-left: 5px; margin-right: 5px;">
+							<img alt="" src="images/card/{{appImageCfg.imageType}}" class="dropdown-toggle" data-toggle="dropdown"
+							style="cursor: pointer;">
+							<ul class="dropdown-menu" ng-if="appImageCfg.links">
+								<li ng-repeat="link in appImageCfg.links"><a
+									href="javascript:;" ng-click="openService(link.value)">{{link.key}}_{{appImageCfg.instanceNo}}</a></li>
+								<li><a href="javascript:;"
+									ng-click="openTerminal(appImageCfg.containerId)">Logs_{{appImageCfg.instanceNo}}</a></li>
+							</ul>
+						</span>
+					</div>
+
+					<div class="card_bar">
+						<span ng-repeat="serviceImageCfg in appimagecfg.serviceImageCfgs"
+							class="dropdown" style="margin-left: 5px; margin-right: 5px;">
+							<img alt="" src="images/card/{{serviceImageCfg.imageType}}"
+							style="cursor: pointer;">
+							<ul class="dropdown-menu">
+								<li ng-repeat="link in serviceImageCfg.links"><a
+									href="javascript:;" ng-click="openService(link.value)">{{link.key}}_{{serviceImageCfg.instanceNo}}</a></li>
+								<li><a href="javascript:;"
+									ng-click="openTerminal(serviceImageCfg.containerId)">Logs_{{serviceImageCfg.instanceNo}}</a></li>
+							</ul>
+						</span>
+					</div>
+
+					<div class="card_bar">
+						<span class="card-box" ng-repeat="tag in appimagecfg.tags">
+							{{tag}} </span>
+					</div>
+
+					<div class="card-comments">
+						<div
+							ng-class="{'progress-striped' : appimagecfg.starting || appimagecfg.stopping, 'progress active' : appimagecfg}"
+							id='bar{{appimagecfg.id}}'
+							style="height: 18px; margin-bottom: 10px;">
+							<div
+								ng-class="{'progress-bar' : appimagecfg, 'progress-bar-danger' : (!appimagecfg.running && !appimagecfg.stopping && !appimagecfg.starting) || appimagecfg.stopping || appimagecfg.stopping, 'progress-bar-success' : (appimagecfg.running && !appimagecfg.stopping && !appimagecfg.starting) || appimagecfg.starting}"
+								id='progressBar{{appimagecfg.id}}' style="width: 100%">
+								<span
+									style="font-size: 8pt; float: left; margin-top: -5px; margin-left: 5px;"
+									ng-if="appimagecfg.starting">Starting</span> <span
+									style="font-size: 8pt; float: left; margin-top: -5px; margin-left: 5px;"
+									ng-if="appimagecfg.stopping">Stopping</span>
+							</div>
+						</div>
+						<div>
+							<img alt="" ng-if="!appimagecfg.running"
+								ng-click="start(appimagecfg, index, $index)" class="card_button"
+								src="images/card/start-icon-dark.png"> <img alt=""
+								ng-if="appimagecfg.running"
+								ng-click="stop(appimagecfg, index, $index)" class="card_button"
+								src="images/card/stop-icon-dark.png"> <img alt=""
+								class="card_button" src="images/card/edit-icon-dark.png">
+							<img alt="" ng-click="delete(appimagecfg.id)" class="card_button"
+								src="images/card/delete-icon-dark.png">
+						</div>
+						<div class="card_uptime">Uptime :
+							{{appimagecfg.formattedStartTime | timeago}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

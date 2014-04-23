@@ -1,6 +1,5 @@
 package com.cloudezz.houston.domain;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class Application extends BaseEntity {
 
   @Column(name = "app_desc", columnDefinition = "VARCHAR(1500)")
   protected String desc = "";
-
+  
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_user_id", nullable = false)
@@ -68,7 +67,7 @@ public class Application extends BaseEntity {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "exposed_service_id")
-  protected List<ExposedService> exposedServices = new ArrayList<ExposedService>();
+  protected Set<ExposedService> exposedServices = new LinkedHashSet<ExposedService>();
 
 
   @Override
@@ -176,11 +175,11 @@ public class Application extends BaseEntity {
     this.running = running;
   }
 
-  public List<ExposedService> getExposedServices() {
+  public Set<ExposedService> getExposedServices() {
     return exposedServices;
   }
 
-  public void setExposedServices(List<ExposedService> exposedServices) {
+  public void setExposedServices(Set<ExposedService> exposedServices) {
     this.exposedServices = exposedServices;
   }
 

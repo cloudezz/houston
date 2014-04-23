@@ -2,10 +2,11 @@ package com.cloudezz.houston.service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
@@ -52,11 +53,11 @@ public class ImageService {
   private Environment env;
 
 
-  public List<ExposedService> getExposedService(Application application) throws CloudezzException {
+  public Set<ExposedService> getExposedService(Application application) throws CloudezzException {
 
     Preconditions.checkNotNull(application, "Application arg cannot be null");
 
-    List<ExposedService> exposedServices = new ArrayList<>();
+    Set<ExposedService> exposedServices = new LinkedHashSet<>();
 
     for (AppImageCfg appImageCfg : application.getAppImageCfgs()) {
 

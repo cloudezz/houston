@@ -237,105 +237,134 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 		$scope.appimagecfgs  = data;
 		AppConfigCommunicationService.setAppImgConfigs(data);
 	});
-	 $scope.getServiceToURLs = function(exposedServices) {
-	    	var serviceToURLs = [];
-	    	for(var i=0; i<exposedServices.length; i++){
-	    		var instanceNo = exposedServices[i].instanceNo;
-	    		var serviceToURL = exposedServices[i].serviceToURL;
-	    		for(var key in serviceToURL){
-	    			serviceToURLs.push({key : key, value : serviceToURL[key], instanceNo : instanceNo});
-	    		}
-	    	}
-	    	return serviceToURLs;
-	    };
-		
+	
 		$scope.$watchCollection('appimagecfgs', function(newValue, oldValue) {
 		    var appimagecfgsRows = [];
 		    for (var i = 0; i < newValue.length; i++ ) {
 		        if (i % 4 == 0) appimagecfgsRows.push([]);
-		        appimagecfgsRows[appimagecfgsRows.length-1].push(newValue[i]);
+		        var app = formatAppImageConfig(newValue[i]);
+		        appimagecfgsRows[appimagecfgsRows.length-1].push(app);
 		    }
 		    $scope.appimagecfgsRows = appimagecfgsRows;
 		});
+		
+		function formatAppImageConfig(appimagecfg){
+			appimagecfg.starting = false;
+			appimagecfg.stopping = false;
+			var serviceToURLmap = {};
+	        var exposedServices = appimagecfg.exposedServices;
+	    	for(var k=0; k<exposedServices.length; k++){
+	    		var instanceNo = exposedServices[k].instanceNo;
+	    		var containerId = exposedServices[k].containerId;
+	    		var serviceToURL = exposedServices[k].serviceToURL;
+	    		for(var key in serviceToURL){
+	    			if(serviceToURLmap[containerId + "_" + instanceNo]){
+	    				serviceToURLmap[containerId + "_" + instanceNo].push({key : key, value : serviceToURL[key], instanceNo : instanceNo});
+	    			} else {
+	    				serviceToURLmap[containerId + "_" + instanceNo] = [];
+	    				serviceToURLmap[containerId + "_" + instanceNo].push({key : key, value : serviceToURL[key], instanceNo : instanceNo});
+	    			}
+	    		}
+	    	}
+	    	var appImageCfgs = appimagecfg.appImageCfgs;
+	    	for(var m=0; m<appImageCfgs.length; m++){
+	    		appImageCfgs[m]['links'] = serviceToURLmap[appImageCfgs[m].containerId + "_" + appImageCfgs[m].instanceNo];
+	    	}
+	    	var serImageCfgs = appimagecfg.serviceImageCfgs;
+	    	for(var n=0; n<serImageCfgs.length; n++){
+	    		serImageCfgs[n]['links'] = serviceToURLmap[serImageCfgs[n].containerId + "_" + serImageCfgs[n].instanceNo];
+	    	}
+			return appimagecfg;
+		}
 				
         console.log($scope.appimagecfgs);
 
-        $scope.start = function (appimagecfg) {
-        	appimagecfg.starting = true;
-        	$scope.progressText ="Starting";
+        $scope.start = function (appimagecfg, index1, index2) {
+        	$scope.appimagecfgsRows[index1][index2].starting = true;
+        	$("#progressBar" + appimagecfg.id).css("width", "0%");
         	var percent = 0;
         	progress();
         	function progress(){
-            	$timeout(function(){
-            		percent = percent + 10;
-            		$("#progressBar" + appimagecfg.id).css("width", percent+"%");
-            		if(percent < 80){
-            			progress();
-            		}
-            	}, 100);
+        		if(appimagecfg.starting){
+                	$timeout(function(){
+                		percent = percent + 10;
+                		$("#progressBar" + appimagecfg.id).css("width", percent+"%");
+                		if(percent < 80){
+                			progress();
+                		}
+                	}, 500);
+        		} else {
+        			$("#progressBar" + appimagecfg.id).css("width", "100%");
+        		}
         	};
         	
         	AppImageService.start(appimagecfg.id, function (data, status) {
-        		delete appimagecfg.starting;
-        		$scope.progressText ="";
+        		$scope.appimagecfgsRows[index1][index2].starting = false;
+        		$("#progressBar" + appimagecfg.id).css("width", "100%");
         		if(status == 200 ) {
-        			$("#progressBar" + appimagecfg.id).css("width", "100%");
         			$rootScope.msg.update({
-					message:'Machine Started!',
-					type: 'success',
-					showCloseButton: true
-				});
+						message:'Machine Started!',
+						type: 'success',
+						showCloseButton: true
+        			});
+        			var updatedApp = AppImageCfg.get({id : $scope.appimagecfgsRows[index1][index2].id}, function(){
+        				$scope.appimagecfgsRows[index1][index2] = formatAppImageConfig(updatedApp);
+        			});
         			AppImageCfg.query(function (data) {
-					$scope.appimagecfgs  = data;
-					AppConfigCommunicationService.setAppImgConfigs(data);
-				});
+						//$scope.appimagecfgs  = data;
+						AppConfigCommunicationService.setAppImgConfigs(data);
+        			});
         		} else {
-        			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        				$rootScope.msg.update({
-					message:'Machine was not started : Error is : '+data.error+'!',
-					type: 'error',
-					showCloseButton: true
-				});        		}
+    				$rootScope.msg.update({
+						message:'Machine was not started : Error is : '+data.error+'!',
+						type: 'error',
+						showCloseButton: true
+    				});        		
+        		}
         	});
         };
         
-        $scope.stop = function (appimagecfg) {
-        	appimagecfg.starting = true;
-        	$scope.progressText ="Stopping";
+        $scope.stop = function (appimagecfg, index1, index2) {
+        	$scope.appimagecfgsRows[index1][index2].stopping = true;
+        	$("#progressBar" + appimagecfg.id).css("width", "0%");
         	var percent = 0;
         	progress();
         	function progress(){
+        		if(appimagecfg.stopping){
             	$timeout(function(){
             		percent = percent + 10;
             		$("#progressBar" + appimagecfg.id).css("width", percent+"%");
             		if(percent < 80){
             			progress();
             		}
-            	}, 100);
+            	}, 500);
+        		} else {
+        			$("#progressBar" + appimagecfg.id).css("width", "100%");
+        		}
         	};
         	
-        	
         	AppImageService.stop(appimagecfg.id, function (data, status) {
-        		delete appimagecfg.starting;
-    			$scope.progressText ="";
+        		$scope.appimagecfgsRows[index1][index2].stopping = false;
+        		$("#progressBar" + appimagecfg.id).css("width", "100%");
         		if(status == 200 ) {
-        			$("#progressBar" + appimagecfg.id).css("width", "100%");
         			$rootScope.msg.update({
-					message:'Machine Stopped!',
-					type: 'success',
-					showCloseButton: true
-				});
-        			AppImageCfg.query(function (data) {
-					$scope.appimagecfgs  = data;
-					AppConfigCommunicationService.setAppImgConfigs(data);
-				});
+						message:'Machine Stopped!',
+						type: 'success',
+						showCloseButton: true
+        			});
+        			var updatedApp = AppImageCfg.get({id : $scope.appimagecfgsRows[index1][index2].id}, function(){
+        				$scope.appimagecfgsRows[index1][index2] = formatAppImageConfig(updatedApp);
+        			});
+	        		AppImageCfg.query(function (data) {
+						//$scope.appimagecfgs  = data;
+						AppConfigCommunicationService.setAppImgConfigs(data);
+        			});
         		} else {
-        			$("#progressBar" + appimagecfg.id).css("width", "0%");
-        		$rootScope.msg.update({
-					message:'Machine was not stopped :: Error is : '+data.error+'!',
-					type: 'error',
-					showCloseButton: true
-				});
+	        		$rootScope.msg.update({
+						message:'Machine was not stopped :: Error is : '+data.error+'!',
+						type: 'error',
+						showCloseButton: true
+					});
         		}
         	});
         };
@@ -370,7 +399,6 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 // };
         
         $scope.delete = function (id) {
-        	
         	var modalInstance = $modal.open({
 				templateUrl : 'deleteConfirm.html',
 				controller : DeleteModalInstanceCtrl,
@@ -1235,6 +1263,47 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance,$rootSc
 	};
 }
 
+houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'resolvedDeploymentScript', 'DeploymentScript',
+                                                    function ($scope,$rootScope, resolvedDeploymentScript, DeploymentScript) {
+
+        $scope.deploymentScripts = resolvedDeploymentScript;
+
+        $scope.create = function () {
+        	DeploymentScript.save($scope.deploymentScript,
+                function () {
+                    $scope.deploymentScripts = DeploymentScript.query();
+                    $('#deploymentScriptModal').modal('hide');
+                    $scope.clear();
+                });
+        };
+
+        $scope.update = function (id) {
+            $scope.deploymentScript = DeploymentScript.get({id: id});
+            $('#deploymentScriptModal').modal('show');
+        };
+
+        $scope.delete = function (id) {
+        	DeploymentScript.delete({id: id},
+	            function () {
+		            $scope.deploymentScripts = DeploymentScript.query();
+					$rootScope.msg.update({
+						message:'Deleted Deployment Script!',
+						type: 'success',
+						showCloseButton: true
+					});
+	            },function(httpResponse){
+					$rootScope.msg.update({
+						message:'Could not delete Deployment Script.Error is : '+httpResponse.data.error+'!',
+						type: 'error',
+						showCloseButton: true
+					});
+	            });
+        };
+
+        $scope.clear = function () {
+            $scope.deploymentScript = {};
+        };
+    }]);
 
 
 houstonApp.controller('ServiceImageCfgController', ['$scope','$rootScope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
