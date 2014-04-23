@@ -451,6 +451,11 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 		$scope.openWizard();
 	});
 
+	$scope.$on('$destroy', function () {
+		$scope.isAppEditCtxt=false;
+		AppConfigCommunicationService.setConfigToEdit(null);
+		});
+	
 	$scope.getImgInitialStyle=function(serviceId,imageName){
 		if($scope.appImageCfgDTO.imageName==imageName){
 			$("#app"+serviceId+"").css('border-color', 'grey');
@@ -868,6 +873,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 		serviceWizard.on("closed", function(serviceWizard) {
 			$('.modal-backdrop').remove();
+			resetServiceWizard(serviceWizard); 
 		});
 
 		serviceWizard.on("reset", function(serviceWizard) {
@@ -942,13 +948,11 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 	/* App wizard creation */
 
-	$scope.openWizard = function () {		
-		
-		$scope.isAppEditCtxt=false;
+	$scope.openWizard = function () {	
 		
 		if(AppConfigCommunicationService.getConfigToEdit()!=null){
-			$scope.isAppEditCtxt=true;
 			$scope.appDTO=AppConfigCommunicationService.getConfigToEdit();
+			$scope.isAppEditCtxt=true;
 		}
 		
 		initializeWizard();
@@ -1027,6 +1031,8 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 
 		wizard.on("closed", function(wizard) {
 			$('.modal-backdrop').remove();
+			$scope.isAppEditCtxt=false;
+			AppConfigCommunicationService.setConfigToEdit(null);
 		});
 
 		wizard.on("reset", function(wizard) {
@@ -1038,10 +1044,14 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 			wizard.reset().close();
 			$('.modal-backdrop').remove();
 			$(".wizard").remove();
+			$scope.isAppEditCtxt=false;
+			AppConfigCommunicationService.setConfigToEdit(null);
 		});
 
 		wizard.el.find(".wizard-success .create-another-server").click(function() {
 			wizard.reset();
+			$scope.isAppEditCtxt=false;
+			AppConfigCommunicationService.setConfigToEdit(null);
 			initializeWizard();
 		});
 		AppImageCfg.query(function (data) {
