@@ -273,7 +273,6 @@ table th {
   margin: 10px 0 20px 0;
   background-color: #ffffff;
   border: 1px solid #d8d8d8;
-  height : 371px;
 /*   border-top-width: 2px; */
   border-bottom-width: 2px;
   -webkit-border-radius: 3px;
@@ -302,7 +301,7 @@ table th {
 .card .card-heading.image img {
   display: inline-block;
   width: 46px;
-  height: 46px;
+ /*  height: 46px; */
   margin-right: 15px;
   vertical-align: top;
   border: 0;
@@ -564,28 +563,16 @@ table th {
 
 .card_bar{
 	background-color: #F8F8F8;
-	margin-bottom: 5px;
-	margin-top: 5px;
-	height: 40px;
-}
-
-.card_desc_ser{
-	font-size: 12px;
-	margin-top: -15px;
-	height: 100px;
-	overflow: hidden
-}
-
-.card_desc_ser{
-	font-size: 12px;
-	margin-top: -15px;
-	height: 100px;
-	overflow: hidden
+	margin-bottom: 10px;
+	margin-top: 10px;
+	min-height: 40px;
+	padding : 0px;
 }
 
 .card_desc{
 	font-size: 12px;
 	margin-top: -15px;
-	height: 140px;
-	overflow: hidden
+	margin-bottom: 10px;
+	max-height :100px;
+	overflow : hidden;
 }

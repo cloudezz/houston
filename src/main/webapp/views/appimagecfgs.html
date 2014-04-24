@@ -20,20 +20,23 @@
 					Application</span></a> <input class="col-lg-4 pull-right search-box"
 				placeholder="Search" type="text" ng-model="search">
 		</div>
-		<div class="row"
+
+ 		<div  class="col-lg-3"
 			ng-repeat="(index, appimagecfgsRow) in appimagecfgsRows">
-			<div class="col-lg-3" ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
-				<div class="card" style="position: relative;">
+			<div
+				ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
+				<div class="card" style="position: relative; height:auto">
 					<div class="card-heading simple"
-						style="font-size: 15px; height: 30px; text-align: center; font-weight: bold">{{appimagecfg.appName}}</div>
+						style="font-size: 18px; height: 30px; text-align: center; font-weight: bold">{{appimagecfg.appName}}</div>
 					<div class="card-body">
-						<div  ng-class="{'card_desc' : appimagecfg.serviceImageCfgs.length == 0, 'card_desc_ser' : appimagecfg.serviceImageCfgs.length != 0}">{{appimagecfg.desc}}</div>
+						<div class="card_desc">{{appimagecfg.desc}}</div>
 					</div>
 
 					<div class="card_bar">
 						<span ng-repeat="appImageCfg in appimagecfg.appImageCfgs"
 							class="dropdown" style="margin-left: 5px; margin-right: 5px;">
-							<img alt="" src="images/card/{{appImageCfg.imageType}}.png" class="dropdown-toggle" data-toggle="dropdown"
+							<img alt="" src="images/card/{{appImageCfg.imageType}}.png"
+							class="dropdown-toggle" data-toggle="dropdown"
 							style="cursor: pointer;">
 							<ul class="dropdown-menu" ng-if="appImageCfg.links">
 								<li ng-repeat="link in appImageCfg.links"><a
@@ -44,7 +47,8 @@
 						</span>
 					</div>
 
-					<div class="card_bar" ng-if="appimagecfg.serviceImageCfgs.length !== 0">
+					<div class="card_bar"
+						ng-if="appimagecfg.serviceImageCfgs.length !== 0">
 						<span ng-repeat="serviceImageCfg in appimagecfg.serviceImageCfgs"
 							class="dropdown" style="margin-left: 5px; margin-right: 5px;">
 							<img alt="" src="images/card/{{serviceImageCfg.imageType}}.png"
@@ -63,7 +67,8 @@
 							{{tag}} </span>
 					</div>
 
-					<div class="card-comments" style="position: absolute; bottom: 0px; width :100%">
+					<div class="card-comments"
+						style="bottom: 0px; width: 100%; margin-top:10px;">
 						<div
 							ng-class="{'progress-striped' : appimagecfg.starting || appimagecfg.stopping, 'progress active' : appimagecfg}"
 							id='bar{{appimagecfg.id}}'
@@ -84,13 +89,16 @@
 								src="images/card/start-icon-dark.png"> <img alt=""
 								ng-if="appimagecfg.running"
 								ng-click="stop(appimagecfg, index, $index)" class="card_button"
-								src="images/card/stop-icon-dark.png"> <img alt="" ng-click="editConfig(appimagecfg)"
-								class="card_button" src="images/card/edit-icon-dark.png">
-							<img alt="" ng-click="delete(appimagecfg.id)" class="card_button"
+								src="images/card/stop-icon-dark.png"> <img alt=""
+								ng-click="editConfig(appimagecfg)" class="card_button"
+								src="images/card/edit-icon-dark.png"> <img alt=""
+								ng-click="delete(appimagecfg.id)" class="card_button"
 								src="images/card/delete-icon-dark.png">
 						</div>
-						<div class="card_uptime"><span ng-if="appimagecfg.formattedStartTime">Uptime :
-							{{appimagecfg.formattedStartTime | timeago}}</span></div>
+						<div class="card_uptime">
+							<span ng-if="appimagecfg.formattedStartTime">Uptime :
+								{{appimagecfg.formattedStartTime | timeago}}</span>
+						</div>
 					</div>
 				</div>
 			</div>

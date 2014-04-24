@@ -240,10 +240,19 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 	
 		$scope.$watchCollection('appimagecfgs', function(newValue, oldValue) {
 		    var appimagecfgsRows = [];
+		    
+		    var count = 0;
 		    for (var i = 0; i < newValue.length; i++ ) {
-		        if (i % 4 == 0) appimagecfgsRows.push([]);
-		        var app = formatAppImageConfig(newValue[i]);
-		        appimagecfgsRows[appimagecfgsRows.length-1].push(app);
+		    	var app = formatAppImageConfig(newValue[i]);
+		    	if(!appimagecfgsRows[count]){
+		    		appimagecfgsRows.push([]);
+		    	}
+		    	appimagecfgsRows[count].push(app);
+		    	if(count < 3){
+		    		count++;
+		    	} else {
+		    		count = 0;
+		    	}
 		    }
 		    $scope.appimagecfgsRows = appimagecfgsRows;
 		});
