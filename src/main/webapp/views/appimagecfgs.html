@@ -23,11 +23,11 @@
 		<div class="row"
 			ng-repeat="(index, appimagecfgsRow) in appimagecfgsRows">
 			<div class="col-lg-3" ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
-				<div class="card">
+				<div class="card" style="position: relative;">
 					<div class="card-heading simple"
 						style="font-size: 15px; height: 30px; text-align: center; font-weight: bold">{{appimagecfg.appName}}</div>
 					<div class="card-body">
-						<div class="card_desc">{{appimagecfg.desc}}</div>
+						<div  ng-class="{'card_desc' : appimagecfg.serviceImageCfgs.length == 0, 'card_desc_ser' : appimagecfg.serviceImageCfgs.length != 0}">{{appimagecfg.desc}}</div>
 					</div>
 
 					<div class="card_bar">
@@ -44,7 +44,7 @@
 						</span>
 					</div>
 
-					<div class="card_bar">
+					<div class="card_bar" ng-if="appimagecfg.serviceImageCfgs.length !== 0">
 						<span ng-repeat="serviceImageCfg in appimagecfg.serviceImageCfgs"
 							class="dropdown" style="margin-left: 5px; margin-right: 5px;">
 							<img alt="" src="images/card/{{serviceImageCfg.imageType}}.png"
@@ -63,7 +63,7 @@
 							{{tag}} </span>
 					</div>
 
-					<div class="card-comments">
+					<div class="card-comments" style="position: absolute; bottom: 0px; width :100%">
 						<div
 							ng-class="{'progress-striped' : appimagecfg.starting || appimagecfg.stopping, 'progress active' : appimagecfg}"
 							id='bar{{appimagecfg.id}}'
@@ -89,8 +89,8 @@
 							<img alt="" ng-click="delete(appimagecfg.id)" class="card_button"
 								src="images/card/delete-icon-dark.png">
 						</div>
-						<div class="card_uptime">Uptime :
-							{{appimagecfg.formattedStartTime | timeago}}</div>
+						<div class="card_uptime"><span ng-if="appimagecfg.formattedStartTime">Uptime :
+							{{appimagecfg.formattedStartTime | timeago}}</span></div>
 					</div>
 				</div>
 			</div>
