@@ -84,12 +84,12 @@
 								src="images/card/start-icon-dark.png"> <img alt=""
 								ng-if="appimagecfg.running"
 								ng-click="stop(appimagecfg, index, $index)" class="card_button"
-								src="images/card/stop-icon-dark.png"> <img alt=""
+								src="images/card/stop-icon-dark.png"> <img alt="" ng-click="editConfig(appimagecfg)"
 								class="card_button" src="images/card/edit-icon-dark.png">
 							<img alt="" ng-click="delete(appimagecfg.id)" class="card_button"
 								src="images/card/delete-icon-dark.png">
 						</div>
-						<div class="card_uptime">Uptime :
+						<div ng-if="appimagecfg.formattedStartTime" class="card_uptime">Uptime :
 							{{appimagecfg.formattedStartTime | timeago}}</div>
 					</div>
 				</div>
