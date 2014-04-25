@@ -77,6 +77,15 @@ houstonApp
                         }]
                     }
                 })
+                .when('/deploymentScript', {
+                    templateUrl: 'views/deploymentScript.html',
+                    controller: 'DeploymentScriptController',
+                    resolve:{
+                        resolvedDeploymentScript: ['DeploymentScript', function (DeploymentScript) {
+                            return DeploymentScript.query();
+                        }]
+                    }
+                })
                 .when('/appImgConfigWizard', {
                     templateUrl: 'views/appimagecfgsWizard.html',
                     controller: 'AppImgConfigWizardController'
@@ -301,3 +310,56 @@ houstonApp
 				}
 			};
 		});
+
+houstonApp.directive('popOver', function ($compile, $timeout) {
+/*	  var itemsTemplate = "<ul class='unstyled'><li ng-repeat='item in items'>{{item}}</li></ul>";
+	  
+	  */
+	  var itemsTemplate = "<ul>"
+		+"<li ng-repeat='serviceToURL in items.serviceToURL'><a "
+			+"href='javascript:;' ng-click='openService({{serviceToURL.value}})'>{{serviceToURL.key}}_{{items.instanceNo}}</a></li>"
+		+"<li><a href='javascript:;'"
+			+"ng-click='openTerminal({{items.containerId}})'>Logs_{{items.instanceNo}}</a></li>"
+	  "</ul>";
+	  
+	  
+	  var getTemplate = function (contentType) {
+	    var template = '';
+	    switch (contentType) {
+	      case 'items':
+	        template = itemsTemplate;
+	        break;
+	    }
+	    return template;
+	  }
+	  return {
+	    restrict: "A",
+	    transclude: true,
+	    template: "<span ng-transclude></span>",
+	    link: function (scope, element, attrs) {
+	      var popOverContent;
+	      if (scope.items) {
+	        var html = getTemplate("items");
+	        var el = angular.element(html);
+	        popOverContent = $compile(el)(scope);
+            $timeout(function(){
+            	//popOverContent = $compile(el)(scope);
+                $compile(element.data('popover').tip())(scope);
+            });
+	        
+	        
+	      }
+	      var options = {
+	        content: popOverContent,
+	        placement: "bottom",
+	        html: true,
+	        title: scope.title
+	      };
+	      $(element).popover(options);
+	    },
+	    scope: {
+	      items: '=',
+	      title: '@'
+	    }
+	  };
+	});
