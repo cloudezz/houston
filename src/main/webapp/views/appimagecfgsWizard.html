@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="styles/hover_style_common.css">
+</head>
+<body>
+	<div>
+		<div class="wizard" id="serviceConfigWzd" data-title="Service Config">
+			<div class="wizard-card" data-cardname="servicecard1"
+				id="servicecard1">
+				<h3 hidden="true">Service Name</h3>
+				<div class="wizard-input-section ">
+					<label style="font-size: 15px;">Service Name</label> <input
+						id="serviceAppName" type="text" class="form-control"
+						name="serviceAppName" ng-model="serviceDTO.appName" ng-minlength=1
+						ng-maxlength=50 required ng-disabled="isServiceEditCtxt"/>
+				</div>
+
+				<div class="wizard-input-section">
+					<div class="imgcontainer">
+						<div id="serviceErrorSpan" style="width: 90%"></div>
+						<div class="main">
+							<div class="view view-first"
+								ng-repeat="svcImg in subServiceImages"
+								ng-click=setSubServiceUI(svcImg.id,svcImg.imageName)
+								id=service{{svcImg.id}}
+								ng-style="getSerImgInitialStyle(svcImg.id,svcImg.imageName)">
+								<img ng-src="{{svcImg.logoURL}}" />
+								<div class="mask">
+									<p>{{svcImg.desc}}</p>
+									<a class="info"><label>{{svcImg.version}}</label></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="wizard-card" data-cardname="servicecard2">
+				<h3 hidden="true">Machine Configuration</h3>
+				<div class="wizard-input-section" style="margin-bottom: 70px">
+					<div style="padding-bottom: 20px">Select a pre-defined
+						machine configuration or use sliders for custom configuration</div>
+					<div class="wizard-btn-gp" id="serviceWizardButtons">
+						<button class="btn btn-primary btn-sm" id="service_tinyConfig"
+							ng-click="setServiceDefaultConfig('Tiny');">Tiny</button>
+						<button class="btn btn-primary btn-sm" id="service_smallConfig"
+							ng-click="setServiceDefaultConfig('Small');">Small</button>
+						<button class="btn btn-primary btn-sm" id="service_medConfig"
+							ng-click="setServiceDefaultConfig('Medium');">Medium</button>
+						<button class="btn btn-primary btn-sm" id="service_largeConfig"
+							ng-click="setServiceDefaultConfig('Large');">Large</button>
+						<button class="btn btn-primary btn-sm"
+							id="service_veryLargeConfig"
+							ng-click="setServiceDefaultConfig('VeryLarge');">Very
+							Large</button>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class=wizard-label-div>
+						<label class="wizard-slider-label">Memory (MB)</label>
+					</div>
+					<input id="service_memory" class="form-control"
+						data-slider-id='memorySlider' type="text" data-slider-min="128"
+						data-slider-max="16384" data-slider-step="128"
+						style="width: 300px" /><span style="padding-left: 15px"
+						id="smemorySliderVal"></span>
+				</div>
+				<div class="wizard-input-section">
+					<div class=wizard-label-div>
+						<label class="wizard-slider-label">CPU Shares</label>
+					</div>
+					<input id="service_cpuShares" class="form-control"
+						data-slider-id='cpuSharesSlider' type="text" data-slider-min="1"
+						data-slider-max="8" data-slider-step="1" style="width: 300px" /><span
+						style="padding-left: 15px" id="scpuSharesSliderVal"></span>
+				</div>
+
+			</div>
+
+			<div class="wizard-card" data-cardname="servicecard3"
+				id="serviceFormDiv">
+				<h3 hidden="true">Environment</h3>
+			</div>
+
+			<div class="wizard-error">
+				<div class="alert alert-error">
+					<strong>There was a problem</strong> with your submission. Please
+					correct the errors and re-submit.
+				</div>
+			</div>
+
+			<div class="wizard-failure">
+				<div class="alert alert-error">
+					<strong>There was a problem</strong> submitting the form. Please
+					try again in a minute.
+				</div>
+			</div>
+
+			<div class="wizard-success">
+				<div class="alert alert-success">
+					<span class="create-server-name">{{serviceDTO.appName}}</span> was
+					created <strong>successfully.</strong>
+				</div>
+				<a class="btn create-another-server">Configure another Image</a> <span
+					style="padding: 0 10px">or</span> <a class="btn im-done">Done</a>
+			</div>
+		</div>
+
+
+		<div id="wizardDiv" align="center">
+			<div class="wizard" id="appImageConfigWzd"
+				data-title="Application Config">
+				<div class="wizard-card" data-cardname="card1" id="card1">
+					<h3 hidden="true">App Name</h3>
+					<div class="wizard-input-section ">
+						<label Style="font-size: 15px">App Name</label> <input
+							id="appName" type="text" class="form-control" name="appName"
+							ng-model="appDTO.appName" ng-minlength=1 ng-maxlength=50 required
+							ng-disabled="isAppEditCtxt" />
+					</div>
+					<div class="wizard-input-section">
+						<div class="imgcontainer">
+							<div id="errorSpan" style="width: 90%"></div>
+							<div class="main">
+								<div class="view view-first" ng-repeat="svcImg in serviceImages"
+									ng-click=setServiceUI(svcImg.id,svcImg.imageName)
+									id=app{{svcImg.id}}
+									ng-style="getImgInitialStyle(svcImg.id,svcImg.imageName)">
+									<img ng-src="{{svcImg.logoURL}}" />
+									<!-- **added for the tick mark selection**	<span class="roll" ></span> -->
+									<div class="mask">
+										<p>{{svcImg.desc}}</p>
+										<a class="info"><label>{{svcImg.version}}</label></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-card" data-cardname="card2">
+					<h3 hidden="true">Machine Configuration</h3>
+					<div class="wizard-input-section">
+						<div style="padding-bottom: 20px">Select a pre-defined
+							machine configuration or use sliders for custom configuration</div>
+						<div class="wizard-btn-gp" id=wizardButtons>
+							<button class="btn btn-primary btn-sm" id="tinyConfig"
+								ng-click="setDefaultConfig('Tiny');">Tiny</button>
+							<button class="btn btn-primary btn-sm" id="smallConfig"
+								ng-click="setDefaultConfig('Small');">Small</button>
+							<button class="btn btn-primary btn-sm" id="medConfig"
+								ng-click="setDefaultConfig('Medium');">Medium</button>
+							<button class="btn btn-primary btn-sm" id="largeConfig"
+								ng-click="setDefaultConfig('Large');">Large</button>
+							<button class="btn btn-primary btn-sm" id="veryLargeConfig"
+								ng-click="setDefaultConfig('VeryLarge');">Very Large</button>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class=wizard-label-div>
+							<label class="wizard-slider-label">Memory (MB)</label>
+						</div>
+						<input id="memory" class="form-control"
+							data-slider-id='memorySlider' type="text" data-slider-min="128"
+							data-slider-max="16384" data-slider-step="128"
+							data-slider-value="{{appImageCfgDTO.memory}}"
+							style="width: 400px;" /><span id="memorySliderVal"
+							class="slider-val-style"></span>
+					</div>
+
+					<div class="wizard-input-section">
+						<div class=wizard-label-div>
+							<label class="wizard-slider-label">CPU Shares</label>
+						</div>
+						<input id="cpuShares" class="form-control"
+							data-slider-id='cpuSharesSlider' type="text" data-slider-min="1"
+							data-slider-max="8" data-slider-step="1"
+							data-slider-value="{{appImageCfgDTO.cpuShares}}"
+							style="width: 400px;" /><span id="cpuSharesSliderVal"
+							class="slider-val-style"></span>
+					</div>
+					<div class="wizard-input-section">
+						<div style="padding: 10px">No of instances</div>
+						<div class=wizard-label-div>
+							<label class="wizard-slider-label">Instance Count</label>
+						</div>
+						<input id="noOfInstance" class="form-control"
+							data-slider-id='noOfInstanceSlider' type="text"
+							data-slider-min="1" data-slider-max="25" data-slider-step="1"
+							data-slider-value="{{appImageCfgDTO.noOfInstance}}"
+							style="width: 400px" /><span class="slider-val-style"
+							id="noOfInstanceSliderVal"></span>
+					</div>
+				</div>
+
+				<div class="wizard-card" data-cardname="card6">
+					<h3 hidden="true">Additional Information</h3>
+					<div class="wizard-input-section">
+						<label>Description</label>
+						<textarea ng-model="appDTO.desc" name="desc" id="desc"
+							required="true" ng-required="true" ng-minlength="0"
+							class="form-control" style="height: 300px;"
+							font-size: 14px"
+							spellcheck="false"></textarea>
+					</div>
+					<div class="wizard-input-section ">
+						<label>Tags</label><select multiple data-role="tagsinput"
+							id="tags" name="tags" class="form-control"></select>
+					</div>
+				</div>
+
+				<div class="wizard-card" data-cardname="card3" id="formDiv">
+					<h3 hidden="true">Environment</h3>
+				</div>
+
+				<div class="wizard-card" data-cardname="card4">
+					<h3 hidden="true">Initialization Script</h3>
+					<div class="wizard-input-section">
+						<label>Init Shell Script</label>
+						<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
+							id="initScript" required="true" ng-required="true"
+							ng-minlength="0" class="form-control" style="height: 300px;"
+							font-size: 14px"
+							spellcheck="false"></textarea>
+						<div align="left" style="margin-bottom: 10px; padding-top: 20px">
+							<button class="btn btn-primary btn-md" id="restoreScriptBtn"
+								ng-click="restoreDefaultScript();">Restore Default
+								Script</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="wizard-card" data-cardname="card5">
+					<h3 hidden="true">Services</h3>
+					<div class="wizard-input-section">
+						<div align="left" style="margin-bottom: 10px;">
+							<button class="btn btn-primary btn-md"
+								data-target="#serviceConfigWzd" id="open-service-wizard"
+								ng-click="openServiceWizard(false)">
+								<span class="glyphicon glyphicon-flash"></span>Add Service
+							</button>
+						</div>
+						<div>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th>Service Name</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="serviceItem in serviceDTOList">
+										<td>{{serviceItem.appName}}</td>
+										<td>
+											<button type="submit"
+												ng-click="updateService(serviceItem.id)" class="btn btn-sm"
+												style="width: 100px;">
+												<span class="glyphicon glyphicon-pencil"></span> Edit
+											</button>
+											<button type="submit"
+												ng-click="deleteService(serviceItem.id)"
+												class="btn btn-sm btn-delete" style="width: 100px;">
+												<span class="glyphicon glyphicon-remove-circle"></span>
+												Delete
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="wizard-error">
+					<div class="alert alert-error">
+						<strong>There was a problem</strong> with your submission. Please
+						correct the errors and re-submit.
+					</div>
+				</div>
+
+				<div class="wizard-failure">
+					<div class="alert alert-error">
+						<strong>There was a problem</strong> submitting the form. Please
+						try again in a minute.
+					</div>
+				</div>
+
+				<div class="wizard-success">
+					<div class="alert alert-success">
+						<span class="create-server-name">{{appDTO.appName}}</span> was
+						created <strong>successfully.</strong>
+					</div>
+
+					<a class="btn create-another-server">Configure another Image</a> <span
+						style="padding: 0 10px">or</span> <a class="btn im-done"
+						href="#/appimagecfg">Done</a>
+				</div>
+			</div>
+		</div>
+		<div id="wizardDivParent" align="left" style="position: absolute;"></div>
+
+		<div class="modal fade" id="imageDescModal" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true" ng-click="clear()">&times;</button>
+						<h4 class="modal-title" id="imageDescModalLabel">Image
+							Description</h4>
+					</div>
+					<div class="modal-body">{{selectedImgDesc}}</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal"
+							ng-click="clear()">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
