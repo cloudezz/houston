@@ -48,14 +48,14 @@ public class User extends BaseEntity {
   @Size(min = 0, max = 50)
   @Column(name = "account_id")
   private String accountId;
-  
+
   @Column(name = "active", nullable = false, columnDefinition = "TINYINT")
   private boolean active;
 
   @Email
   @Size(min = 0, max = 100)
   @Id
-  @Column(name = "email", unique=true)
+  @Column(name = "email", unique = true)
   private String email;
 
   @JsonIgnore
@@ -68,9 +68,12 @@ public class User extends BaseEntity {
   @JsonIgnore
   @OneToMany(mappedBy = "user")
   private Set<PersistentToken> persistentTokens;
-  
+
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
   private List<Application> applications;
+
+  @ManyToMany
+  private List<Team> teams;
 
   public String getLogin() {
     return login;
@@ -189,6 +192,14 @@ public class User extends BaseEntity {
 
   public void setApplications(List<Application> applications) {
     this.applications = applications;
+  }
+
+  public List<Team> getTeams() {
+    return teams;
+  }
+
+  public void setTeams(List<Team> teams) {
+    this.teams = teams;
   }
 
 }
