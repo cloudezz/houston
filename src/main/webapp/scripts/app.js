@@ -107,7 +107,16 @@ houstonApp
                             return ImageInfo.query();
                         }]
                     }
-                })                
+                })          
+                 .when('/dockerhostmachine', {
+                    templateUrl: 'views/dockerhostmachines.html',
+                    controller: 'DockerHostMachineController',
+                    resolve:{
+                        resolvedImageInfo: ['DockerHostMachine', function (DockerHostMachine) {
+                            return DockerHostMachine.query();
+                        }]
+                    }
+                })          
                 .otherwise({
                     templateUrl: 'views/main.html',
                     controller: 'MainController'
