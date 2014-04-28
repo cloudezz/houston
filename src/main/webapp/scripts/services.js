@@ -220,7 +220,7 @@ houstonApp.factory('ServiceImageInfo', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('AppImageCfg', [ '$resource', function($resource) {
-	return $resource('app/rest/appimagecfgs/:id', {
+	return $resource('app/rest/application/:id', {
 		id : '@id'
 	}, {
 		'query' : {
@@ -238,7 +238,7 @@ houstonApp.factory('AppImageService', [
 		function($http) {
 			return {
 				start : function(id, callback) {
-					var url = 'app/rest/appimagecfgs/start/' + id
+					var url = 'app/rest/application/start/' + id
 					$http.post(url).success(function(data, status) {
 						callback(data, status)
 					}).error(function(data, status) {
@@ -247,7 +247,7 @@ houstonApp.factory('AppImageService', [
 				},
 
 				stop : function(id, callback) {
-					var url = 'app/rest/appimagecfgs/stop/' + id
+					var url = 'app/rest/application/stop/' + id
 					$http.post(url).success(function(data, status) {
 						callback(data, status)
 					}).error(function(data, status) {
@@ -274,7 +274,7 @@ houstonApp.factory('AppImageService', [
 				},
 
 				listServices : function(appName, callback) {
-					var url = "app/rest/appimagecfgs/" + appName + "/service"
+					var url = "app/rest/application/" + appName + "/service"
 					$http.get(url).success(function(data) {
 						callback(data);
 					});
@@ -286,18 +286,26 @@ houstonApp.factory('AppConfigCommunicationService', [ '$http', function($http) {
 	var configToEdit;
 	var apImgConfigs;
 	return {
-		setConfigToEdit : function(config) {
-			configToEdit = config;
+		setConfigToEdit : function(config, callback) {
+			if (config != null) {
+				var url = "app/rest/application/dto/" + config.id
+				$http.get(url).success(function(data) {
+					configToEdit = data;
+					callback(data);
+				});
+			} else {
+				configToEdit = null;
+			}
 		},
 		getConfigToEdit : function() {
 			return configToEdit;
 		},
-		setAppImgConfigs:function(imgConfigs){
-			apImgConfigs=imgConfigs;
-		} ,
-		getAppImgConfigs:function(){
+		setAppImgConfigs : function(imgConfigs) {
+			apImgConfigs = imgConfigs;
+		},
+		getAppImgConfigs : function() {
 			return apImgConfigs;
-		} 
+		}
 	}
 } ]);
 

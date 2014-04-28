@@ -11,11 +11,11 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
  */
 public class ApplicationWebXml extends SpringBootServletInitializer {
 
-  private static final Logger log = LoggerFactory.getLogger(Application.class);
+  private static final Logger log = LoggerFactory.getLogger(MainApp.class);
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-    return application.profiles(addDefaultProfile()).showBanner(false).sources(Application.class);
+    return application.profiles(addDefaultProfile()).showBanner(false).sources(MainApp.class);
   }
 
   /**

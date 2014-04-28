@@ -6,10 +6,13 @@ import java.util.Map;
 
 public class BaseImageCfgDTO {
 
-
   protected String appName;
 
+  protected Integer noOfInstance = 1;
+
   protected String imageName;
+
+  protected String groupName;
 
   protected String gitURL;
 
@@ -19,16 +22,25 @@ public class BaseImageCfgDTO {
 
   protected String domainName;
 
-  protected Long memory=0L;
+  protected Long memory = 0L;
 
-  protected Long memorySwap=0L;
+  protected Long memorySwap = 0L;
 
-  protected Integer cpuShares=0;
-  
-  protected Boolean daemon= new Boolean(true);
+  protected Integer cpuShares = 0;
+
+  protected Boolean daemon = new Boolean(true);
 
   protected Map<String, String> environmentMapping;
 
+  protected String id;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public String getAppName() {
     return appName;
@@ -44,6 +56,22 @@ public class BaseImageCfgDTO {
 
   public void setImageName(String imageName) {
     this.imageName = imageName;
+  }
+
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
+  public Integer getNoOfInstance() {
+    return noOfInstance;
+  }
+
+  public void setNoOfInstance(Integer noOfInstance) {
+    this.noOfInstance = noOfInstance;
   }
 
   public String getGitURL() {

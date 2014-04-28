@@ -70,7 +70,7 @@ public class User extends BaseEntity {
   private Set<PersistentToken> persistentTokens;
   
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-  private List<AppImageCfg> appImageCfgs;
+  private List<Application> applications;
 
   public String getLogin() {
     return login;
@@ -183,12 +183,12 @@ public class User extends BaseEntity {
     this.accountId = accountId;
   }
 
-  public List<AppImageCfg> getAppImageCfgs() {
-    return appImageCfgs;
+  public List<Application> getApplications() {
+    return applications;
   }
 
-  public void setAppImageCfgs(List<AppImageCfg> appImageCfgs) {
-    this.appImageCfgs = appImageCfgs;
+  public void setApplications(List<Application> applications) {
+    this.applications = applications;
   }
 
 }

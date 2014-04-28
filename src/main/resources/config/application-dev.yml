@@ -1,29 +1,30 @@
 server:
     port: 8090
-    address: localhost
+    address: 0.0.0.0
 
 spring:
     profiles: dev
     datasource:
-        driverClass: org.hsqldb.jdbc.JDBCDriver
-        url: jdbc:hsqldb:mem:houston
+        dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+        url: jdbc:mysql://localhost:3306/houston
+        databaseName: 
         serverName: 
-        username: 
-        password:
+        username: Sajin        
+        password: samsungnote@2
 
     jpa:
-        database-platform: org.hibernate.dialect.HSQLDialect
-        database: HSQL
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        database: MYSQL
         openInView: true
-        show_sql: true
-        generate-ddl: true
+        show_sql: false
+        generate-ddl: false
         hibernate:
-            ddl-auto: create
+            ddl-auto: update
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: true
+            hibernate.generate_statistics: false
 
     thymeleaf:
         mode: XHTML
@@ -31,6 +32,7 @@ spring:
 
 metrics:
     jmx.enabled: true
+
 
 reverse-proxy:
     host: 127.0.0.1
@@ -40,3 +42,9 @@ reverse-proxy:
     https: false
 
         
+# You can add as many as folders to watch
+# You just need to add a dash + the directory to watch
+hotReload:
+  enabled: true
+  watchdir:
+    - target/classes

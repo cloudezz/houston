@@ -1,5 +1,6 @@
 package com.cloudezz.houston.domain;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
@@ -32,8 +30,9 @@ public abstract class BaseImageCfg extends BaseEntity {
   private static final long serialVersionUID = 5524208892445624915L;
 
   protected String containerId;
-  
-  protected String dataContainerName;
+
+  @Column(name = "instance_no")
+  private Integer instanceNo;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "docker_host")
@@ -48,6 +47,9 @@ public abstract class BaseImageCfg extends BaseEntity {
   @Column(name = "domain_name")
   protected String domainName = "";
 
+  @Column(name = "group_name")
+  protected String groupName = "";
+
   protected Long memory = 0L;
 
   @Column(name = "memory_swap")
@@ -57,28 +59,24 @@ public abstract class BaseImageCfg extends BaseEntity {
   protected Integer cpuShares = 0;
 
   @Column(name = "data_volume_from")
-  private String dataVolumeFrom="";
-  
+  protected String dataVolumeFrom = "";
+
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean daemon = new Boolean(true);
 
   @Column(nullable = false, columnDefinition = "TINYINT")
   protected Boolean tty = new Boolean(true);
 
-  @Column(name = "running", nullable = false, columnDefinition = "TINYINT")
-  protected Boolean running = new Boolean(false);
-
-  @Column(name = "start_time")
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-  private LocalDateTime startTime;
-
   @Column(name = "init_script", columnDefinition = "VARCHAR(6000)")
-  private String initScript="";
+  protected String initScript = "";
 
   @Transient
   @JsonIgnore
   protected HostConfig hostConfig;
 
+  @Transient
+  @JsonIgnore
+  protected Map<String, String> dockerPortToHostPort = new HashMap<String, String>();
 
   public abstract List<String> getDns();
 
@@ -157,18 +155,6 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
   /**
-   * Data container name that is used with docker -volume-from option
-   * @return
-   */
-  public String getDataContainerName() {
-    return dataContainerName;
-  }
-
-  public void setDataContainerName(String dataContainer) {
-    this.dataContainerName = dataContainer;
-  }
-
-  /**
    * @return the hostName
    */
   public String getHostName() {
@@ -199,6 +185,14 @@ public abstract class BaseImageCfg extends BaseEntity {
   }
 
 
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
   /**
    * @return the memory
    */
@@ -213,7 +207,7 @@ public abstract class BaseImageCfg extends BaseEntity {
     this.memory = memory;
   }
 
- 
+
 
   /**
    * @return the daemon
@@ -227,16 +221,6 @@ public abstract class BaseImageCfg extends BaseEntity {
    */
   public void setDaemon(Boolean daemon) {
     this.daemon = daemon;
-  }
-
-  public Boolean isRunning() {
-    return running;
-  }
-
-  public void setRunning(Boolean running) {
-    this.running = running;
-    if (running)
-      this.startTime = LocalDateTime.now();
   }
 
   /**
@@ -365,22 +349,6 @@ public abstract class BaseImageCfg extends BaseEntity {
     return hostConfig;
   }
 
-  @JsonIgnore
-  public LocalDateTime getStartTime() {
-    return startTime;
-  }
-
-  @JsonGetter
-  public String getFormattedStartTime() {
-    if (startTime == null)
-      return null;
-
-    return startTime.toString("yyyy-MM-dd'T'HH:mm:ssZ");
-  }
-
-  public void setStartTime(LocalDateTime startTime) {
-    this.startTime = startTime;
-  }
 
   public String getDataVolumeFrom() {
     return dataVolumeFrom;
@@ -389,7 +357,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   public void setDataVolumeFrom(String dataVolumeFrom) {
     this.dataVolumeFrom = dataVolumeFrom;
   }
-  
+
   /**
    * @return the hostToDockervolumeMapping
    */
@@ -398,7 +366,7 @@ public abstract class BaseImageCfg extends BaseEntity {
   /**
    * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
    */
-  public abstract void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping) ;
+  public abstract void setHostToDockerVolumeMapping(Map<String, String> hostToDockervolumeMapping);
 
   /**
    * @param hostToDockervolumeMapping the hostToDockervolumeMapping to set
@@ -413,12 +381,42 @@ public abstract class BaseImageCfg extends BaseEntity {
   /**
    * @param environmentMapping the environmentMapping to set
    */
-  public abstract void setEnvironmentMapping(Map<String, String> environmentMapping) ;
+  public abstract void setEnvironmentMapping(Map<String, String> environmentMapping);
 
   /**
    * @param environmentMapping the environmentMapping to set
    */
   public abstract void addEnvironmentMapping(String envName, String envValue);
+
+  /**
+   * Get application
+   * 
+   * @return
+   */
+  public abstract Application getApplication();
+
+  /**
+   * Set application
+   * 
+   * @param application
+   */
+  public abstract void setApplication(Application application);
+
+  public Map<String, String> getDockerPortToHostPort() {
+    return dockerPortToHostPort;
+  }
+
+  public void setDockerPortToHostPort(Map<String, String> dockerPortToHostPort) {
+    this.dockerPortToHostPort = dockerPortToHostPort;
+  }
+
+  public Integer getInstanceNo() {
+    return instanceNo;
+  }
+
+  public void setInstanceNo(Integer instanceNo) {
+    this.instanceNo = instanceNo;
+  }
 
 
 }

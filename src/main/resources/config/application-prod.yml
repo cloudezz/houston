@@ -1,25 +1,25 @@
 server:
-    port: 8080
+    port: 9000
     address: localhost
 
 spring:
     profiles: prod
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-        url: jdbc:mysql://localhost:3306/houston
+        url: jdbc:mysql://203.196.144.232:3306/houston
         databaseName: 
         serverName: 
         username: root
-        password: password
+        password: cloudezz
 
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         database: MYSQL
         openInView: true
-        show_sql: false
+        show_sql: true
         generate-ddl: false
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
             hibernate.cache.use_second_level_cache: false
@@ -39,6 +39,13 @@ metrics:
         enabled: false
         host:
         port:
+
+reverse-proxy:
+    host: 127.0.0.1
+    port: 80
+    username: admin
+    password: admin
+    https: false
 
 
         

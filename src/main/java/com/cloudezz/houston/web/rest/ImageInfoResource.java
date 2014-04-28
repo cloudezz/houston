@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ImgSettings.Form;
 import com.cloudezz.houston.repository.ImageInfoRepository;
-import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.security.AuthoritiesConstants;
+import com.cloudezz.houston.util.RepositoryUtils;
 import com.cloudezz.houston.web.propertyeditors.LocaleDateTimeEditor;
 import com.codahale.metrics.annotation.Timed;
 

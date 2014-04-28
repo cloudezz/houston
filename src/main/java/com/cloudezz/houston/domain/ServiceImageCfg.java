@@ -1,12 +1,12 @@
 package com.cloudezz.houston.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "T_SERVICE_IMAGE_CONFIG")
-public class ServiceImageCfg extends BaseImageCfg {
+public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
 
   private static final long serialVersionUID = 1857747836263604938L;
 
@@ -54,28 +53,24 @@ public class ServiceImageCfg extends BaseImageCfg {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "env_name")
-  @Column(name = "env_mapping", nullable = true)
+  @Column(name = "env_value", nullable = true)
   @CollectionTable(name = "T_SERVICE_ENV_VARIABLE_MAPPING", joinColumns = @JoinColumn(
       name = "env_mapping_id"))
   protected Map<String, String> environmentMapping = new HashMap<String, String>();
-  
+
 
   @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "host_volume")
-  @Column(name = "volume_mapping", nullable = true)
-  @CollectionTable(name = "T_SERVICE_VOLUME_MAPPING", joinColumns = @JoinColumn(name = "vol_mapping_id"))
+  @Column(name = "container_value", nullable = true)
+  @CollectionTable(name = "T_SERVICE_VOLUME_MAPPING", joinColumns = @JoinColumn(
+      name = "vol_mapping_id"))
   protected Map<String, String> hostToDockerVolumeMapping = new HashMap<String, String>();
-  
-  
-  @JsonIgnore 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "app_config_id", nullable = false)
-  private AppImageCfg applicationImageConfig;
 
-  @OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-  @JoinColumn(name="exposed_service_id",insertable=true,
-      updatable=true,nullable=true,unique=true)
-  protected ExposedService exposedService;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Application app;
+
 
   @Override
   public String getId() {
@@ -135,13 +130,12 @@ public class ServiceImageCfg extends BaseImageCfg {
   }
 
   public List<String> getPorts() {
-    return ports;
+    return this.ports;
   }
 
   public void setPorts(List<String> ports) {
     this.ports = ports;
   }
-
 
   public String[] getDnsAsArray() {
     return dns.toArray(new String[dns.size()]);
@@ -150,30 +144,6 @@ public class ServiceImageCfg extends BaseImageCfg {
 
   public String[] getPortsAsArray() {
     return ports.toArray(new String[ports.size()]);
-  }
-
-
-  /**
-   * @return the applicationImageConfig
-   */
-  @JsonIgnore 
-  public AppImageCfg getApplicationImageConfig() {
-    return applicationImageConfig;
-  }
-
-  /**
-   * @param applicationImageConfig the applicationImageConfig to set
-   */
-  public void setApplicationImageConfig(AppImageCfg applicationImageConfig) {
-    this.applicationImageConfig = applicationImageConfig;
-  }
-
-  public ExposedService getExposedService() {
-    return exposedService;
-  }
-
-  public void setExposedService(ExposedService exposedService) {
-    this.exposedService = exposedService;
   }
 
   /**
@@ -216,6 +186,55 @@ public class ServiceImageCfg extends BaseImageCfg {
    */
   public void addEnvironmentMapping(String envName, String envValue) {
     this.environmentMapping.put(envName, envValue);
+  }
+
+  @JsonIgnore
+  public Application getApplication() {
+    return app;
+  }
+
+  public void setApplication(Application application) {
+    this.app = application;
+  }
+
+  @Override
+  public ServiceImageCfg clone() {
+    ServiceImageCfg serviceImgCfg = new ServiceImageCfg();
+    serviceImgCfg.setApplication(this.app);
+    serviceImgCfg.setServiceName(this.serviceName);  
+    serviceImgCfg.setGroupName(this.groupName);
+    serviceImgCfg.setHostName(this.hostName);
+    serviceImgCfg.setCpuShares(this.cpuShares);
+    serviceImgCfg.setImageName(this.imageName);
+    serviceImgCfg.setInitScript(this.initScript);
+    serviceImgCfg.setMemory(this.memory);
+    serviceImgCfg.setMemorySwap(this.memorySwap);
+    serviceImgCfg.setPorts(new ArrayList<String>(this.ports));
+    serviceImgCfg.setTty(this.tty);
+    serviceImgCfg.setDaemon(this.daemon);
+    serviceImgCfg.setDataVolumeFrom(this.dataVolumeFrom);
+    serviceImgCfg.setDns(new ArrayList<String>(this.dns));
+    serviceImgCfg.setDockerHostMachine(this.dockerHostMachine);
+    serviceImgCfg.setEnvironmentMapping(new HashMap<String, String>(this.environmentMapping));
+    serviceImgCfg.setHostToDockerVolumeMapping(new HashMap<String, String>(
+        this.hostToDockerVolumeMapping));
+    return serviceImgCfg;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || !(obj instanceof ServiceImageCfg)) {
+      return false;
+    }
+    return this.serviceName.equals(((ServiceImageCfg) obj).serviceName);
+  }
+
+  @Override
+  public int hashCode() {
+    return this.serviceName.hashCode();
   }
 
 

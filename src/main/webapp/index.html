@@ -13,14 +13,16 @@
 <meta name="viewport" content="width=device-width">
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <!-- build:css(.tmp) styles/main.css -->
+<link rel="icon" type="image/png" href="favicon.png" />
 <link rel="stylesheet" href="styles/bootstrap.css">
 <link rel="stylesheet" href="styles/messenger.css">
 <link rel="stylesheet" href="styles/messenger-theme-air.css">
 <link rel="stylesheet" href="styles/cloudezz.css">
-<!--      <link rel="stylesheet" href="styles/main.css">
+<!--         <link rel="stylesheet" href="styles/main.css">
         <link href="styles/style.css" rel="stylesheet"> -->
 <link rel="stylesheet" href="styles/famfamfam-flags.css">
 <link href="styles/bootstrap-wizard.css" rel="stylesheet" />
+<link href="styles/bootstrap-tagsinput.css" rel="stylesheet" />
 <link href="bower_components/seiyria-bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet" />
 
 <!-- endbuild -->
@@ -43,14 +45,11 @@
 				<ul class="nav navbar-nav navbar-right">
 
 
-					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span
-							class="glyphicon glyphicon-align-justify"></span> <span
-							translate="global.menu.apps">Apps</span>
+					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span class="glyphicon glyphicon-align-justify"></span>
+							<span translate="global.menu.apps">Apps</span>
 					</a></li>
-					<li ng-switch-when="false"><a
-						href="http://cloudezz.tumblr.com"> <span
-							class="glyphicon glyphicon-pencil"></span> <span
-							translate="global.menu.blog">Blog </span>
+					<li ng-switch-when="false"><a href="http://cloudezz.tumblr.com"> <span class="glyphicon glyphicon-pencil"></span>
+							<span translate="global.menu.blog">Blog </span>
 					</a></li>
 					<li ng-show="page == '/login'"><a href="#/signup"> <span
 							class="glyphicon glyphicon-file"></span> <span
@@ -130,7 +129,7 @@
         </script>-->
 
 	<!-- build:js scripts/scripts.js -->
-
+	
 
 	<script src="bower_components/modernizr/modernizr.js"></script>
 	<script src="bower_components/jquery/jquery.js"></script>
@@ -150,10 +149,8 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 	<script
 		src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script type="text/javascript"
-		src="http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"
-		charset="utf-8"></script>
-	<script src="scripts/stomp.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js" charset="utf-8"></script>
+    <script src="scripts/stomp.min.js"></script>
 	<script src="scripts/term.js"></script>
 	<script src="scripts/bootstrap-wizard.js"></script>
 	<script src="scripts/bootstrap-wizard_nomodal.js"></script>
@@ -164,9 +161,9 @@
 	<script src="scripts/directives.js"></script>
 	<script src="scripts/pace.min.js"></script>
 	<script src="scripts/messenger.min.js"></script>
-	<script src="scripts/messenger-theme-flat.js"></script>
-	<!-- <script src="scripts/wizard.js"></script> -->
-
+	<script src="scripts/messenger-theme-flat.js"></script> 
+	<script src="scripts/bootstrap-tagsinput.js"></script>
+	
 	<script src="bower_components/sass-bootstrap/js/affix.js"></script>
 	<script src="bower_components/sass-bootstrap/js/alert.js"></script>
 	<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
@@ -183,7 +180,6 @@
 	<script src="bower_components/jquery/jquery.fileupload.js"></script>
 	<script src="bower_components/jquery/jquery.iframe-transport.js"></script>
 	<script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
-	
 	
 	<!-- endbuild -->
 </body>

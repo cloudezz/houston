@@ -1,5 +1,5 @@
-id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short_desc;description;img_settings_block
-07887;cloudezz/nodejs;"Node JS";0;NULL;/images/logos/nodejs-on.png;"0.10.22";"Node js v0.10.22, npm and forever";"Image with nodejs v0.10.22, npm and forever";"<?xml version="1.0" encoding="UTF-8"?>
+id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short_desc;description;exposed_ports;role;img_settings_block
+07887;cloudezz/nodejs;"Node JS";0;NULL;/images/logos/nodejs-on.png;"0.10.22";"Node js v0.10.22, npm and forever";"Image with nodejs v0.10.22, npm and forever";"3000";"nodejs";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/nodejs">
@@ -12,7 +12,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 		<port name="node_web" display-name="Node JS Web" value="3000"/>
 	</port-config>
 </img-settings>"
-81277;cloudezz/tomcat7;"Tomcat 7";0;NULL;/images/logos/tomcat-on.png;"7.0.52";"Tomcat 7, java 7, maven 3 and ant";"Image with tomcat 7, java 7, maven and ant";"<?xml version="1.0" encoding="UTF-8"?>
+81277;cloudezz/tomcat7;"Tomcat 7";0;NULL;/images/logos/tomcat-on.png;"7.0.52";"Tomcat 7, java 7, maven 3 and ant";"Image with tomcat 7, java 7, maven and ant";"8080";"tomcat";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/tomcat7">
 <!-- <form-element type="input" name="gitURL" display-name="Git URL" optional="true" /> -->
@@ -27,7 +27,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 </port-config>
 
 </img-settings>"
-37359;cloudezz/java7;"Java 7";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Oracle sun jdk and jre 7 ";"Image with oracle sun jdk 7";"<?xml version="1.0" encoding="UTF-8"?>
+37359;cloudezz/java7;"Java 7";0;NULL;/images/logos/java-on.png;"1.7.0_51";"Oracle sun jdk and jre 7 ";"Image with oracle sun jdk 7";"";"java";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/tomcat7">
 		<form-element type="input" name="gitURL" display-name="Git URL" optional="true" />
@@ -36,7 +36,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	</form>
 	<port-config/> 
 </img-settings>"
-34754;cloudezz/ghost;"Ghost";0;NULL;/images/logos/ghost-on.png;"0.4.1";"Ghost blogging site with node js";"Image with Ghost blogging site with node js";"<?xml version="1.0" encoding="UTF-8"?>
+34754;cloudezz/ghost;"Ghost";0;NULL;/images/logos/ghost-on.png;"0.4.1";"Ghost blogging site with node js";"Image with Ghost blogging site with node js";"2368";"ghost";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 <form name="cloudezz/ghost">
 	<form-element type="password" name="ROOT_SSH_PASSWD" display-name="SSH Root Password" optional="false" />
@@ -49,7 +49,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 
 </img-settings>"
 
-57320;cloudezz/rabbitmq;Rabbitmq;1;NULL;/images/logos/rabbitmq-on.png;"3.2.2";"Rabbitmq server and admin console";"Image with Rabbitmq server and admin console";"<?xml version="1.0" encoding="UTF-8"?>
+57320;cloudezz/rabbitmq;Rabbitmq;1;NULL;/images/logos/rabbitmq-on.png;"3.2.2";"Rabbitmq server and admin console";"Image with Rabbitmq server and admin console";"5672,15672,4369";"rabbitmq";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/rabbitmq">
 		<form-element type="input" name="RABBITMQ_USER" display-name="RabbitMQ User" optional="false" />
@@ -62,7 +62,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	</port-config>
 </img-settings>"
 
-73683;cloudezz/redis;Redis;1;NULL;/images/logos/redis-on.png;"2.8.7";"Redis server with password protection and client";"Redis server with password protection and client";"<?xml version="1.0" encoding="UTF-8"?>
+73683;cloudezz/redis;Redis;1;NULL;/images/logos/redis-on.png;"2.8.7";"Redis server with password protection and client";"Redis server with password protection and client";"6379";"redis";"<?xml version="1.0" encoding="UTF-8"?>
 <img-settings>
 	<form name="cloudezz/redis">
 		<form-element type="password" name="REDIS_PASSWORD" display-name="Redis Password" optional="false" />
@@ -72,7 +72,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	<port-config/>
 </img-settings>"
 
-91004;cloudezz/mysql;MySQL;1;NULL;/images/logos/mysql-on.png;"5.0";"Mysql RDBMS database server and client";"Mysql RDBMS database server and client";"<?xml version="1.0" encoding="UTF-8"?>
+91004;cloudezz/mysql;MySQL;1;NULL;/images/logos/mysql-on.png;"5.0";"Mysql RDBMS database server and client";"Mysql RDBMS database server and client";"3306";"mysql";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/mysql">
@@ -88,7 +88,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	</port-config>
 </img-settings>"
 
-44311;cloudezz/haproxy;HAProxy;1;NULL;/images/logos/haproxy-on.png;"1.5-dev21";"HAProxy load balancer dev version";"HAProxy load balancer dev version";"<?xml version="1.0" encoding="UTF-8"?>
+44311;cloudezz/haproxy;HAProxy;1;NULL;/images/logos/haproxy-on.png;"1.5-dev21";"HAProxy load balancer dev version";"HAProxy load balancer dev version";"80";"haproxy";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/haproxy">
@@ -100,7 +100,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	</port-config>
 </img-settings>"
 
-68926;cloudezz/ubuntu12-04;Ubuntu Precise;0;NULL;/images/logos/ubuntu-precise-on.png;"12.04";"Ubuntu Precise plain vanilla";"Ubuntu Precise plain vanilla";"<?xml version="1.0" encoding="UTF-8"?>
+68926;cloudezz/ubuntu12-04;Ubuntu Precise;0;NULL;/images/logos/ubuntu-precise-on.png;"12.04";"Ubuntu Precise plain vanilla";"Ubuntu Precise plain vanilla";"";"none";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu12-04">
@@ -110,7 +110,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	<port-config/>
 </img-settings>"
 
-189898;cloudezz/ubuntu12-10;Ubuntu Quantal;0;NULL;/images/logos/ubuntu-quantal-on.png;"12.10";"Ubuntu Quantal plain vanilla";"Ubuntu Quantal plain vanilla";"<?xml version="1.0" encoding="UTF-8"?>
+189898;cloudezz/ubuntu12-10;Ubuntu Quantal;0;NULL;/images/logos/ubuntu-quantal-on.png;"12.10";"Ubuntu Quantal plain vanilla";"Ubuntu Quantal plain vanilla";"";"none";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu12-10">
@@ -120,7 +120,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	<port-config/>
 </img-settings>"
 
-26826;cloudezz/ubuntu13-04;Ubuntu Raring;0;NULL;/images/logos/ubuntu-on.png;"13.04";"Ubuntu Raring plain vanilla";"Ubuntu Raring plain vanilla";"<?xml version="1.0" encoding="UTF-8"?>
+26826;cloudezz/ubuntu13-04;Ubuntu Raring;0;NULL;/images/logos/ubuntu-on.png;"13.04";"Ubuntu Raring plain vanilla";"Ubuntu Raring plain vanilla";"";"none";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu13-04">
@@ -130,7 +130,7 @@ id;image_name;name;service_image;build_pack_git_url;logo_url;image_version;short
 	<port-config/>
 </img-settings>"
 
-16776;cloudezz/ubuntu13-10;Ubuntu Saucy;0;NULL;/images/logos/ubuntu-saucy-on.png;"13.10";"Ubuntu Saucy plain vanilla";"Ubuntu Saucy plain vanilla";"<?xml version="1.0" encoding="UTF-8"?>
+16776;cloudezz/ubuntu13-10;Ubuntu Saucy;0;NULL;/images/logos/ubuntu-saucy-on.png;"13.10";"Ubuntu Saucy plain vanilla";"Ubuntu Saucy plain vanilla";"";"none";"<?xml version="1.0" encoding="UTF-8"?>
 
 <img-settings>
 	<form name="cloudezz/ubuntu13-10">

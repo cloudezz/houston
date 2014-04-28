@@ -22,6 +22,9 @@ public class ExposedService extends BaseEntity {
   @Id
   @Column(name = "container_id")
   private String containerId;
+  
+  @Column(name = "instance_no")
+  private Integer instanceNo;
 
   @Column(name = "is_service_image",nullable = false, columnDefinition = "TINYINT")
   private boolean serviceImage;
@@ -33,9 +36,8 @@ public class ExposedService extends BaseEntity {
       name = "container_id"))
   private Map<String, String> serviceToURL = new LinkedHashMap<String, String>();
 
-
   public String getContainerId() {
-    return containerId;
+    return this.containerId;
   }
 
   public void setContainerId(String containerId) {
@@ -67,6 +69,14 @@ public class ExposedService extends BaseEntity {
 
   public void setServiceImage(boolean serviceImage) {
     this.serviceImage = serviceImage;
+  }
+
+  public Integer getInstanceNo() {
+    return instanceNo;
+  }
+
+  public void setInstanceNo(Integer instanceNo) {
+    this.instanceNo = instanceNo;
   }
 
 }

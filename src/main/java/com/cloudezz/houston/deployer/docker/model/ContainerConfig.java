@@ -16,15 +16,15 @@ public class ContainerConfig {
     @JsonProperty("PortSpecs")    private String[]  portSpecs;
     @JsonProperty("ExposedPorts") private Map<String, Map<String, HostPortBinding>> exposedPorts = new HashMap<String, Map<String, HostPortBinding>>();
     @JsonProperty("User")         private String    user = "";
-    @JsonProperty("Tty")          private boolean   tty = false;
-    @JsonProperty("OpenStdin")    private boolean   stdinOpen = false;
-    @JsonProperty("StdinOnce")    private boolean   stdInOnce = false;
-    @JsonProperty("Memory")       private long      memoryLimit = 0;
-    @JsonProperty("MemorySwap")   private long      memorySwap = 0;
-    @JsonProperty("CpuShares")    private int       cpuShares = 0;
-    @JsonProperty("AttachStdin")  private boolean   attachStdin = false;
-    @JsonProperty("AttachStdout") private boolean   attachStdout = false;
-    @JsonProperty("AttachStderr") private boolean   attachStderr = false;
+    @JsonProperty("Tty")          private Boolean   tty = false;
+    @JsonProperty("OpenStdin")    private Boolean   stdinOpen = false;
+    @JsonProperty("StdinOnce")    private Boolean   stdInOnce = false;
+    @JsonProperty("Memory")       private Long      memoryLimit = 0L;
+    @JsonProperty("MemorySwap")   private Long      memorySwap = 0L;
+    @JsonProperty("CpuShares")    private Integer   cpuShares = 0;
+    @JsonProperty("AttachStdin")  private Boolean   attachStdin = false;
+    @JsonProperty("AttachStdout") private Boolean   attachStdout = false;
+    @JsonProperty("AttachStderr") private Boolean   attachStderr = false;
     @JsonProperty("Env")          private String[]  env;
     @JsonProperty("Cmd")          private String[]  cmd;
     @JsonProperty("Dns")          private String[]  dns;
@@ -32,8 +32,8 @@ public class ContainerConfig {
     @JsonProperty("Volumes")      private Object    volumes;
     @JsonProperty("VolumesFrom")  private String    volumesFrom = "";
     @JsonProperty("Entrypoint")   private String[]  entrypoint = new String[]{};
-    @JsonProperty("NetworkDisabled") private boolean networkDisabled = false;
-    @JsonProperty("Privileged")   private boolean privileged = false;
+    @JsonProperty("NetworkDisabled") private Boolean networkDisabled = false;
+    @JsonProperty("Privileged")   private Boolean privileged = false;
     @JsonProperty("WorkingDir")   private String workingDir = "";
 
 
@@ -45,15 +45,15 @@ public class ContainerConfig {
         this.workingDir = workingDir;
     }
 
-    public boolean isPrivileged() {
+    public Boolean isPrivileged() {
         return privileged;
     }
 
-    public void setPrivileged(boolean privileged) {
+    public void setPrivileged(Boolean privileged) {
         this.privileged = privileged;
     }
 
-    public boolean getNetworkDisabled() {
+    public Boolean getNetworkDisabled() {
         return networkDisabled;
     }
 
@@ -101,51 +101,51 @@ public class ContainerConfig {
         this.user = user;
     }
 
-    public boolean isTty() {
+    public Boolean isTty() {
         return tty;
     }
 
-    public void setTty(boolean tty) {
+    public void setTty(Boolean tty) {
         this.tty = tty;
     }
 
-    public boolean isStdinOpen() {
+    public Boolean isStdinOpen() {
         return stdinOpen;
     }
 
-    public void setStdinOpen(boolean stdinOpen) {
+    public void setStdinOpen(Boolean stdinOpen) {
         this.stdinOpen = stdinOpen;
     }
 
-    public boolean isStdInOnce() {
+    public Boolean isStdInOnce() {
         return stdInOnce;
     }
 
-    public void setStdInOnce(boolean stdInOnce) {
+    public void setStdInOnce(Boolean stdInOnce) {
         this.stdInOnce = stdInOnce;
     }
 
-    public long getMemoryLimit() {
+    public Long getMemoryLimit() {
         return memoryLimit;
     }
 
-    public void setMemoryLimit(long memoryLimit) {
+    public void setMemoryLimit(Long memoryLimit) {
         this.memoryLimit = memoryLimit;
     }
 
-    public long getMemorySwap() {
+    public Long getMemorySwap() {
         return memorySwap;
     }
 
-    public void setMemorySwap(long memorySwap) {
+    public void setMemorySwap(Long memorySwap) {
         this.memorySwap = memorySwap;
     }
 
-    public int getCpuShares() {
+    public Integer getCpuShares() {
         return cpuShares;
     }
 
-    public void setCpuShares(int cpuShares) {
+    public void setCpuShares(Integer cpuShares) {
         this.cpuShares = cpuShares;
     }
 
@@ -157,19 +157,19 @@ public class ContainerConfig {
         this.attachStdin = attachStdin;
     }
 
-    public boolean isAttachStdout() {
+    public Boolean isAttachStdout() {
         return attachStdout;
     }
 
-    public void setAttachStdout(boolean attachStdout) {
+    public void setAttachStdout(Boolean attachStdout) {
         this.attachStdout = attachStdout;
     }
 
-    public boolean isAttachStderr() {
+    public Boolean isAttachStderr() {
         return attachStderr;
     }
 
-    public void setAttachStderr(boolean attachStderr) {
+    public void setAttachStderr(Boolean attachStderr) {
         this.attachStderr = attachStderr;
     }
 

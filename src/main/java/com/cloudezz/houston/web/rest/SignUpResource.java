@@ -48,10 +48,10 @@ import com.cloudezz.houston.domain.PersistentToken;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.domain.UserSignUpActivationKey;
 import com.cloudezz.houston.repository.PersistentTokenRepository;
-import com.cloudezz.houston.repository.RepositoryUtils;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.repository.UserSignUpActivationKeyRepository;
 import com.cloudezz.houston.service.UserService;
+import com.cloudezz.houston.util.RepositoryUtils;
 import com.codahale.metrics.annotation.Timed;
 
 /**
