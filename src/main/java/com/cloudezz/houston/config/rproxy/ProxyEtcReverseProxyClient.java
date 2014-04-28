@@ -1,6 +1,7 @@
 package com.cloudezz.houston.config.rproxy;
 
 import java.nio.charset.Charset;
+
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -12,20 +13,36 @@ import org.springframework.web.client.RestTemplate;
 
 public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
 
-  private String host = "localhost";
+  private static final Logger log = Logger.getLogger(ProxyEtcReverseProxyClient.class);
 
-  private String port = "3333";
+  private String host;
 
-  private String username = "admin";
+  private String port ;
 
-  private String password = "admin";
+  private String username;
+
+  private String password;
+  
+  private boolean https;
 
   private RestTemplate restTemplate;
 
   private HttpHeaders httpHeaders;
 
-  private static final Logger log = Logger.getLogger(ProxyEtcReverseProxyClient.class);
-
+ 
+  public ProxyEtcReverseProxyClient(){
+    
+  }
+  
+  public ProxyEtcReverseProxyClient(String host,String port,boolean https,String username, String password){
+    this.host=host;
+    this.port=port;
+    this.https=https;
+    this.username=username;
+    this.password=password;
+  }
+  
+  
   @Override
   public void init() {
     restTemplate = new RestTemplate();
@@ -44,7 +61,7 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
       try {
         String body = "{\"source\" : \"" + frontendURL + "\", \"target\" : \"" + backendURL + "\"}";
         HttpEntity<String> httpEntity = new HttpEntity<String>(body, httpHeaders);
-        String url = "http://" + host + ":" + port + "/api/routes/add";
+        String url = getProtocol()+ host + ":" + port + "/api/routes/add";
         ResponseEntity<String> response =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
         String responseBody = response.getBody();
@@ -73,7 +90,7 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
             "{\"source\" : \"" + frontendURL + "\", \"oldTarget\" : \"" + oldBackendURL
                 + "\", \"newTarget\":\"" + newBackendURL + "\"}";
         HttpEntity<String> httpEntity = new HttpEntity<String>(body, httpHeaders);
-        String url = "http://" + host + ":" + port + "/api/routes/updateTarget";
+        String url = getProtocol() + host + ":" + port + "/api/routes/updateTarget";
         ResponseEntity<String> response =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
         String responseBody = response.getBody();
@@ -99,7 +116,7 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
       try {
         String body = "{\"source\" : \"" + frontendURL + "\"}";
         HttpEntity<String> httpEntity = new HttpEntity<String>(body, httpHeaders);
-        String url = "http://" + host + ":" + port + "/api/routes/deleteRouteBySource";
+        String url = getProtocol() + host + ":" + port + "/api/routes/deleteRouteBySource";
         ResponseEntity<String> response =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
         String responseBody = response.getBody();
@@ -125,7 +142,7 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
       try {
         String body = "{\"source\" : \"" + frontendURL + "\", \"target\" : \"" + backendURL + "\"}";
         HttpEntity<String> httpEntity = new HttpEntity<String>(body, httpHeaders);
-        String url = "http://" + host + ":" + port + "/api/routes/deleteTarget";
+        String url = getProtocol() + host + ":" + port + "/api/routes/deleteTarget";
         ResponseEntity<String> response =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
         String responseBody = response.getBody();
@@ -150,7 +167,7 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
     try {
       if (restTemplate != null && httpHeaders != null) {
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
-        String url = "http://" + host + ":" + port + "/api/routes/isReachable";
+        String url = getProtocol() + host + ":" + port + "/api/routes/isReachable";
         ResponseEntity<String> response =
             restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
         String body = response.getBody();
@@ -161,9 +178,16 @@ public class ProxyEtcReverseProxyClient implements ReverseProxyClient {
         log.error("ProxyEtcReverseProxyClient is not initialized");
       }
     } catch (Exception ex) {
-      log.error("Error while pinging proxy-etc", ex);
+      log.error("Error while pinging proxy-etc");
     }
     return false;
+  }
+  
+  private String getProtocol(){
+    if(https)
+      return "https://";
+    
+    return "http://";
   }
 
 }

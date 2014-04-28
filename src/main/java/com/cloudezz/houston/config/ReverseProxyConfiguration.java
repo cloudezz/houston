@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import com.cloudezz.houston.config.rproxy.HipacheReverseProxyClient;
+import com.cloudezz.houston.config.rproxy.ProxyEtcReverseProxyClient;
 import com.cloudezz.houston.config.rproxy.ReverseProxyClient;
-import com.cloudezz.houston.util.ConnectionUtils;
 
 @Configuration
 public class ReverseProxyConfiguration implements EnvironmentAware {
@@ -19,16 +18,16 @@ public class ReverseProxyConfiguration implements EnvironmentAware {
 
   private static final String PROP_HOST = "host";
   private static final String PROP_PORT = "port";
-  private static final String PROP_REDIS_PORT = "redis-port";
-  private static final String PROP_REDIS_HOST = "redis-host";
-  private static final String PROP_REDIS_PASSWORD = "redis-password";
+  private static final String PROP_PASSWORD = "password";
+  private static final String PROP_USERNAME = "username";
+  private static final String PROP_HTTPS = "https";
 
   private static final String DEFAULT_HOST = "apps.cloudezz.com";
   private static final Integer DEFAULT_PORT = 80;
 
-  private static final Integer DEFAULT_REDIS_PORT = 6379;
-  private static final String DEFAULT_REDIS_HOST = "apps.cloudezz.com";
-  private static final String DEFAULT_REDIS_PASSWORD = "password";
+  private static final String DEFAULT_USERNAME = "admin";
+  private static final String DEFAULT_PASSWORD = "admin";
+  private static final Boolean DEFAULT_HTTPS = false;
 
 
   private final Logger log = LoggerFactory.getLogger(ReverseProxyConfiguration.class);
@@ -47,30 +46,22 @@ public class ReverseProxyConfiguration implements EnvironmentAware {
   public ReverseProxyClient reverseProxyClient() {
     log.debug("Configuring reverse proxy client");
     String host = propertyResolver.getProperty(PROP_HOST, DEFAULT_HOST);
-    int port = propertyResolver.getProperty(PROP_PORT, Integer.class, DEFAULT_PORT);
-    String redisHost = propertyResolver.getProperty(PROP_REDIS_HOST, DEFAULT_REDIS_HOST);
-    int redisPort =
-        propertyResolver.getProperty(PROP_REDIS_PORT, Integer.class, DEFAULT_REDIS_PORT);
-    String redisPassword =
-        propertyResolver.getProperty(PROP_REDIS_PASSWORD, DEFAULT_REDIS_PASSWORD);
+    String port = propertyResolver.getProperty(PROP_PORT, Integer.class, DEFAULT_PORT).toString();
+    String username = propertyResolver.getProperty(PROP_USERNAME, DEFAULT_USERNAME);
+    String password =
+        propertyResolver.getProperty(PROP_PASSWORD,DEFAULT_PASSWORD);
+    Boolean https =
+        propertyResolver.getProperty(PROP_HTTPS, Boolean.class,DEFAULT_HTTPS);
 
-    HipacheReverseProxyClient rProxyClient = new HipacheReverseProxyClient();
-    rProxyClient.setRedisHost(redisHost);
-    rProxyClient.setRedisPort(redisPort);
-    rProxyClient.setRedisPassword(redisPassword);
+    ReverseProxyClient rProxyClient = new ProxyEtcReverseProxyClient(host,port,https,username,password);
     rProxyClient.init();
 
     // check reverse proxy server conn settings
-    if(!ConnectionUtils.urlReachable(host, port)){
+    if(!rProxyClient.serverReachable()){
       log.warn("Warning! Not able to reach reverse proxy server");
       log.debug("Did you configure your reverse proxy rerver settings in your application.yml?");
     }
     
-    // check redis server conn settings
-    if (!rProxyClient.serverReachable()) {
-      log.warn("Warning! Not able to reach reverse proxy redis server");
-      log.debug("Did you configure your reverse proxy server redis settings in your application.yml?");
-    }
 
     return rProxyClient;
   }
