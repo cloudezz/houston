@@ -108,10 +108,32 @@
 		<commons-io.version>2.3</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<commons-compress.version>1.0</commons-compress.version>
-		<start-class>com.cloudezz.houston.Application</start-class>
+		<start-class>com.cloudezz.houston.MainApp</start-class>
 	</properties>
 
 	<repositories>
+		<repository>
+			<id>beyondbytes-maven-repo</id>
+			<name>S3 Release Repository</name>
+			<url>s3://beyondbytes-maven/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>beyondbytes-maven-snapshot</id>
+			<name>S3 Snapshot Repository</name>
+			<url>s3://beyondbytes-maven/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
@@ -374,7 +396,7 @@
 		<dependency>
 			<groupId>com.bbytes</groupId>
 			<artifactId>avis-client</artifactId>
-			<version>0.0.11-SNAPSHOT</version>
+			<version>0.0.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -511,13 +533,9 @@
 					</classpathDependencyExcludes>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
-				</configuration>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
+				<configuration> <packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes> 
+				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -564,7 +582,15 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build.aws</groupId>
+				<artifactId>org.springframework.build.aws.maven</artifactId>
+				<version>3.0.0.RELEASE</version>
+			</extension>
+		</extensions>
 	</build>
 
 
