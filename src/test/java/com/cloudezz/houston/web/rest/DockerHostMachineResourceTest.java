@@ -25,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.cloudezz.houston.Application;
+import com.cloudezz.houston.MainApp;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 
@@ -36,7 +36,7 @@ import com.cloudezz.houston.repository.DockerHostMachineRepository;
  * @see DockerHostMachineResource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = MainApp.class)
 @WebAppConfiguration
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
