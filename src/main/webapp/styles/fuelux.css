@@ -3,10 +3,6 @@
  *
  */
  
-.tree {
-	width: 400px;
-}
-
 .fuelux [class^="icon-"],.fuelux [class*=" icon-"] {
 	display: inline-block;
 	width: 14px;
