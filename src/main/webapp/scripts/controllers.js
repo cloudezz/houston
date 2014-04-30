@@ -1338,7 +1338,6 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
     	}
 
         $scope.create = function () {
-        	alert($scope.files.length);
      	   for (var i = 0; i < $scope.files.length; i++)
     	   {
     	        var fd = new FormData();
