@@ -24,24 +24,24 @@
 					<td>{{deploymentScript.scriptName}}</td>
 					<td>{{deploymentScript.description}}</td>
 					<td class="fuelux">
-							<div id="{{deploymentScript.scriptId}}" class="tree"
-								folder="{{deploymentScript.folderStructure}}" folder-tree
-								style="margin-bottom: 15px; max-width: 350px; text-align:left">
-								<div class="tree-folder" style="display: none;">
-									<div class="tree-folder-header">
-										<i class="icon-folder-close"></i>
+						<div id="{{deploymentScript.scriptId}}" class="tree"
+							folder="{{deploymentScript.folderStructure}}" folder-tree
+							style="margin-bottom: 15px; max-width: 350px; text-align: left">
+							<div class="tree-folder" style="display: none;">
+								<div class="tree-folder-header">
+									<i class="icon-folder-close"></i>
 
-										<div class="tree-folder-name"></div>
-									</div>
-									<div class="tree-folder-content"></div>
-									<div class="tree-loader" style="display: none"></div>
+									<div class="tree-folder-name"></div>
 								</div>
-								<div class="tree-item" style="display: none;">
-									<i class="tree-dot"></i>
-
-									<div class="tree-item-name"></div>
-								</div>
+								<div class="tree-folder-content"></div>
+								<div class="tree-loader" style="display: none"></div>
 							</div>
+							<div class="tree-item" style="display: none;">
+								<i class="tree-dot"></i>
+
+								<div class="tree-item-name"></div>
+							</div>
+						</div>
 
 					</td>
 				</tr>
@@ -81,11 +81,6 @@
 							<label>Upload Zip</label> <input id="fileUpload"
 								name="uploadFile" type="file"
 								onchange="angular.element(this).scope().fileChange(this.files)" />
-
-
-							<input type="file" name="files[]" multiple directory
-								webkitdirectory mozdirectory>
-
 							<div class='progressBar' style="display: none">
 								<div></div>
 							</div>
