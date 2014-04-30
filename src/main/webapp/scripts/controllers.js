@@ -1272,18 +1272,86 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance,$rootSc
 	};
 }
 
-houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'resolvedDeploymentScript', 'DeploymentScript',
-                                                    function ($scope,$rootScope, resolvedDeploymentScript, DeploymentScript) {
+
+houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'resolvedDeploymentScript', 'DeploymentScript', '$http',
+                                                    function ($scope,$rootScope, resolvedDeploymentScript, DeploymentScript, $http) {
 
         $scope.deploymentScripts = resolvedDeploymentScript;
+        $scope.files = [];
+        $scope.fileChange = function(files){
+        	$scope.files = files;
+			$("#uploadStatus").hide();
+			$("#uploadStatus").html("");
+			/*for (var i = 0; i < ArticleTab.files.length; i++){
+				setFileNameSize(ArticleTab.files[i].name, ArticleTab.files[i].size);
+		    }*/
+        };
+
+    	var sendFileToServer = function(formData, status){
+    		$("#progressBar").show();
+    		var url = document.URL;
+    		var url1 = url.split("#")[0];
+    	    var uploadURL = url1 + "app/rest/deploymentScript/create"; //Upload URL
+    	    var jqXHR=$.ajax({
+    	            xhr: function() {
+    	            var xhrobj = $.ajaxSettings.xhr();
+    	            if (xhrobj.upload) {
+    	                    xhrobj.upload.addEventListener('progress', function(event) {
+    	                        var percent = 0;
+    	                        var position = event.loaded || event.position;
+    	                        var total = event.total;
+    	                        if (event.lengthComputable) {
+    	                            percent = Math.ceil(position / total * 100);
+    	                        }
+    	                        //Set progress
+    	                        status.setProgress(percent);
+    	                    }, false);
+    	                }
+    	            return xhrobj;
+    	        },
+    	    url: uploadURL,
+    	    type: "POST",
+    	    contentType:false,
+    	    processData: false,
+    	        cache: false,
+    	        data: formData,
+    	        success: function(data){
+    	        	status.setProgress(100);
+    	        	$("#uploadStatus").show();
+    	        	$("#uploadStatus").html(data.message);
+    	        	$('#deploymentScriptModal').modal('hide');
+                    $scope.deploymentScripts = DeploymentScript.query();
+                    $scope.clear();
+    	        }
+    	    });
+    	}
+        
+    	var createStatusbar = function(){
+    	    this.setProgress = function(progress){      
+    	        var progressBarWidth = progress * $("#progressBar").width()/ 100; 
+    	        $("#progressBar").find('div').animate({ width: progressBarWidth }, 10).html(progress + "% ");
+    	        if(parseInt(progress) >= 100)
+    	        {
+    	        	$("#progressBar").hide();
+    	        }
+    	    };
+    	}
 
         $scope.create = function () {
-        	DeploymentScript.save($scope.deploymentScript,
-                function () {
-                    $scope.deploymentScripts = DeploymentScript.query();
-                    $('#deploymentScriptModal').modal('hide');
-                    $scope.clear();
-                });
+        	alert($scope.files.length);
+     	   for (var i = 0; i < $scope.files.length; i++)
+    	   {
+    	        var fd = new FormData();
+    	        fd.append('file', $scope.files[i]);
+    	        
+    			var scriptName = $scope.deploymentScript.scriptName;
+    			var description = $scope.deploymentScript.description;
+    	        fd.append('scriptName', scriptName);
+    	        fd.append('description', description);
+    	 
+    	        var status = new createStatusbar(); //Using this we can set progress.
+    	        sendFileToServer(fd, status);
+    	   }
         };
 
         $scope.update = function (id) {
@@ -1313,7 +1381,6 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
             $scope.deploymentScript = {};
         };
     }]);
-
 
 houstonApp.controller('ServiceImageCfgController', ['$scope','$rootScope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
                                                     function ($scope,$rootScope, resolvedServiceImageCfg, ServiceImageCfg) {

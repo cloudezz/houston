@@ -1,0 +1,135 @@
+/*!
+ * Included only css required for tree
+ *
+ */
+ 
+.tree {
+	width: 400px;
+}
+
+.fuelux [class^="icon-"],.fuelux [class*=" icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	*margin-right: .3em;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("../images/glyphicons-halflings.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat;
+}
+
+.fuelux .icon-white,.fuelux .nav-pills>.active>a>[class^="icon-"],.fuelux .nav-pills>.active>a>[class*=" icon-"],.fuelux .nav-list>.active>a>[class^="icon-"],.fuelux .nav-list>.active>a>[class*=" icon-"],.fuelux .navbar-inverse .nav>.active>a>[class^="icon-"],.fuelux .navbar-inverse .nav>.active>a>[class*=" icon-"],.fuelux .dropdown-menu>li>a:hover>[class^="icon-"],.fuelux .dropdown-menu>li>a:focus>[class^="icon-"],.fuelux .dropdown-menu>li>a:hover>[class*=" icon-"],.fuelux .dropdown-menu>li>a:focus>[class*=" icon-"],.fuelux .dropdown-menu>.active>a>[class^="icon-"],.fuelux .dropdown-menu>.active>a>[class*=" icon-"],.fuelux .dropdown-submenu:hover>a>[class^="icon-"],.fuelux .dropdown-submenu:focus>a>[class^="icon-"],.fuelux .dropdown-submenu:hover>a>[class*=" icon-"],.fuelux .dropdown-submenu:focus>a>[class*=" icon-"]
+	{
+	background-image: url("../images/glyphicons-halflings-white.png"); 
+}
+
+.fuelux .icon-ok {
+	background-position: -288px 0;
+}
+
+.fuelux .icon-folder-close {
+	width: 16px;
+	background-position: -384px -120px;
+}
+
+.fuelux .icon-folder-open {
+	width: 16px;
+	background-position: -408px -120px;
+}
+
+.fuelux .tree {
+	position: relative;
+	padding: 10px 15px 0 15px;
+	overflow-x: hidden;
+	overflow-y: auto;
+/* 	border: 1px solid #BBBBBB;
+	border-radius: 4px 4px 4px 4px; */
+}
+
+.fuelux .tree .tree-folder {
+	width: 100%;
+	min-height: 20px;
+	margin-top: 1px;
+	cursor: pointer;
+}
+
+.fuelux .tree .tree-folder .tree-folder-header {
+	position: relative;
+	height: 20px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.fuelux .tree .tree-folder .tree-folder-header:hover {
+	background-color: #dfeef5;
+}
+
+.fuelux .tree .tree-folder .tree-folder-header i {
+	position: absolute;
+	top: 1px;
+	left: 5px;
+	float: left;
+}
+
+.fuelux .tree .tree-folder .tree-folder-header .tree-folder-name {
+	padding-left: 29px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fuelux .tree .tree-folder .tree-folder-content {
+	margin-left: 23px;
+}
+
+.fuelux .tree .tree-item {
+	position: relative;
+	width: 100%;
+	height: 20px;
+	margin-top: 1px;
+	cursor: pointer;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.fuelux .tree .tree-item:hover {
+	background-color: #dfeef5;
+}
+
+.fuelux .tree .tree-item .tree-item-name {
+	padding-left: 29px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fuelux .tree .tree-item .tree-dot {
+	position: absolute;
+	top: 8px;
+	left: 10px;
+	display: block;
+	width: 4px;
+	height: 4px;
+	background-color: #333333;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.fuelux .tree .tree-item .icon-ok {
+	position: absolute;
+	top: 1px;
+	left: 5px;
+}
+
+.fuelux .tree .tree-selected {
+	background-color: #b9dff1;
+}
+
+.fuelux .tree .tree-selected:hover {
+	background-color: #b9dff1;
+}

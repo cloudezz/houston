@@ -219,6 +219,18 @@ houstonApp.factory('ServiceImageInfo', [ '$resource', function($resource) {
 	});
 } ]);
 
+houstonApp.factory('DeploymentScript', [ '$resource', function($resource) {
+	return $resource('app/rest/deploymentScript/:id', {}, {
+		'query' : {
+			method : 'GET',
+			isArray : true
+		},
+		'get' : {
+			method : 'GET'
+		}
+	});
+} ]);
+
 houstonApp.factory('AppImageCfg', [ '$resource', function($resource) {
 	return $resource('app/rest/application/:id', {
 		id : '@id'

@@ -19,7 +19,7 @@
                 "logs": "Logs",
                 "imageinfo" : "Image Config",
                 "dockerHostMachine" : "Host Machine Config",
-               
+                "deploymentScripts" : "Deployment Scripts",
                 "audits": "Audits",
                 "login": "Authenticate",
                 "logout": "Log out"

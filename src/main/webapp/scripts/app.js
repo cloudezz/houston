@@ -372,3 +372,27 @@ houstonApp.directive('popOver', function ($compile, $timeout) {
 	    }
 	  };
 	});
+
+
+houstonApp.directive('folderTree',  function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+            	var folderStructure = $.parseJSON(attrs.folder);
+            	var values = [];
+            	var data = {name : attrs.id, type : "folder", files: folderStructure};
+            	values.push(data);
+        		var dataSourceTree = new DataSourceTree({
+        			data: values,
+        			delay: 400
+        		});
+            	
+        		$(element).tree({
+        			dataSource: dataSourceTree,
+        			loadingHTML: '<div class="static-loader">Loading...</div>',
+        			multiSelect: true,
+        			cacheItems: true
+        		});
+            }
+        };
+    });

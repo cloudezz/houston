@@ -1,0 +1,100 @@
+<div>
+
+	<div style="margin-bottom: 10px; margin-top: 30px;">
+		<a href="javascript:;" class="btn btn-xxl" data-toggle="modal"
+			data-target="#deploymentScriptModal"><span
+			class="glyphicon glyphicon-flash"> </span>New Deployment Script</a> <input
+			class="col-lg-4 pull-right search-box" placeholder="Search"
+			type="text" ng-model="search">
+	</div>
+
+	<div>
+		<table class="table-hover table-bordered"
+			style="width: 100%; margin-bottom: 10px;">
+			<thead>
+				<tr style="height: 40px">
+					<th>Script Name</th>
+					<th>Description</th>
+					<th>Folder Structure</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="deploymentScript in deploymentScripts | filter:search">
+					<td>{{deploymentScript.scriptName}}</td>
+					<td>{{deploymentScript.description}}</td>
+					<td class="fuelux">
+					
+						<div id="{{deploymentScript.scriptId}}" class="tree" folder="{{deploymentScript.folderStructure}}" folder-tree>
+							<div class="tree-folder" style="display: none;">
+								<div class="tree-folder-header">
+									<i class="icon-folder-close"></i>
+
+									<div class="tree-folder-name"></div>
+								</div>
+								<div class="tree-folder-content"></div>
+								<div class="tree-loader" style="display: none"></div>
+							</div>
+							<div class="tree-item" style="display: none;">
+								<i class="tree-dot"></i>
+
+								<div class="tree-item-name"></div>
+							</div>
+						</div>
+
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="modal fade" id="deploymentScriptModal" tabindex="-1"
+		role="dialog" aria-labelledby="myDeploymentScriptLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form name="form" role="form" novalidate
+					class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength">
+
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true" ng-click="clear()">&times;</button>
+						<h4 class="modal-title" id="myImageInfoLabel">Create or edit
+							a Deployment script</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label>Script Name</label> <input type="text"
+								class="form-control" name="scriptName"
+								ng-model="deploymentScript.scriptName" required>
+						</div>
+
+						<div class="form-group">
+							<label>Description</label> <input type="text"
+								class="form-control" name="description"
+								ng-model="deploymentScript.description" required>
+						</div>
+
+						<div class="form-group">
+							<label>Upload Zip</label> <input id="fileUpload"
+								name="uploadFile" type="file"
+								onchange="angular.element(this).scope().fileChange(this.files)" />
+							<div class='progressBar' style="display: none">
+								<div></div>
+							</div>
+							<div id="uploadStatus" style="display: none; margin-top: 20px;"></div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							ng-click="clear()">Cancel</button>
+						<button ng-disabled="form.$invalid" ng-click="create()"
+							class="btn btn-primary">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
