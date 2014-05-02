@@ -21,11 +21,10 @@
 				placeholder="Search" type="text" ng-model="search">
 		</div>
 
- 		<div  class="col-lg-3"
+		<div class="col-lg-3"
 			ng-repeat="(index, appimagecfgsRow) in appimagecfgsRows">
-			<div
-				ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
-				<div class="card" style="position: relative; height:auto">
+			<div ng-repeat="appimagecfg in appimagecfgsRow | filter:search">
+				<div class="card" style="position: relative; height: auto">
 					<div class="card-heading simple"
 						style="font-size: 18px; height: 30px; text-align: center; font-weight: bold">{{appimagecfg.appName}}</div>
 					<div class="card-body">
@@ -68,7 +67,7 @@
 					</div>
 
 					<div class="card-comments"
-						style="bottom: 0px; width: 100%; margin-top:10px;">
+						style="bottom: 0px; width: 100%; margin-top: 10px;">
 						<div
 							ng-class="{'progress-striped' : appimagecfg.starting || appimagecfg.stopping, 'progress active' : appimagecfg}"
 							id='bar{{appimagecfg.id}}'
@@ -85,15 +84,25 @@
 						</div>
 						<div>
 							<img alt="" ng-if="!appimagecfg.running"
+								ng-mouseenter="changeToDarkImage($event)"
+								ng-mouseleave="changeToLightImage($event)"
 								ng-click="start(appimagecfg, index, $index)" class="card_button"
 								src="images/card/start-icon-dark.png"> <img alt=""
 								ng-if="appimagecfg.running"
+								ng-mouseenter="changeToDarkImage($event)"
+								ng-mouseleave="changeToLightImage($event)"
 								ng-click="stop(appimagecfg, index, $index)" class="card_button"
 								src="images/card/stop-icon-dark.png"> <img alt=""
-								ng-click="editConfig(appimagecfg)" class="card_button"
+								ng-click="editConfig(appimagecfg)"
+								ng-mouseenter="changeToDarkImage($event)"
+								ng-mouseleave="changeToLightImage($event)" class="card_button"
 								src="images/card/edit-icon-dark.png"> <img alt=""
-								ng-click="delete(appimagecfg.id)" class="card_button"
+								ng-click="delete(appimagecfg.id)"
+								ng-mouseenter="changeToDarkImage($event)"
+								ng-mouseleave="changeToLightImage($event)" class="card_button"
 								src="images/card/delete-icon-dark.png">
+							<button class="btn btn-primary btn-sm" style="width: 75px;">Run
+								Scripts</button>
 						</div>
 						<div class="card_uptime">
 							<span ng-if="appimagecfg.formattedStartTime">Uptime :

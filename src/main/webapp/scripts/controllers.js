@@ -429,6 +429,18 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 				// $log.info('Modal dismissed at: ' + new Date());
 			});
         };
+        
+        $scope.changeToLightImage = function(event){
+        	var src = $(event.target).attr('src');
+        	src = src.replace("dark", "light"); 
+        	$(event.target).attr('src', src);
+        };
+        
+        $scope.changeToDarkImage = function(event){
+        	var src = $(event.target).attr('src');
+        	src = src.replace("light", "dark"); 
+        	$(event.target).attr('src', src);
+        };
     }]);
 
 houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService','AppConfigCommunicationService','defaultConfigs',
