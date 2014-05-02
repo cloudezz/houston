@@ -1273,8 +1273,8 @@ function DeleteModalInstanceCtrl($scope,$timeout, $modal, $modalInstance,$rootSc
 }
 
 
-houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'resolvedDeploymentScript', 'DeploymentScript', '$http',
-                                                    function ($scope,$rootScope, resolvedDeploymentScript, DeploymentScript, $http) {
+houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'resolvedDeploymentScript', 'DeploymentScript', '$http', '$modal',
+                                                    function ($scope,$rootScope, resolvedDeploymentScript, DeploymentScript, $http, $modal) {
 
         $scope.deploymentScripts = resolvedDeploymentScript;
         $scope.files = [];
@@ -1318,10 +1318,14 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
     	        success: function(data){
     	        	status.setProgress(100);
     	        	$("#uploadStatus").show();
-    	        	$("#uploadStatus").html(data.message);
-    	        	$('#deploymentScriptModal').modal('hide');
-                    $scope.deploymentScripts = DeploymentScript.query();
-                    $scope.clear();
+    	        	if(data.message){
+    	        		$("#uploadStatus").html(data.message);
+    	        		$('#deploymentScriptModal').modal('hide');
+                        $scope.deploymentScripts = DeploymentScript.query();
+                        $scope.clear();
+    	        	} else {
+    	        		$("#uploadStatus").html(data.error);
+    	        	}
     	        }
     	    });
     	}
@@ -1344,7 +1348,7 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
     	        fd.append('file', $scope.files[i]);
     	        
     			var scriptName = $scope.deploymentScript.scriptName;
-    			var description = $scope.deploymentScript.description;
+    			var description = $scope.deploymentScript.desc;
     	        fd.append('scriptName', scriptName);
     	        fd.append('description', description);
     	 
@@ -1357,11 +1361,41 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
             $scope.deploymentScript = DeploymentScript.get({id: id});
             $('#deploymentScriptModal').modal('show');
         };
-
+        
         $scope.delete = function (id) {
+        	var modalInstance = $modal.open({
+				templateUrl : 'deleteConfirm.html',
+				controller : DeleteModalCtrl,
+				scope : $scope,
+				resolve : {
+					AppImageCfg : function() {
+						return DeploymentScript;
+					}, 
+					
+					id: function () {
+						return id;
+					}
+				}
+			});
+	
+			modalInstance.result.then(function(selectedItem) {
+				$scope.selected = selectedItem;
+			}, function() {
+				// $log.info('Modal dismissed at: ' + new Date());
+			});
+        };
+
+        $scope.clear = function () {
+            $scope.deploymentScript = {};
+        };
+    }]);
+
+function DeleteModalCtrl($scope,$timeout, $modal, $modalInstance,$rootScope,DeploymentScript, id){
+
+	$scope.ok = function() {
         	DeploymentScript.delete({id: id},
-	            function () {
-		            $scope.deploymentScripts = DeploymentScript.query();
+        			 function () {
+		            $scope.$parent.deploymentScripts = DeploymentScript.query();
 					$rootScope.msg.update({
 						message:'Deleted Deployment Script!',
 						type: 'success',
@@ -1374,12 +1408,13 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
 						showCloseButton: true
 					});
 	            });
-        };
+		$modalInstance.close();
+	};
 
-        $scope.clear = function () {
-            $scope.deploymentScript = {};
-        };
-    }]);
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+}
 
 houstonApp.controller('ServiceImageCfgController', ['$scope','$rootScope', 'resolvedServiceImageCfg', 'ServiceImageCfg',
                                                     function ($scope,$rootScope, resolvedServiceImageCfg, ServiceImageCfg) {

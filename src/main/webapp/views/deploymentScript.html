@@ -1,5 +1,20 @@
 <div>
 
+	<script type="text/ng-template" id="deleteConfirm.html">
+		<div id="confirmDeleteApp">	
+			<div class="modal-header">
+				<h4>Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete selected Deployment Script ?
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="ok()">Ok</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+			</div>
+		</div>
+	</script>
+
 	<div style="margin-bottom: 10px; margin-top: 30px;">
 		<a href="javascript:;" class="btn btn-xxl" data-toggle="modal"
 			data-target="#deploymentScriptModal"><span
@@ -16,6 +31,7 @@
 					<th>Script Name</th>
 					<th>Description</th>
 					<th>Folder Structure</th>
+					<th>Delete</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,10 +39,10 @@
 					ng-repeat="deploymentScript in deploymentScripts | filter:search">
 					<td>{{deploymentScript.scriptName}}</td>
 					<td>{{deploymentScript.description}}</td>
-					<td class="fuelux">
+					<td class="fuelux" style="width:350px">
 						<div id="{{deploymentScript.scriptId}}" class="tree"
 							folder="{{deploymentScript.folderStructure}}" folder-tree
-							style="margin-bottom: 15px; max-width: 350px; text-align: left">
+							style="margin-bottom: 15px; width: 100%; text-align: left">
 							<div class="tree-folder" style="display: none;">
 								<div class="tree-folder-header">
 									<i class="icon-folder-close"></i>
@@ -43,6 +59,16 @@
 							</div>
 						</div>
 
+					</td>
+					<td>
+						<button type="submit" ng-click="update(deploymentScript.id)"
+							class="btn btn-sm" style="width: 100px;">
+							<span class="glyphicon glyphicon-pencil"></span> Edit
+						</button>
+						<button type="submit" ng-click="delete(deploymentScript.id)"
+							style="width: 100px;" class="btn btn-sm btn-delete">
+							<span class="glyphicon glyphicon-remove-circle"></span> Delete
+						</button>
 					</td>
 				</tr>
 			</tbody>
@@ -74,7 +100,7 @@
 						<div class="form-group">
 							<label>Description</label> <input type="text"
 								class="form-control" name="description"
-								ng-model="deploymentScript.description" required>
+								ng-model="deploymentScript.desc" required>
 						</div>
 
 						<div class="form-group">
