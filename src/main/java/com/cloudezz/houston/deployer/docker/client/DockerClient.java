@@ -38,7 +38,7 @@ import org.springframework.web.client.RestTemplate;
 import com.cloudezz.houston.deployer.docker.client.utils.CompressArchiveUtil;
 import com.cloudezz.houston.deployer.docker.model.ChangeLog;
 import com.cloudezz.houston.deployer.docker.model.CommitConfig;
-import com.cloudezz.houston.deployer.docker.model.Container;
+import com.cloudezz.houston.deployer.docker.model.LXContainer;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
 import com.cloudezz.houston.deployer.docker.model.ContainerCreateResponse;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
@@ -228,10 +228,10 @@ public class DockerClient {
    ** CONTAINERS API
    **/
 
-  public List<Container> listContainers(boolean listAll) {
-    Container[] response =
+  public List<LXContainer> listContainers(boolean listAll) {
+    LXContainer[] response =
         restTemplate.getForObject(dockerDeamonUrl + "/containers/json?all={all}",
-            Container[].class, listAll);
+            LXContainer[].class, listAll);
     return Arrays.asList(response);
   }
 
@@ -240,9 +240,9 @@ public class DockerClient {
    **/
 
   public int getContainersSize() {
-    Container[] response =
+    LXContainer[] response =
         restTemplate.getForObject(dockerDeamonUrl + "/containers/json?all={all}",
-            Container[].class, true);
+            LXContainer[].class, true);
 
     if (response == null)
       return 0;

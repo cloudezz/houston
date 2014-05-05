@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
+import com.cloudezz.houston.domain.Container;
 import com.cloudezz.houston.domain.DockerHostMachine;
 
 public class ContainerLogStreamWorker implements Runnable {
@@ -22,7 +23,7 @@ public class ContainerLogStreamWorker implements Runnable {
 
   private volatile boolean exit = false;
 
-  private String containerId;
+  private Container container;
 
   private DockerHostMachine dockerHostMachine;
 
@@ -30,9 +31,9 @@ public class ContainerLogStreamWorker implements Runnable {
   
   private SimpMessageSendingOperations messagingTemplate;
 
-  public ContainerLogStreamWorker(final String containerId,
+  public ContainerLogStreamWorker(final Container container,
       final DockerHostMachine dockerHostMachine,final LogCacheHolder logCacheHolder, SimpMessageSendingOperations messagingTemplate) {
-    this.containerId = containerId;
+    this.container = container;
     this.dockerHostMachine = dockerHostMachine;
     this.logCacheHolder = logCacheHolder;
     this.messagingTemplate=messagingTemplate;
@@ -44,7 +45,7 @@ public class ContainerLogStreamWorker implements Runnable {
     CloseableHttpClient httpClient = HttpClients.createDefault();
     String url =
         String.format("%s/containers/%s/attach?logs=1&stream=1&stdout=1",
-            dockerHostMachine.getDockerDaemonURL(), containerId);
+            dockerHostMachine.getDockerDaemonURL(), container.getId());
     CloseableHttpResponse httpResponse = null;
     try {
       HttpPost httpPostRequest = new HttpPost(url);
@@ -90,18 +91,18 @@ public class ContainerLogStreamWorker implements Runnable {
   }
 
   private void pushLogToWebSocket(final String chunk) {
-    logCacheHolder.addData(containerId, chunk);
-    messagingTemplate.convertAndSend("/topic/log/"+containerId, chunk);
+    logCacheHolder.addData(container.getId(), chunk);
+    messagingTemplate.convertAndSend("/topic/log/"+container, chunk);
   }
 
   public void requestExit() {
     exit = true;
-    logCacheHolder.removeData(containerId);
-    messagingTemplate.convertAndSend("/topic/log/"+containerId, "Shutting down...\r\n");
+    logCacheHolder.removeData(container.getId());
+    messagingTemplate.convertAndSend("/topic/log/"+container, "Shutting down...\r\n");
   }
 
   public String toString() {
-    return "Container " + containerId;
+    return "Container " + container;
   }
 
 }

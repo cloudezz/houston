@@ -15,14 +15,15 @@ import com.cloudezz.houston.deployer.docker.client.DockerClient;
 import com.cloudezz.houston.deployer.docker.client.DockerClientException;
 import com.cloudezz.houston.deployer.docker.client.DockerConstant;
 import com.cloudezz.houston.deployer.docker.client.DockerHostSSHConnection;
-import com.cloudezz.houston.deployer.docker.model.Container;
 import com.cloudezz.houston.deployer.docker.model.ContainerConfig;
 import com.cloudezz.houston.deployer.docker.model.ContainerInspectResponse;
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
 import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.deployer.docker.model.Image;
+import com.cloudezz.houston.deployer.docker.model.LXContainer;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.BaseImageCfg;
+import com.cloudezz.houston.domain.Container;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ImgSettings.VolumeConfig.VolumeMapping;
@@ -55,8 +56,8 @@ public class DeployerHelperService {
     }
   }
 
-  public List<Container> getAllContainers(DockerClient dockerClient) throws CloudezzDeployException {
-    List<Container> containers = dockerClient.listContainers(true);
+  public List<LXContainer> getAllContainers(DockerClient dockerClient) throws CloudezzDeployException {
+    List<LXContainer> containers = dockerClient.listContainers(true);
     return containers;
   }
 
@@ -174,7 +175,10 @@ public class DeployerHelperService {
     if (containerInspectResponse == null)
       return false;
 
-    cloudezzImageConfig.setContainerId(containerInspectResponse.getId());
+    Container container = new Container();
+    container.setId(containerInspectResponse.getId());
+    
+    cloudezzImageConfig.setContainer(container);
     return true;
 
   }
@@ -186,10 +190,10 @@ public class DeployerHelperService {
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
     // if no container then no need to stop jus return done
-    if (cloudezzImageConfig.getContainerId() == null)
+    if (cloudezzImageConfig.getContainer() == null)
       return true;
 
-    return dockerClient.stopContainer(cloudezzImageConfig.getContainerId());
+    return dockerClient.stopContainer(cloudezzImageConfig.getContainer().getId());
 
   }
 
@@ -199,10 +203,10 @@ public class DeployerHelperService {
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
 
     // if no container then no need to stop jus return done
-    if (cloudezzImageConfig.getContainerId() == null)
+    if (cloudezzImageConfig.getContainer() == null)
       return true;
 
-    return dockerClient.kill(cloudezzImageConfig.getContainerId());
+    return dockerClient.kill(cloudezzImageConfig.getContainer().getId());
 
   }
 
@@ -212,11 +216,12 @@ public class DeployerHelperService {
 
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
-
-    String containerId = cloudezzImageConfig.getContainerId();
-    if (containerId == null) {
+    
+    String containerId = null;
+    Container container = cloudezzImageConfig.getContainer();
+    if (container == null) {
       createAndSetContainerOnImageConfig(dockerClient, cloudezzImageConfig);
-      containerId = cloudezzImageConfig.getContainerId();
+      containerId = cloudezzImageConfig.getContainer().getId();
     }
 
     return containerId;
@@ -293,12 +298,12 @@ public class DeployerHelperService {
    * @param dockerContainerList
    * @throws CloudezzDeployException
    */
-  public void destroyContainers(DockerClient dockerClient, String dockerContainerId)
+  public void destroyContainers(DockerClient dockerClient, Container dockerContainer)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    Preconditions.checkNotNull(dockerContainerId, "dockerContainerId arg cannot be null");
-    dockerClient.stopContainer(dockerContainerId);
-    dockerClient.removeContainer(dockerContainerId, true);
+    Preconditions.checkNotNull(dockerContainer, "Docker Container arg cannot be null");
+    dockerClient.stopContainer(dockerContainer.getId());
+    dockerClient.removeContainer(dockerContainer.getId(), true);
   }
 
   /**
@@ -309,14 +314,14 @@ public class DeployerHelperService {
    * @param dockerContainerList
    * @throws CloudezzDeployException
    */
-  public void destroyContainers(DockerClient dockerClient, List<String> dockerContainerList)
+  public void destroyContainers(DockerClient dockerClient, List<Container> dockerContainerList)
       throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    Preconditions.checkNotNull(dockerContainerList, "dockerContainerList arg cannot be null");
-    for (Iterator<String> iterator = dockerContainerList.iterator(); iterator.hasNext();) {
-      String containerId = iterator.next();
-      dockerClient.stopContainer(containerId);
-      dockerClient.removeContainer(containerId, true);
+    Preconditions.checkNotNull(dockerContainerList, "Docker Container List arg cannot be null");
+    for (Iterator<Container> iterator = dockerContainerList.iterator(); iterator.hasNext();) {
+      Container container = iterator.next();
+      dockerClient.stopContainer(container.getId());
+      dockerClient.removeContainer(container.getId(), true);
     }
   }
 
@@ -330,9 +335,9 @@ public class DeployerHelperService {
    */
   public void destroyAllContainers(DockerClient dockerClient) throws CloudezzDeployException {
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
-    List<Container> containers = dockerClient.listContainers(true);
-    for (Iterator<Container> iterator = containers.iterator(); iterator.hasNext();) {
-      Container container = iterator.next();
+    List<LXContainer> containers = dockerClient.listContainers(true);
+    for (Iterator<LXContainer> iterator = containers.iterator(); iterator.hasNext();) {
+      LXContainer container = iterator.next();
       dockerClient.stopContainer(container.getId());
       dockerClient.removeContainer(container.getId(), true);
     }
@@ -341,7 +346,11 @@ public class DeployerHelperService {
   public boolean deleteContainer(DockerClient dockerClient, BaseImageCfg baseImageConfig)
       throws CloudezzDeployException {
     try {
-      return dockerClient.removeContainer(baseImageConfig.getContainerId(), true);
+      
+      if(baseImageConfig.getContainer()==null)
+        return false;
+      
+      return dockerClient.removeContainer(baseImageConfig.getContainer().getId(), true);
     } catch (DockerClientException e) {
       throw new CloudezzDeployException(e);
     }

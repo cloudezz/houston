@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import com.cloudezz.houston.domain.Container;
 import com.cloudezz.houston.domain.DockerHostMachine;
 
 @Service
@@ -25,7 +26,7 @@ public class ContainerLogManager implements RejectedExecutionHandler {
 
   private final Logger log = LoggerFactory.getLogger(ContainerLogManager.class);
 
-  private Map<String, ContainerLogStreamWorker> containerIdToLogStreamer;
+  private Map<Container, ContainerLogStreamWorker> containerIdToLogStreamer;
 
   private BlockingQueue<Runnable> worksQueue;
 
@@ -39,7 +40,7 @@ public class ContainerLogManager implements RejectedExecutionHandler {
   private ThreadPoolExecutor executor;
 
   public ContainerLogManager() {
-    containerIdToLogStreamer = new HashMap<String, ContainerLogStreamWorker>();
+    containerIdToLogStreamer = new HashMap<Container, ContainerLogStreamWorker>();
     worksQueue = new ArrayBlockingQueue<Runnable>(2);
     executor = new ThreadPoolExecutor(3, 50, 10, TimeUnit.SECONDS, worksQueue, this);
     executor.allowCoreThreadTimeOut(true);
@@ -47,17 +48,20 @@ public class ContainerLogManager implements RejectedExecutionHandler {
 
 
 
-  public boolean startLog(String containerId, DockerHostMachine dockerHostMachine) {
+  public boolean startLog(Container container, DockerHostMachine dockerHostMachine) {
     ContainerLogStreamWorker logStreamer =
-        new ContainerLogStreamWorker(containerId, dockerHostMachine, logCacheHolder,
+        new ContainerLogStreamWorker(container, dockerHostMachine, logCacheHolder,
             messagingTemplate);
-    containerIdToLogStreamer.put(containerId, logStreamer);
+    containerIdToLogStreamer.put(container, logStreamer);
     executor.execute(logStreamer);
     return true;
   }
 
-  public boolean stopLog(String containerId) {
-    ContainerLogStreamWorker logStreamer = containerIdToLogStreamer.get(containerId);
+  public boolean stopLog(Container container) {
+    if(container==null)
+      return false;
+    
+    ContainerLogStreamWorker logStreamer = containerIdToLogStreamer.get(container.getId());
     if (logStreamer == null)
       return false;
 
@@ -66,10 +70,10 @@ public class ContainerLogManager implements RejectedExecutionHandler {
     return true;
   }
 
-  public boolean stopLog(List<String> containerIds) {
+  public boolean stopLog(List<Container> containers) {
     boolean success = true;
-    for (String containerId : containerIds) {
-      boolean state = stopLog(containerId);
+    for (Container container : containers) {
+      boolean state = stopLog(container);
       success = success && state;
     }
     return success;
@@ -83,7 +87,7 @@ public class ContainerLogManager implements RejectedExecutionHandler {
   @PreDestroy
   public void destroy() {
     // stop all
-    for (Iterator<String> iterator = containerIdToLogStreamer.keySet().iterator(); iterator
+    for (Iterator<Container> iterator = containerIdToLogStreamer.keySet().iterator(); iterator
         .hasNext();) {
       stopLog(iterator.next());
     }

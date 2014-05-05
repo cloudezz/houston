@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.cloudezz.firework.domain.Node;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
@@ -28,6 +29,7 @@ import com.cloudezz.houston.deployer.docker.model.HostPortBinding;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.BaseImageCfg;
+import com.cloudezz.houston.domain.Container;
 import com.cloudezz.houston.domain.DockerHostMachine;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
@@ -61,7 +63,7 @@ public class ImageService {
 
     for (AppImageCfg appImageCfg : application.getAppImageCfgs()) {
 
-      if (appImageCfg.getContainerId() == null && !application.isRunning()) {
+      if (appImageCfg.getContainer() == null && !application.isRunning()) {
         throw new CloudezzException(
             "Cannot get exposed service information from a instance that is not running");
       }
@@ -74,14 +76,14 @@ public class ImageService {
         ExposedService exposedService = new ExposedService();
         List<Port> ports = imageInfo.getPortsExposed();
         // need to create proper pojo for img settings to get port
-        exposedService.setContainerId(appImageCfg.getContainerId());
+        exposedService.setContainerId(appImageCfg.getContainer().getId());
         exposedService.setName(appImageCfg.getAppName());
         exposedService.setServiceImage(false);
         exposedService.setInstanceNo(appImageCfg.getInstanceNo());
         DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
         DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
         ContainerInspectResponse containerInspectResponse =
-            dockerClient.inspectContainer(appImageCfg.getContainerId());
+            dockerClient.inspectContainer(appImageCfg.getContainer().getId());
         Map<String, HostPortBinding[]> hostPortBindings =
             containerInspectResponse.networkSettings.ports;
         if (hostPortBindings != null) {
@@ -235,5 +237,28 @@ public class ImageService {
     }
   }
 
+
+  /**
+   * Get the node for the base image of the container is available
+   * @param baseImageCfg
+   * @return
+   */
+  public Node getNodeForImageConfig(BaseImageCfg baseImageCfg) {
+    Preconditions.checkNotNull(baseImageCfg, "BaseImageCfg arg cannot be null");
+    Preconditions.checkNotNull(baseImageCfg.getContainer(), "Container not available");
+    Container container = baseImageCfg.getContainer();
+    Node node = new Node();
+    node.setHost(container.getHost());
+    node.setName(container.getName());
+    node.setSSHPassword(container.getSSHPassword());
+    node.setSSHPemPrivateKey(container.getSSHPemPrivateKey());
+    node.setSSHPemPrivateKeyPassword(container.getSSHPemPrivateKeyPassword());
+    node.setSSHPort(container.getSSHPort());
+    node.setSSHUsername(container.getSSHUsername());
+    node.setSudo(false);
+    
+    return node;
+    
+  }
 
 }

@@ -29,7 +29,7 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   private static final long serialVersionUID = 5524208892445624915L;
 
-  protected String containerId;
+  protected Container container;
 
   @Column(name = "instance_no")
   private Integer instanceNo;
@@ -92,17 +92,17 @@ public abstract class BaseImageCfg extends BaseEntity {
 
 
   /**
-   * @return the containerId
+   * @return the container
    */
-  public String getContainerId() {
-    return containerId;
+  public Container getContainer() {
+    return container;
   }
 
   /**
-   * @param containerId the containerId to set
+   * @param container the container to set
    */
-  public void setContainerId(String containerId) {
-    this.containerId = containerId;
+  public void setContainer(Container container) {
+    this.container = container;
   }
 
   /**

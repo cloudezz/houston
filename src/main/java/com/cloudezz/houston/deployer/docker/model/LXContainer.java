@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Container {
+public class LXContainer {
 
   @JsonProperty("Id")
   public String id;

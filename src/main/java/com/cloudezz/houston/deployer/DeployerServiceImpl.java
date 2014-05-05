@@ -18,6 +18,7 @@ import com.cloudezz.houston.deployer.docker.client.DockerImageStopException;
 import com.cloudezz.houston.deployer.docker.client.utils.DockerUtil;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
+import com.cloudezz.houston.domain.Container;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.logstream.ContainerLogManager;
@@ -59,7 +60,7 @@ public class DeployerServiceImpl implements DeployerService {
 
 
   private boolean startAppImages(Application application) throws CloudezzDeployException {
-    List<String> containerIdCache = new ArrayList<String>();
+    List<Container> containerCache = new ArrayList<Container>();
     boolean success = true;
 
     try {
@@ -73,18 +74,18 @@ public class DeployerServiceImpl implements DeployerService {
         success = deployerHelperService.startContainer(dockerClient, appImageConfig);
 
         if (success) {
-          containerIdCache.add(appImageConfig.getContainerId());
+          containerCache.add(appImageConfig.getContainer());
         } else {
           // if even one app container start fails then stop and delete the old app
           // containers that were started
-          containerLogManager.stopLog(containerIdCache);
-          deployerHelperService.destroyContainers(dockerClient, containerIdCache);
+          containerLogManager.stopLog(containerCache);
+          deployerHelperService.destroyContainers(dockerClient, containerCache);
           throw new DockerImageStartException("Cloudn't start container with id "
-              + appImageConfig.getContainerId());
+              + appImageConfig.getContainer());
         }
         
         // start log
-        containerLogManager.startLog(appImageConfig.getContainerId(),appImageConfig.getDockerHostMachine());
+        containerLogManager.startLog(appImageConfig.getContainer(),appImageConfig.getDockerHostMachine());
       }
 
     } catch (DockerImageStartException e) {
@@ -98,7 +99,7 @@ public class DeployerServiceImpl implements DeployerService {
 
 
   private boolean startServiceImages(Application application) throws CloudezzDeployException {
-    List<String> containerIdCache = new ArrayList<String>();
+    List<Container> containerCache = new ArrayList<Container>();
     boolean success = true;
     try {
       for (ServiceImageCfg serviceImageConfig : application.getServiceImageCfgs()) {
@@ -112,13 +113,13 @@ public class DeployerServiceImpl implements DeployerService {
         success = deployerHelperService.startContainer(dockerClient, serviceImageConfig);
 
         if (success) {
-          containerIdCache.add(serviceImageConfig.getContainerId());
+          containerCache.add(serviceImageConfig.getContainer());
         } else {
           // if even one service container start fails then stop and delete the old service
           // containers that were started
-          deployerHelperService.destroyContainers(dockerClient, containerIdCache);
+          deployerHelperService.destroyContainers(dockerClient, containerCache);
           throw new DockerImageStartException("Cloudn't start container with id "
-              + serviceImageConfig.getContainerId());
+              + serviceImageConfig.getContainer());
         }
       }
 
@@ -143,7 +144,7 @@ public class DeployerServiceImpl implements DeployerService {
     if (!application.isRunning())
       return true;
 
-    List<String> containerIdFailList = new ArrayList<String>();
+    List<Container> containerFailList = new ArrayList<Container>();
 
     // stop service imgs
     Set<ServiceImageCfg> serviceImageConfigs = application.getServiceImageCfgs();
@@ -152,10 +153,10 @@ public class DeployerServiceImpl implements DeployerService {
           DockerUtil.getDockerClient(serviceImageConfig.getDockerHostMachine());
       boolean done = deployerHelperService.stopContainer(dockerClient, serviceImageConfig);
       if (!done) {
-        containerIdFailList.add(serviceImageConfig.getContainerId());
+        containerFailList.add(serviceImageConfig.getContainer());
       } else {
         // stop log
-        containerLogManager.stopLog(serviceImageConfig.getContainerId());
+        containerLogManager.stopLog(serviceImageConfig.getContainer());
       }
     }
 
@@ -165,14 +166,14 @@ public class DeployerServiceImpl implements DeployerService {
       DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
       boolean done = deployerHelperService.stopContainer(dockerClient, appImageConfig);
       if (!done) {
-        containerIdFailList.add(appImageConfig.getContainerId());
+        containerFailList.add(appImageConfig.getContainer());
       } else {
         // stop log
-        containerLogManager.stopLog(appImageConfig.getContainerId());
+        containerLogManager.stopLog(appImageConfig.getContainer());
       }
     }
 
-    if (containerIdFailList.size() > 0) {
+    if (containerFailList.size() > 0) {
       throw new DockerImageStopException("Few container couldn't be stopped");
     } else {
       return true;
@@ -188,16 +189,16 @@ public class DeployerServiceImpl implements DeployerService {
       log.error("Error stopping container before delete , may be the container wasn't running", e);
     }
 
-    List<String> containerIdFailList = new ArrayList<String>();
+    List<Container> containerFailList = new ArrayList<Container>();
     Set<ServiceImageCfg> serviceImageConfigs = application.getServiceImageCfgs();
     for (ServiceImageCfg serviceImageConfig : serviceImageConfigs) {
       DockerClient dockerClient =
           DockerUtil.getDockerClient(serviceImageConfig.getDockerHostMachine());
-      if (serviceImageConfig.getContainerId() != null) {
+      if (serviceImageConfig.getContainer() != null) {
         boolean done = deployerHelperService.deleteContainer(dockerClient, serviceImageConfig);
 
         if (!done)
-          containerIdFailList.add(serviceImageConfig.getContainerId());
+          containerFailList.add(serviceImageConfig.getContainer());
       }
 
     }
@@ -205,10 +206,10 @@ public class DeployerServiceImpl implements DeployerService {
     Set<AppImageCfg> appImageCfgs = application.getAppImageCfgs();
     for (AppImageCfg appImageConfig : appImageCfgs) {
       DockerClient dockerClient = DockerUtil.getDockerClient(appImageConfig.getDockerHostMachine());
-      if (appImageConfig.getContainerId() != null) {
+      if (appImageConfig.getContainer() != null) {
         boolean done = deployerHelperService.deleteContainer(dockerClient, appImageConfig);
         if (!done)
-          containerIdFailList.add(appImageConfig.getContainerId());
+          containerFailList.add(appImageConfig.getContainer());
 
         boolean cleanUpSuccess =
             deployerHelperService.cleanUpVolumeOnDockerHost(dockerClient, appImageConfig);
@@ -220,7 +221,7 @@ public class DeployerServiceImpl implements DeployerService {
     }
 
 
-    if (containerIdFailList.size() > 0) {
+    if (containerFailList.size() > 0) {
       throw new DockerImageStopException("Few container's delete cmd failed for Application : "
           + application.getAppName());
     } else {

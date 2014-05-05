@@ -101,14 +101,14 @@ public class DeployerImageEnvVariableTest extends BaseApplicationContextLoader {
     boolean success = deployerHelperService.startContainer(dockerClient, serviceImageConfig);
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
-        dockerClient.inspectContainer(serviceImageConfig.getContainerId());
+        dockerClient.inspectContainer(serviceImageConfig.getContainer().getId());
 
     HostConfig hostConfig = application.getAppImageCfgs().iterator().next().getHostConfig();
     hostConfig.setLinks(new String[] {containerInspectResponse.name + ":dep_base"});
     deployerHelperService.startContainer(dockerClient, application.getAppImageCfgs().iterator()
         .next(), hostConfig);
 
-    containerInspectResponse = dockerClient.inspectContainer(serviceImageConfig.getContainerId());
+    containerInspectResponse = dockerClient.inspectContainer(serviceImageConfig.getContainer().getId());
 
   }
 

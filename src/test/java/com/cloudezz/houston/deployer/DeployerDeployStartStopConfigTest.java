@@ -108,7 +108,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
     Assert.assertTrue(success);
     ContainerInspectResponse containerInspectResponse =
         dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next()
-            .getContainerId());
+            .getContainer().getId());
     Assert.assertTrue(containerInspectResponse.state.running);
 
     success = deployer.stop(application);
@@ -116,7 +116,7 @@ public class DeployerDeployStartStopConfigTest extends BaseApplicationContextLoa
 
     containerInspectResponse =
         dockerClient.inspectContainer(application.getAppImageCfgs().iterator().next()
-            .getContainerId());
+            .getContainer().getId());
     Assert.assertTrue(!containerInspectResponse.state.running);
 
   }
