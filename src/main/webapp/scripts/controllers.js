@@ -441,6 +441,11 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         	src = src.replace("light", "dark"); 
         	$(event.target).attr('src', src);
         };
+        
+        $scope.runScript = function(id){
+        	$rootScope.selectedAppId = id;
+        	$location.path("/runScript");
+        };
     }]);
 
 houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$compile','AppImageCfg','ImageInfo','ServiceImageInfo','AppImageService','AppConfigCommunicationService','defaultConfigs',
@@ -1402,8 +1407,63 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
         };
     }]);
 
-function DeleteModalCtrl($scope,$timeout, $modal, $modalInstance,$rootScope,DeploymentScript, id){
+houstonApp.controller('RunScriptController', ['$scope','$rootScope', '$location', 'DeploymentScript', 'AppImageCfg', 'AppImageService', '$http',
+                                                     function ($scope,$rootScope, $location, DeploymentScript, AppImageCfg, AppImageService, $http) {
+	
+	if($rootScope.selectedAppId){
+		$scope.deploymentScripts = DeploymentScript.query();
+		
+		$scope.app = AppImageCfg.get({id : $rootScope.selectedAppId}, function(){
+			
+		});
+	} else {
+		$location.path("/appimagecfg");
+	}
+	
+	$scope.toggleSelect = function(imageConfig){
+		if(imageConfig.selected){
+			imageConfig.selected = false;
+		} else {
+			imageConfig.selected = true;
+		}
+	};
+	
+    $scope.isActive = function (viewLocation) { 
+        return viewLocation === $location.path();
+    };
+    
+    
+    $scope.runAppScript = function(){
+    	var selectedScript = $('#deploymentScript').val();
+    	var command = $("#command").val();
+    	
+    	var selectedAppImageConfigs = [];
+    	var selectedServiceImageConfigs = [];
+    	
+    	var appImageConfigs = $scope.app.appImageCfgs;
+    	for(var i=0; i<appImageConfigs.length; i++){
+    		if(appImageConfigs[i].selected){
+    			selectedAppImageConfigs.push(appImageConfigs[i].id);
+    		}
+    	}
+    	
+    	var serviceImageConfigs = $scope.app.serviceImageCfgs;
+    	for(var i=0; i<serviceImageConfigs.length; i++){
+    		if(serviceImageConfigs[i].selected){
+    			selectedServiceImageConfigs.push(serviceImageConfigs[i].id);
+    		}
+    	}
+    	if(!command)
+    		command = "";
+    	
+    	var data = "id="+$rootScope.selectedAppId+ "&scriptId=" + selectedScript + "&command=" +command+ "&appImageConfigs=" + selectedAppImageConfigs + "&serviceImageConfigs=" + selectedServiceImageConfigs;
+    	AppImageService.runAppScript(data, function(data, status){
+    		
+    	});
+    }
+}]);
 
+function DeleteModalCtrl($scope, $timeout, $modal, $modalInstance,$rootScope,DeploymentScript, id){
 	$scope.ok = function() {
         	DeploymentScript.delete({id: id},
         			 function () {

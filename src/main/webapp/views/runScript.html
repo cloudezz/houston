@@ -1,0 +1,75 @@
+<div style="margin-top: 30px; font-size: 12px;">
+	<div class="row">
+		<tabset> <tab heading="Script">
+		<div class="tab-pane fade active in" id="script"
+			style="margin-top: 15px;">
+			<div class="row">
+				<div class="col-lg-1"  style="margin-top:4px;">Script :</div>
+				<div class="col-lg-4">
+					<select class="selectpicker" data-style="btn-sm"
+						id="deploymentScript" style="width: 100%;" data-live-search="true">
+						<option ng-repeat="deploymentScript in deploymentScripts"
+							value="{{deploymentScript.id}}">{{deploymentScript.scriptName}}</option>
+					</select>
+				</div>
+				<div class="col-lg-1 pull-right">
+					<button class="btn btn-sm btn-success" ng-click="runAppScript()"
+						style="background-color: #37BC4C">Run</button>
+				</div>
+			</div>
+		</div>
+		</tab> <tab heading="Command">
+		<div class="row" style="margin-top: 15px;">
+			<div class="col-lg-1" style="margin-top:7px;">Command :</div>
+			<input type="text" value="" id="command" class="col-lg-4">
+			<div class="col-lg-1 pull-right">
+				<button class="btn btn-sm btn-success" ng-click="runAppScript()"
+					style="background-color: #37BC4C">Run</button>
+			</div>
+
+		</div>
+		</tab> </tabset>
+		<div>
+			<div class="row appImages_block">
+				<div class="col-lg-6">
+					<div ng-repeat="appImageCfg in app.appImageCfgs"
+						style="width: 75px;"
+						ng-class="{'sel_appImage' : appImageCfg.selected}"
+						ng-click="toggleSelect(appImageCfg)">
+						<img alt="" src="images/card/{{appImageCfg.imageType}}.png"
+							style="cursor: pointer;">
+						<div>{{appImageCfg.imageType}}_{{appImageCfg.instanceNo}}</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div ng-repeat="serviceImageCfg in app.serviceImageCfgs"
+						style="width: 75px;"
+						ng-class="{'sel_appImage' : serviceImageCfg.selected}"
+						ng-click="toggleSelect(serviceImageCfg)">
+						<img alt="" src="images/card/{{serviceImageCfg.imageType}}.png"
+							style="cursor: pointer;">
+						<div>{{appImageCfg.imageType}}_{{appImageCfg.instanceNo}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top: 20px;">
+		<tabset> <tab heading="Output1">
+		<div class="output">Java is a set of several computer software products and specifications from Oracle Corporation that provides a system for developing application software and deploying it in a cross-platform computing environment. Java is used in a wide variety of computing platforms from embedded devices and mobile phones on the low end, to enterprise servers and supercomputers on the high end. While less common, Java applets are sometimes used to provide improved and secure functions while browsing the World Wide Web on desktop computers.
+
+Writing in the Java programming language is the primary way to produce code that will be deployed as Java bytecode. There are, however, bytecode compilers available for other languages such as Ada, JavaScript, Python, and Ruby. Several new languages have been designed to run natively on the Java Virtual Machine (JVM), such as Scala, Clojure and Groovy. Java syntax borrows heavily from C and C++, but object-oriented features are modeled after Smalltalk and Objective-C.[9] Java eliminates certain low-level constructs such as pointers and has a very simple memory model where every object is allocated on the heap and all variables of object types are references. Memory management is handled through integrated automatic garbage collection performed by the JVM.
+
+On November 13, 2006, Sun Microsystems made the bulk of its implementation of Java available under the GNU General Public License (GPL).[10][11]Java is a set of several computer software products and specifications from Oracle Corporation that provides a system for developing application software and deploying it in a cross-platform computing environment. Java is used in a wide variety of computing platforms from embedded devices and mobile phones on the low end, to enterprise servers and supercomputers on the high end. While less common, Java applets are sometimes used to provide improved and secure functions while browsing the World Wide Web on desktop computers.
+
+Writing in the Java programming language is the primary way to produce code that will be deployed as Java bytecode. There are, however, bytecode compilers available for other languages such as Ada, JavaScript, Python, and Ruby. Several new languages have been designed to run natively on the Java Virtual Machine (JVM), such as Scala, Clojure and Groovy. Java syntax borrows heavily from C and C++, but object-oriented features are modeled after Smalltalk and Objective-C.[9] Java eliminates certain low-level constructs such as pointers and has a very simple memory model where every object is allocated on the heap and all variables of object types are references. Memory management is handled through integrated automatic garbage collection performed by the JVM.
+
+On November 13, 2006, Sun Microsystems made the bulk of its implementation of Java available under the GNU General Public License (GPL).[10][11]</div>
+		</tab> <tab heading="Output2">
+		<div class="output">output2</div>
+		</tab> <tab heading="Output3">
+		<div class="output">output3</div>
+		</tab> </tabset>
+	</div>
+</div>

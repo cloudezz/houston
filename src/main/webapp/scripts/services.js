@@ -286,12 +286,26 @@ houstonApp.factory('AppImageService', [
 				},
 
 				listServices : function(appName, callback) {
-					var url = "app/rest/application/" + appName + "/service"
+					var url = "app/rest/application/" + appName + "/service";
 					$http.get(url).success(function(data) {
 						callback(data);
 					});
+				},
+				
+				runAppScript : function(data, callback){
+					var url = "app/rest/application/runScript";
+					$http.post(url, data,
+							{
+						headers : {
+							"Content-Type" : "application/x-www-form-urlencoded"
+						}
+					}).success(function(data, status) {
+						callback(data, status);
+					}).error(function(data, status) {
+						callback(data, status);
+					});
 				}
-			}
+			};
 		} ]);
 
 houstonApp.factory('AppConfigCommunicationService', [ '$http', function($http) {

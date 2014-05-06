@@ -577,3 +577,27 @@ table th {
 	max-height :100px;
 	overflow : hidden;
 }
+
+.sel_appImage{
+	background-color : #E7E7E7; 
+}
+
+.output{
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
+	border-color: #D8D8D8;
+	height: 200px;
+	padding:20px;
+	overflow: auto;
+}
+
+.appImages_block{
+	margin-top: 20px;
+	border: 1px solid;
+	border-color: #D8D8D8;
+	padding: 10px;
+	height: 180px;
+	margin-left: 0px;
+	margin-right: 0px;
+}

@@ -101,8 +101,9 @@
 								ng-mouseenter="changeToDarkImage($event)"
 								ng-mouseleave="changeToLightImage($event)" class="card_button"
 								src="images/card/delete-icon-dark.png">
-							<button class="btn btn-primary btn-sm" style="width: 75px;">Run
-								Scripts</button>
+							<button ng-click="runScript(appimagecfg.id);" class="btn btn-primary btn-sm" style="width : 75px;">
+								Run Scripts
+							</button>
 						</div>
 						<div class="card_uptime">
 							<span ng-if="appimagecfg.formattedStartTime">Uptime :

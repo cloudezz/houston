@@ -1,5 +1,9 @@
 package com.cloudezz.houston.web.rest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,18 +13,24 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.security.auth.login.AppConfigurationEntry;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cloudezz.firework.domain.AppScript;
+import com.cloudezz.firework.domain.Node;
+import com.cloudezz.firework.executor.ExecutionListener;
+import com.cloudezz.firework.service.ExecutionService;
 
 import com.cloudezz.houston.deployer.DeployerService;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
@@ -28,11 +38,15 @@ import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.domain.AppImageCfg;
 import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.ClusterConfig;
+import com.cloudezz.houston.domain.DeploymentScript;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
+import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.ApplicationRepository;
+import com.cloudezz.houston.repository.DeploymentScriptRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
+import com.cloudezz.houston.repository.ServiceImageConfigRepository;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.security.SecurityUtils;
 import com.cloudezz.houston.service.ImageService;
@@ -42,6 +56,8 @@ import com.cloudezz.houston.web.rest.dto.AppImageCfgDTO;
 import com.cloudezz.houston.web.rest.dto.ApplicationDTO;
 import com.cloudezz.houston.web.rest.dto.ServiceImageCfgDTO;
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * REST controller for managing AppImageCfg.
@@ -66,6 +82,21 @@ public class ApplicationResource {
 
   @Autowired
   private ImageService imageService;
+
+/*  @Autowired
+  private ExecutionService executionService;*/
+
+  @Inject
+  private DeploymentScriptRepository deploymentScriptRepository;
+
+  @Inject
+  private AppImageCfgRepository appImageCfgRepository;
+
+  @Inject
+  private ServiceImageConfigRepository serviceImageConfigRepository;
+
+  @Value("${deploymentScript.filePath}")
+  private String filePath;
 
   /**
    * POST /rest/application -> Create a new application.
@@ -377,8 +408,7 @@ public class ApplicationResource {
   @RequestMapping(value = "/rest/application/{id}/service", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
-  public Set<ExposedService> getServiceExposed(@PathVariable String id,
-      HttpServletResponse response) {
+  public Set<ExposedService> getServiceExposed(@PathVariable String id, HttpServletResponse response) {
     log.debug("REST request to get Application : {}", id);
     Application application = applicationRepository.findOne(id);
     if (application == null) {
@@ -434,6 +464,86 @@ public class ApplicationResource {
     }
     return null;
   }
+
+
+  /**
+   * POST /rest/application/runScript
+   */
+  @RequestMapping(value = "/rest/application/runScript", method = RequestMethod.POST)
+  @Timed
+  public void runScript(@RequestParam("id") String id, HttpServletResponse response,
+      @RequestParam("appImageConfigs") List<String> appImageConfigs,
+      @RequestParam("serviceImageConfigs") List<String> serviceImageConfigs,
+      @RequestParam("scriptId") String scriptId, @RequestParam("command") String command) {
+
+    try {
+      if(command != null && !command.equals("")){
+        // TODO
+      } else {
+        
+        Application application = applicationRepository.findOne(id);
+        DeploymentScript deploymentScript = deploymentScriptRepository.findOne(scriptId);
+
+        List<AppImageCfg> appImageCfgs = new ArrayList<AppImageCfg>();
+        List<ServiceImageCfg> serviceImageCfgs = new ArrayList<ServiceImageCfg>();
+
+        appImageCfgs = appImageCfgRepository.getByIds(appImageConfigs);
+        serviceImageCfgs = serviceImageConfigRepository.getByIds(serviceImageConfigs);
+        if (application != null && deploymentScript != null && appImageCfgs != null
+            && serviceImageCfgs != null) {
+
+          List<Node> nodes = new ArrayList<Node>();
+
+
+          for (Iterator<AppImageCfg> iterator = appImageCfgs.iterator(); iterator.hasNext();) {
+            Node node = imageService.getNodeForImageConfig(iterator.next());
+            nodes.add(node);
+          }
+
+          for (Iterator<ServiceImageCfg> iterator = serviceImageCfgs.iterator(); iterator.hasNext();) {
+            Node node = imageService.getNodeForImageConfig(iterator.next());
+            nodes.add(node);
+          }
+
+          File ymlFile =
+              new File(filePath + File.separator + deploymentScript.getScriptId() + File.separator
+                  + deploymentScript.getYmlFileName());
+          InputStream ymlFileStream;
+
+          ymlFileStream = new FileInputStream(ymlFile);
+
+          ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+          AppScript appScript = mapper.readValue(ymlFileStream, AppScript.class);
+          appScript.setAppScriptYMLDirectory(ymlFile.getParent());
+          OutputStream outputStream = response.getOutputStream();
+
+/*          executionService.execute(appScript, nodes, new ExecutionListener() {
+
+            @Override
+            public void onStdOut(Node node, String output) {
+              System.out.println(output);
+            }
+
+            @Override
+            public void onStdErr(Node node, String err) {
+              System.out.println(err);
+            }
+
+            @Override
+            public void onExecutionFailure(Throwable throwable) {
+              throwable.printStackTrace();
+            }
+          });*/
+        } else {
+          // TODO
+        }
+        
+      }
+    } catch (Exception e) {
+      log.error("Failed run script", e);
+    }
+  }
+
 
   private ApplicationDTO getDTOForApplication(Application application) {
 

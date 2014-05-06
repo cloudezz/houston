@@ -1,6 +1,7 @@
 package com.cloudezz.houston.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -9,6 +10,7 @@ public class Container extends BaseEntity {
 
   private static final long serialVersionUID = 4880506167220787354L;
 
+  @Id
   private String containerId;
 
   private String host;

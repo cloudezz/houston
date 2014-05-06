@@ -86,6 +86,10 @@ houstonApp
                         }]
                     }
                 })
+                .when('/runScript', {
+                    templateUrl: 'views/runScript.html',
+                    controller: 'RunScriptController'
+                })
                 .when('/appImgConfigWizard', {
                     templateUrl: 'views/appimagecfgsWizard.html',
                     controller: 'AppImgConfigWizardController'

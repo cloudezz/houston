@@ -24,7 +24,10 @@ public class DeploymentScript extends BaseEntity {
   protected String desc = "";
   
   @Column(name = "scriptId")
-  protected String scriptId = "";
+  protected String scriptId;
+  
+  @Column(name = "yml_FileName")
+  protected String ymlFileName;
   
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
@@ -72,6 +75,14 @@ public class DeploymentScript extends BaseEntity {
 
   public void setScriptId(String scriptId) {
     this.scriptId = scriptId;
+  }
+
+  public String getYmlFileName() {
+    return ymlFileName;
+  }
+
+  public void setYmlFileName(String ymlFileName) {
+    this.ymlFileName = ymlFileName;
   }
 
 }
