@@ -69,7 +69,7 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
 houstonApp.controller('AccountSettingsController', ['$scope', 'Cloud',
 		 function ($scope, Cloud) {
 	$scope.selection = "views/cloud.html";
-	$scope.cloud = Account.get();
+	$scope.cloud = {};
 	$scope.clouds = Cloud.query();
 	
 	$scope.create = function () {
