@@ -66,8 +66,8 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
         };
     }]);
 
-houstonApp.controller('AccountSettingsController', ['$scope','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
-		 function ($scope,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
+houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
+		 function ($scope,Cloud,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
 	$scope.selection = "views/cloud.html";
 	$scope.cloud = {};
 	$scope.clouds = Cloud.query();
