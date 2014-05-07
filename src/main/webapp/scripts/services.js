@@ -430,7 +430,7 @@ houstonApp.factory('DockerHostMachine', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('Cloud', [ '$resource', function($resource) {
-	return $resource('app/rest/Cloud/:id', {}, {
+	return $resource('app/rest/cloud/:id', {}, {
 		'query' : {
 			method : 'GET',
 			isArray : true
@@ -439,7 +439,8 @@ houstonApp.factory('Cloud', [ '$resource', function($resource) {
 			method : 'GET'
 		},
 		'save' : {
-			method : 'POST'
+			method : 'POST',
+			headers: [{'Content-Type': 'application/json'}]
 		}
 	});
 } ]);

@@ -22,7 +22,7 @@
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label>Name</label> <select class="form-control" id="select" ng-modal="cloud.name">
+							<label>Name</label> <select class="form-control" id="select" ng-model="cloud.name">
 								<option value="amazon">Amazon cloud</option>
 								<option value="rackspace">Rackspace</option>
 								<option value="google">Google cloud</option>
@@ -62,7 +62,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="imageinfo in imageinfos | filter:search">
+				<tr ng-repeat="cloud in clouds | filter:search">
 					<td>{{cloud.name}}</td>
 					<td>{{cloud.accountId}}</td>
 					<td>{{cloud.password}}</td>
