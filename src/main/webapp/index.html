@@ -47,11 +47,20 @@
 				<ul class="nav navbar-nav navbar-right">
 
 
-					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span class="glyphicon glyphicon-align-justify"></span>
-							<span translate="global.menu.apps">Apps</span>
+					<li ng-switch-when="true"><a href="/#/appimagecfg"> <span
+							class="glyphicon glyphicon-align-justify"></span> <span
+							translate="global.menu.apps">Apps</span>
 					</a></li>
-					<li ng-switch-when="false"><a href="http://cloudezz.tumblr.com"> <span class="glyphicon glyphicon-pencil"></span>
-							<span translate="global.menu.blog">Blog </span>
+
+					<li><a href="#/deploymentScript"><span
+							class="glyphicon glyphicon-tasks"></span> &nbsp;<span
+							translate="global.menu.account.deploymentScripts">Deployment
+								Scripts</span></a></li>
+
+					<li ng-switch-when="false"><a
+						href="http://cloudezz.tumblr.com"> <span
+							class="glyphicon glyphicon-pencil"></span> <span
+							translate="global.menu.blog">Blog </span>
 					</a></li>
 					<li ng-show="page == '/login'"><a href="#/signup"> <span
 							class="glyphicon glyphicon-file"></span> <span
@@ -85,13 +94,13 @@
 									translate="global.menu.account.imageinfo">Image Config</span></a></li>
 							<li><a href="#/dockerhostmachine"><span
 									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
-									translate="global.menu.account.dockerHostMachine">Host Machine Config</span></a></li>
-							<li><a href="#/deploymentScript"><span
-									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
-									translate="global.menu.account.deploymentScripts">Deployment Scripts</span></a></li>
+									translate="global.menu.account.dockerHostMachine">Host
+										Machine Config</span></a></li>
 						</ul></li>
-					<li ng-switch-when="true"><a href="/#/accountSettings"> <span class="glyphicon glyphicon-cog"></span>
-							<span translate="global.menu.accountsettings.main">Account Settings</span>
+					<li ng-switch-when="true" ng-show="hasRole(&apos;ROLE_ADMIN&apos;)"><a href="/#/accountSettings"> <span
+							class="glyphicon glyphicon-cog"></span> <span
+							translate="global.menu.accountsettings.main">Account
+								Settings</span>
 					</a></li>
 					<li ng-show="authenticated == true"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#"> <span> <span
@@ -121,6 +130,7 @@
 			</div>
 		</div>
 	</div>
+
 
 	<div ng-view="" class="container" style="margin-top: 40px;"></div>
 

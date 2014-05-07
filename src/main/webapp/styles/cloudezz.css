@@ -597,7 +597,17 @@ table th {
 	border: 1px solid;
 	border-color: #D8D8D8;
 	padding: 10px;
-	height: 180px;
+	height: 160px;
 	margin-left: 0px;
 	margin-right: 0px;
+}
+
+.runscript_box{
+	/* border-top : 1px solid #D8D8D8; */
+	border-bottom : 1px solid #D8D8D8;
+	border-left : 1px solid #D8D8D8;
+	border-right : 1px solid #D8D8D8;
+	padding:20px;
+	border-radius:3px;
+	margin-bottom:10px;
 }

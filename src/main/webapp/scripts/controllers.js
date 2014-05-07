@@ -66,9 +66,21 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
         };
     }]);
 
-houstonApp.controller('AccountSettingsController', ['$scope',
-		 function ($scope) {
+houstonApp.controller('AccountSettingsController', ['$scope', 'Cloud',
+		 function ($scope, Cloud) {
 	$scope.selection = "views/cloud.html";
+	$scope.cloud = Account.get();
+	$scope.clouds = Cloud.query();
+	
+	$scope.create = function () {
+		Cloud.save($scope.cloud,
+				function () {
+			Cloud.query(function (data) {
+				$scope.clouds = data;
+			});
+		});
+	};
+	
 	
 }]);
 
@@ -283,11 +295,15 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
 	    	}
 	    	var appImageCfgs = appimagecfg.appImageCfgs;
 	    	for(var m=0; m<appImageCfgs.length; m++){
-	    		appImageCfgs[m]['links'] = serviceToURLmap[appImageCfgs[m].containerId + "_" + appImageCfgs[m].instanceNo];
+	    		if(appImageCfgs[m].container){
+	    			appImageCfgs[m]['links'] = serviceToURLmap[appImageCfgs[m].container.containerId + "_" + appImageCfgs[m].instanceNo];
+	    		}
 	    	}
 	    	var serImageCfgs = appimagecfg.serviceImageCfgs;
 	    	for(var n=0; n<serImageCfgs.length; n++){
-	    		serImageCfgs[n]['links'] = serviceToURLmap[serImageCfgs[n].containerId + "_" + serImageCfgs[n].instanceNo];
+	    		if(serImageCfgs[n].container){
+	    			serImageCfgs[n]['links'] = serviceToURLmap[serImageCfgs[n].container.containerId + "_" + serImageCfgs[n].instanceNo];
+	    		}
 	    	}
 			return appimagecfg;
 		}

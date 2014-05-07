@@ -41,7 +41,7 @@
 									<li ng-repeat="link in appImageCfg.links"><a
 										href="javascript:;" ng-click="openService(link.value)">{{link.key}}_{{appImageCfg.instanceNo}}</a></li>
 									<li><a href="javascript:;"
-										ng-click="openTerminal(appImageCfg.containerId)">Logs_{{appImageCfg.instanceNo}}</a></li>
+										ng-click="openTerminal(appImageCfg.container.containerId)">Logs_{{appImageCfg.instanceNo}}</a></li>
 								</ul>
 							</span>
 						</div>
@@ -56,7 +56,7 @@
 									<li ng-repeat="link in serviceImageCfg.links"><a
 										href="javascript:;" ng-click="openService(link.value)">{{link.key}}_{{serviceImageCfg.instanceNo}}</a></li>
 									<li><a href="javascript:;"
-										ng-click="openTerminal(serviceImageCfg.containerId)">Logs_{{serviceImageCfg.instanceNo}}</a></li>
+										ng-click="openTerminal(serviceImageCfg.container.containerId)">Logs_{{serviceImageCfg.instanceNo}}</a></li>
 								</ul>
 							</span>
 						</div>
