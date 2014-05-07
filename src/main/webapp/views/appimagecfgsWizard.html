@@ -198,7 +198,7 @@
 						<label>Description</label>
 						<textarea ng-model="appDTO.desc" name="desc" id="desc"
 							required="true" ng-required="true" ng-minlength="0"
-							class="form-control" style="height: 300px;"
+							class="form-control" style="height: 100px;"
 							font-size: 14px"
 							spellcheck="false"></textarea>
 					</div>
@@ -210,23 +210,6 @@
 
 				<div class="wizard-card" data-cardname="card3" id="formDiv">
 					<h3 hidden="true">Environment</h3>
-				</div>
-
-				<div class="wizard-card" data-cardname="card4">
-					<h3 hidden="true">Initialization Script</h3>
-					<div class="wizard-input-section">
-						<label>Init Shell Script</label>
-						<textarea ng-model="appImageCfgDTO.initScript" name="initScript"
-							id="initScript" required="true" ng-required="true"
-							ng-minlength="0" class="form-control" style="height: 300px;"
-							font-size: 14px"
-							spellcheck="false"></textarea>
-						<div align="left" style="margin-bottom: 10px; padding-top: 20px">
-							<button class="btn btn-primary btn-md" id="restoreScriptBtn"
-								ng-click="restoreDefaultScript();">Restore Default
-								Script</button>
-						</div>
-					</div>
 				</div>
 
 				<div class="wizard-card" data-cardname="card5">

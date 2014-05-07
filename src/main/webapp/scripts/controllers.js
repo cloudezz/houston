@@ -66,8 +66,8 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
         };
     }]);
 
-houstonApp.controller('AccountSettingsController', ['$scope', 'Cloud',
-		 function ($scope, Cloud) {
+houstonApp.controller('AccountSettingsController', ['$scope','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
+		 function ($scope,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
 	$scope.selection = "views/cloud.html";
 	$scope.cloud = {};
 	$scope.clouds = Cloud.query();
@@ -81,6 +81,73 @@ houstonApp.controller('AccountSettingsController', ['$scope', 'Cloud',
 		});
 	};
 	
+	
+	/* for users tab */
+	
+	$scope.isOrgCreate=false;
+	$scope.isUserCreate=false;
+	$scope.isTeamCreate=false;	
+	
+	$scope.organisations=resolvedOrganisations;
+	$scope.users=resolvedUsers;
+	$scope.teams=resolvedTeams;
+	
+	$scope.createNewOrg =function(){
+		$scope.isOrgCreate=true;
+		$scope.isUserCreate=false;
+		$scope.isTeamCreate=false;
+	}
+	$scope.createOrganisation=function(){	
+		$scope.orgDTO={};
+		$scope.orgDTO.orgName=$("#orgName").val();
+		$scope.orgDTO.orgDesc=$("#orgDesc").val();
+		OrgInfo.save($scope.orgDTO,
+				function () {
+			OrgInfo.query(function (data) {
+				$scope.organisations=data;
+			});
+		});
+	}	
+	$scope.createNewUser =function(){
+		$scope.isOrgCreate=false;
+		$scope.isUserCreate=true;
+		$scope.isTeamCreate=false;
+	}
+	$scope.createUser=function(){	
+		$scope.userDTO={};
+		$scope.userDTO.firstName=$("#userFName").val();
+		$scope.userDTO.lastName=$("#userLName").val();
+		$scope.userDTO.email=$("#userEmail").val();
+		UserInfo.save($scope.userDTO,
+				function () {
+			UserInfo.query(function (data) {
+				$scope.users=data;
+			});
+		});
+	}
+	$scope.createNewTeam =function(){
+		$scope.isOrgCreate=false;
+		$scope.isUserCreate=false;
+		$scope.isTeamCreate=true;
+	}
+	$scope.createTeam=function(){	
+		$scope.teamDTO={};
+		$scope.teamDTO.teamName=$("#teamName").val();
+		$scope.teamDTO.teamDesc=$("#teamDesc").val();
+		$scope.teamDTO.teamOrg=$("#teamOrg").val();
+		TeamInfo.save($scope.teamDTO,
+				function () {
+			TeamInfo.query(function (data) {
+				$scope.teams=data;
+			});
+		});
+	}		
+	$scope.back=function(){
+		$scope.isOrgCreate=false;
+		$scope.isUserCreate=false;
+		$scope.isTeamCreate=false;
+	}
+	/* for users tab ends */
 	
 }]);
 
@@ -342,7 +409,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         				$scope.appimagecfgsRows[index1][index2] = formatAppImageConfig(updatedApp);
         			});
         			AppImageCfg.query(function (data) {
-						//$scope.appimagecfgs  = data;
+						// $scope.appimagecfgs = data;
 						AppConfigCommunicationService.setAppImgConfigs(data);
         			});
         		} else {
@@ -387,7 +454,7 @@ houstonApp.controller('AppImageCfgController', ['$rootScope','$scope', '$locatio
         				$scope.appimagecfgsRows[index1][index2] = formatAppImageConfig(updatedApp);
         			});
 	        		AppImageCfg.query(function (data) {
-						//$scope.appimagecfgs  = data;
+						// $scope.appimagecfgs = data;
 						AppConfigCommunicationService.setAppImgConfigs(data);
         			});
         		} else {
@@ -1321,16 +1388,19 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
         	$scope.files = files;
 			$("#uploadStatus").hide();
 			$("#uploadStatus").html("");
-			/*for (var i = 0; i < ArticleTab.files.length; i++){
-				setFileNameSize(ArticleTab.files[i].name, ArticleTab.files[i].size);
-		    }*/
+			/*
+			 * for (var i = 0; i < ArticleTab.files.length; i++){
+			 * setFileNameSize(ArticleTab.files[i].name,
+			 * ArticleTab.files[i].size); }
+			 */
         };
 
     	var sendFileToServer = function(formData, status){
     		$("#progressBar").show();
     		var url = document.URL;
     		var url1 = url.split("#")[0];
-    	    var uploadURL = url1 + "app/rest/deploymentScript/create"; //Upload URL
+    	    var uploadURL = url1 + "app/rest/deploymentScript/create"; // Upload
+																		// URL
     	    var jqXHR=$.ajax({
     	            xhr: function() {
     	            var xhrobj = $.ajaxSettings.xhr();
@@ -1342,7 +1412,7 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
     	                        if (event.lengthComputable) {
     	                            percent = Math.ceil(position / total * 100);
     	                        }
-    	                        //Set progress
+    	                        // Set progress
     	                        status.setProgress(percent);
     	                    }, false);
     	                }
@@ -1391,7 +1461,8 @@ houstonApp.controller('DeploymentScriptController', ['$scope','$rootScope', 'res
     	        fd.append('scriptName', scriptName);
     	        fd.append('description', description);
     	 
-    	        var status = new createStatusbar(); //Using this we can set progress.
+    	        var status = new createStatusbar(); // Using this we can set
+													// progress.
     	        sendFileToServer(fd, status);
     	   }
         };
@@ -1730,3 +1801,4 @@ houstonApp.controller('DockerHostMachineController', ['$scope', 'resolvedDockerH
                                                               $scope.dockerhostmachine = {};
                                                           };
                                                       }]);
+

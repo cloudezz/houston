@@ -1,16 +1,24 @@
-<div class="container" style="width:100%;">
+<div class="container" style="margin-top: 20px;">
 	<div id="orgViewDiv">
 		<tabset> <tab heading="Organisation">
-		<div style="margin-bottom: 10px; margin-top: 30px;">			
+		<div style="margin-bottom: 10px; margin-top: 30px;">
+			<!-- <ol class="ab-nav breadcrumb">
+				<li
+					ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path"
+					ng-class="{ active: $last }"><a ng-if="!$last"
+					ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label"
+					class="margin-right-xs"></a> <span ng-if="$last"
+					ng-bind="breadcrumb.label"></span></li>
+			</ol> -->
 		</div>
-		<div ng-show="!isOrgCreate" style="background-color: #F8F8F8;">
+		<div ng-show="!isOrgCreate">
 			<div style="margin-bottom: 10px;">
 				<a ng-click="createNewOrg();" class="btn btn-xxl"
 					data-toggle="modal"><span class="glyphicon glyphicon-flash">
 				</span>Create New</a> <input class="col-lg-4 pull-right search-box"
 					placeholder="Search" type="text" ng-model="search">
 			</div>
-			<table class="table table-hover"
+			<table class="table-hover table-bordered"
 				style="width: 100%; margin-bottom: 10px;">
 				<thead>
 					<tr style="height: 40px">
@@ -19,14 +27,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="org in organisations | filter:search" style="height:35px;">
+					<tr ng-repeat="org in organisations | filter:search">
 						<td>{{org.orgName}}</td>
 						<td>{{org.orgDesc}}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div id="orgCreateView" ng-show="isOrgCreate" style="background-color: #F8F8F8;">
+		<div id="orgCreateView" ng-show="isOrgCreate" class="createFormClass">
 			<button class="btn btn-primary btn-sm"
 				translate="usermanage.form.backBtn" ng-click="back();"
 				style="margin-top: 10px; margin-bottom: 10px;">Back</button>
@@ -49,8 +57,16 @@
 		</div>
 		</tab> <tab heading="User">
 		<div id="
-			inpDiv" style="margin-bottom: 10px; margin-top: 30px;">			
-			<div ng-show="!isUserCreate" style="background-color: #F8F8F8;">
+			inpDiv" style="margin-bottom: 10px; margin-top: 30px;">
+			<!-- <ol class="ab-nav breadcrumb">
+			<li
+				ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path"
+				ng-class="{ active: $last }"><a ng-if="!$last"
+				ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label"
+				class="margin-right-xs"></a> <span ng-if="$last"
+				ng-bind="breadcrumb.label"></span></li>
+		</ol> -->
+			<div ng-show="!isUserCreate">
 				<div style="margin-bottom: 10px;">
 					<a ng-click="createNewUser();" class="btn btn-xxl"
 						data-toggle="modal"><span class="glyphicon glyphicon-flash">
@@ -58,7 +74,7 @@
 						placeholder="Search" type="text" ng-model="search">
 				</div>
 
-				<table class="table table-hover"
+				<table class="table-hover table-bordered"
 					style="width: 100%; margin-bottom: 10px;">
 					<thead>
 						<tr style="height: 40px">
@@ -75,7 +91,7 @@
 				</table>
 			</div>
 			<div id="usrCreateView" ng-show="isUserCreate"
-				style="background-color: #F8F8F8;">
+				class="createFormClass">
 				<button class="btn btn-primary btn-sm"
 					translate="usermanage.form.backBtn" ng-click="back();"
 					style="margin-top: 10px; margin-bottom: 10px;">Back</button>
@@ -105,7 +121,15 @@
 		</div>
 		</tab> <tab heading="Team">
 		<div style="margin-bottom: 10px; margin-top: 30px;">
-			<div ng-show="!isTeamCreate" style="background-color: #F8F8F8;">
+			<!-- <ol class="ab-nav breadcrumb">
+		<li
+			ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path"
+			ng-class="{ active: $last }"><a ng-if="!$last"
+			ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label"
+			class="margin-right-xs"></a> <span ng-if="$last"
+			ng-bind="breadcrumb.label"></span></li>
+	</ol> -->
+			<div ng-show="!isTeamCreate">
 				<div style="margin-bottom: 10px;">
 					<a ng-click="createNewTeam();" class="btn btn-xxl"
 						data-toggle="modal"><span class="glyphicon glyphicon-flash">
@@ -113,7 +137,7 @@
 						placeholder="Search" type="text" ng-model="search">
 				</div>
 				<div>
-					<table class="table table-hover"
+					<table class="table-hover table-bordered"
 						style="width: 100%; margin-bottom: 10px;">
 						<thead>
 							<tr style="height: 40px">
@@ -133,7 +157,7 @@
 				</div>
 			</div>
 			<div id="teamCreateView" ng-show="isTeamCreate"
-				style="background-color: #F8F8F8;">
+				class="createFormClass">
 				<button class="btn btn-primary btn-sm"
 					translate="usermanage.form.backBtn" ng-click="back();"
 					style="margin-top: 10px; margin-bottom: 10px;">Back</button>

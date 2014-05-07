@@ -346,6 +346,45 @@ houstonApp.factory('ServiceImageCfg', [ '$resource', function($resource) {
 		}
 	});
 } ]);
+
+houstonApp.factory('OrgInfo', [ '$resource', function($resource) {
+	return $resource('app/rest/organisation', {}, {
+		'query' : {
+			method : 'GET',
+			isArray : true
+		},
+		'get' : {
+			method : 'GET'
+		}
+	});
+} ]);
+
+houstonApp.factory('UserInfo', [ '$resource', function($resource) {
+	return $resource('app/rest/users', {}, {
+		'query' : {
+			method : 'GET',
+			isArray : true
+		},
+		'get' : {
+			method : 'GET'
+		}
+	});
+} ]);
+
+houstonApp.factory('TeamInfo', [ '$resource', function($resource) {
+	return $resource('app/rest/team', {}, {
+		'query' : {
+			method : 'GET',
+			isArray : true
+		},
+		'get' : {
+			method : 'GET'
+		}
+	});
+} ]);
+
+
+
 houstonApp.factory('uploadManager', function($rootScope, $http) {
 	var _files = [];
 	return {

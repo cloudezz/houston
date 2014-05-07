@@ -4,51 +4,72 @@ import java.util.Map;
 
 public class UserDTO {
 
-    private final String login;
-    
-    private final String firstName;
-    
-    private final String lastName;
-    
-    private final String email;
+  private String login;
 
-    private final Map<String, Boolean> roles;
+  private String firstName;
 
-    public UserDTO(String login, String firstName, String lastName, String email, Map<String, Boolean> roles) {
-        this.login = login;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.roles = roles;
-    }
+  private String lastName;
 
-    public String getLogin() {
-        return login;
-    }
+  private String email;
 
-    public String getFirstName() {
-        return firstName;
-    }
+  private Map<String, Boolean> roles;
 
-    public String getLastName() {
-        return lastName;
-    }
+  public UserDTO(String login, String firstName, String lastName, String email,
+      Map<String, Boolean> roles) {
+    this.login = login;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.roles = roles;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setLogin(String login) {
+    this.login = login;
+  }
 
-    public Map<String, Boolean> getRoles() {
-        return roles;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "email='" + email + '\'' +
-                ", login='" + login + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public void setRoles(Map<String, Boolean> roles) {
+    this.roles = roles;
+  }
+
+  public UserDTO() {
+    super();
+  }
+
+  public String getLogin() {
+    return login;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public Map<String, Boolean> getRoles() {
+    return roles;
+  }
+
+  @Override
+  public String toString() {
+    return "UserDTO{" + "email='" + email + '\'' + ", login='" + login + '\'' + ", firstName='"
+        + firstName + '\'' + ", lastName='" + lastName + '\'' + '}';
+  }
 }

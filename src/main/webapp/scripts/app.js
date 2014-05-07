@@ -23,7 +23,18 @@ houstonApp
                 })
                 .when('/accountSettings', {
                     templateUrl: 'views/accountSettings.html',
-                    controller: 'AccountSettingsController'
+                    controller: 'AccountSettingsController' ,
+                    resolve:{
+                    	resolvedOrganisations: ['OrgInfo', function (OrgInfo) {
+                            return OrgInfo.query();
+                        }],
+                        resolvedUsers: ['UserInfo', function (UserInfo) {
+                            return UserInfo.query();
+                        }],
+                        resolvedTeams: ['TeamInfo', function (TeamInfo) {
+                            return TeamInfo.query();
+                        }]
+                    }
                 })
                 .when('/password', {
                     templateUrl: 'views/password.html',
@@ -124,7 +135,7 @@ houstonApp
                             return DockerHostMachine.query();
                         }]
                     }
-                })          
+                })         
                 .otherwise({
                     templateUrl: 'views/main.html',
                     controller: 'MainController'

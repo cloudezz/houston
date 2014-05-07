@@ -267,7 +267,26 @@
                 "remoteAddress": "Remote Address:"
             }
         }
-
+    },
+    "usermanage":{
+    	"organisation":{ 
+    		"name":"Name",
+    		"desc":"Description"
+    	},
+    	"team":{ 
+    		"name":"Name",
+    		"desc":"Description",
+    		"org":"Organisation"
+    	},
+    	"user":{ 
+    		"firstname":"First Name",
+    		"lastname":"Last Name",
+    		"email":"Email"
+    	},
+    	"form":{
+    		"saveBtn":"Save",
+    		"backBtn":"Back"
+    	}
     },
     "footer": "This is your footer"
 }
