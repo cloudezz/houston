@@ -9,7 +9,15 @@
             "blog": "Blog",
             "login": "Login",
             "signup": "Signup",
-            "accountSettings": "Account Settings",
+            "accountsettings": {
+            	"main" : "Account Settings",
+            	"list" : {
+            		"cloud": "Cloud",
+            		"users": "Users",
+            		"permissions": "Permissions",
+            		"datasources": "Datasources"
+            	}
+            },
             "account": {
                 "main": "Account",
                 "settings": "Settings",
