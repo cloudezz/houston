@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.cloudezz.houston.deployer.docker.model.HostConfig;
@@ -29,6 +31,8 @@ public abstract class BaseImageCfg extends BaseEntity {
 
   private static final long serialVersionUID = 5524208892445624915L;
 
+  @OneToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+  @JoinColumn(name = "container")
   protected Container container;
 
   @Column(name = "instance_no")
