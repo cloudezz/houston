@@ -1,0 +1,20 @@
+
+<div>
+	<div class="col-lg-6" style="margin-top: 20px; margin-left: -50px;">
+		<ul class="nav nav-pills nav-stacked"
+			style="max-width: 300px; background-color: #F8F8F8">
+			<li ng-class="{'active' : selection == 'views/cloud.html'}"><a
+				href="javascript:;" ng-click="selection = 'views/cloud.html'">Cloud</a></li>
+			<li ng-class="{'active' : selection == 'views/users.html'}"><a
+				href="javascript:;" ng-click="selection = 'views/users.html'">Users</a></li>
+			<li ng-class="{'active' : selection == 'views/permissions.html'}"><a
+				href="javascript:;" ng-click="selection = 'views/permissions.html'">Permissions</a></li>
+			<li ng-class="{'active' : selection == 'views/datasources.html'}"><a
+				href="javascript:;" ng-click="selection = 'views/datasources.html'">Datasources</a></li>
+		</ul>
+	</div>
+
+	<div class="col-lg-6" style="margin-top: 20px;">
+		<div ng-include src="selection"></div>
+	</div>
+</div>

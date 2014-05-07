@@ -90,11 +90,14 @@
 									class="glyphicon glyphicon-tasks"></span> &nbsp;<span
 									translate="global.menu.account.deploymentScripts">Deployment Scripts</span></a></li>
 						</ul></li>
+					<li ng-switch-when="true"><a href="/#/accountSettings"> <span class="glyphicon glyphicon-cog"></span>
+							<span translate="global.menu.accountSettings">Account Settings</span>
+					</a></li>
 					<li ng-show="authenticated == true"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#"> <span> <span
 								class="glyphicon glyphicon-user"></span> <span
 								class="hidden-tablet" translate="global.menu.account.main">
-									Account </span> <b class="caret"></b>
+									{{account.email}} </span> <b class="caret"></b>
 						</span>
 					</a>
 						<ul class="dropdown-menu" ng-controller="MenuController">

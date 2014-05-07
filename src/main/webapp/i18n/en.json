@@ -9,6 +9,7 @@
             "blog": "Blog",
             "login": "Login",
             "signup": "Signup",
+            "accountSettings": "Account Settings",
             "account": {
                 "main": "Account",
                 "settings": "Settings",

@@ -21,6 +21,10 @@ houstonApp
                     templateUrl: 'views/settings.html',
                     controller: 'SettingsController'
                 })
+                .when('/accountSettings', {
+                    templateUrl: 'views/accountSettings.html',
+                    controller: 'AccountSettingsController'
+                })
                 .when('/password', {
                     templateUrl: 'views/password.html',
                     controller: 'PasswordController'

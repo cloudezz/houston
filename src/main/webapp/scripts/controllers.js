@@ -66,6 +66,12 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
         };
     }]);
 
+houstonApp.controller('AccountSettingsController', ['$scope',
+		 function ($scope) {
+	$scope.selection = "views/cloud.html";
+	
+}]);
+
 houstonApp.controller('PasswordController', ['$scope', 'Password',
     function ($scope, Password) {
         $scope.success = null;
