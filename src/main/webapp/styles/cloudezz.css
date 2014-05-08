@@ -157,6 +157,15 @@ table th {
 	padding: 9px 28px;
 }
 
+.btn-med{
+	background-color: #0088CC;
+    border-color: #0088CC;
+    color: #FFFFFF;
+    height: 2.5em;
+    padding: 9px 28px;
+    width: 11em;
+}
+
 .btn-danger {
 	background-color: #FF807A;
 	border-color: #EA2F10;
@@ -610,4 +619,8 @@ table th {
 	padding:20px;
 	border-radius:3px;
 	margin-bottom:10px;
+}
+.usrDivStyle{
+	padding:15px;
+    /* background-color: #F8F8F8; */
 }
