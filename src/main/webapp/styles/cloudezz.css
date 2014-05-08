@@ -140,6 +140,15 @@ table th {
 	text-align: center;
 }
 
+table.inner-table th{
+	font-weight: bold;
+	font-size: 12px;
+}
+
+table.inner-table{
+	font-size: 12px;
+}
+
 .btn-big-signup {
 	background-color: #48CAB0;
 	border-color: #48CAB0;
