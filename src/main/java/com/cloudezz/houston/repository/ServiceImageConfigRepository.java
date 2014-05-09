@@ -13,7 +13,7 @@ import com.cloudezz.houston.domain.ServiceImageCfg;
  */
 public interface ServiceImageConfigRepository extends JpaRepository<ServiceImageCfg, String> {
   
-  @Query("SELECT serviceImageCfgs FROM ServiceImageCfg serviceImageCfgs WHERE serviceImageCfgs.id IN (:ids)")
+  @Query("SELECT serviceImageCfgs FROM ServiceImageCfg serviceImageCfgs WHERE serviceImageCfgs.id IN :ids")
   public List<ServiceImageCfg> getByIds(@Param("ids") List<String> ids);
   
 }
