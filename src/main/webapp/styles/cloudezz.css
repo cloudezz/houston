@@ -140,6 +140,15 @@ table th {
 	text-align: center;
 }
 
+table.inner-table th{
+	font-weight: bold;
+	font-size: 12px;
+}
+
+table.inner-table{
+	font-size: 12px;
+}
+
 .btn-big-signup {
 	background-color: #48CAB0;
 	border-color: #48CAB0;
@@ -155,6 +164,15 @@ table th {
 	width: 15em;
 	height: 3em;
 	padding: 9px 28px;
+}
+
+.btn-med{
+	background-color: #0088CC;
+    border-color: #0088CC;
+    color: #FFFFFF;
+    height: 2.5em;
+    padding: 9px 28px;
+    width: 11em;
 }
 
 .btn-danger {
@@ -610,4 +628,8 @@ table th {
 	padding:20px;
 	border-radius:3px;
 	margin-bottom:10px;
+}
+.usrDivStyle{
+	padding:15px;
+    /* background-color: #F8F8F8; */
 }

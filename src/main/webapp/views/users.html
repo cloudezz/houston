@@ -1,16 +1,16 @@
-<div class="container" style="width:100%;">
+<div class="container" style="width: 100%;">
 	<div id="orgViewDiv">
 		<tabset> <tab heading="Organisation">
-		<div style="margin-bottom: 10px; margin-top: 30px;">			
-		</div>
-		<div ng-show="!isOrgCreate" style="background-color: #F8F8F8;">
+		<div style="margin-bottom: 10px; margin-top: 10px;"></div>
+		<div ng-show="!isOrgCreate" class="usrDivStyle">
 			<div style="margin-bottom: 10px;">
-				<a ng-click="createNewOrg();" class="btn btn-xxl"
-					data-toggle="modal"><span class="glyphicon glyphicon-flash">
-				</span>Create New</a> <input class="col-lg-4 pull-right search-box"
-					placeholder="Search" type="text" ng-model="search">
+				<input class="col-lg-4 pull-right search-box" placeholder="Search"
+					type="text" ng-model="search"> <a
+					ng-click="createNewOrg();" class="btn btn-med" data-toggle="modal"><span
+					class="glyphicon glyphicon-flash"> </span>Create New</a>
 			</div>
-			<table class="table table-hover"
+			<table
+				class="table table-condensed table-striped table-bordered table-responsive"
 				style="width: 100%; margin-bottom: 10px;">
 				<thead>
 					<tr style="height: 40px">
@@ -19,17 +19,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="org in organisations | filter:search" style="height:35px;">
+					<tr ng-repeat="org in organisations | filter:search"
+						style="height: 35px;">
 						<td>{{org.orgName}}</td>
 						<td>{{org.orgDesc}}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div id="orgCreateView" ng-show="isOrgCreate" style="background-color: #F8F8F8;">
+		<div id="orgCreateView" ng-show="isOrgCreate" class="usrDivStyle">
 			<button class="btn btn-primary btn-sm"
-				translate="usermanage.form.backBtn" ng-click="back();"
-				style="margin-top: 10px; margin-bottom: 10px;">Back</button>
+				translate="usermanage.form.backBtn" ng-click="back();">Back</button>
 			<form name="orgCreateForm" role="form" novalidate
 				ng-submit="createOrganisation();">
 				<div class="form-group">
@@ -42,23 +42,26 @@
 					<input type="text" class="form-control" id="orgDesc"
 						ng-model="orgDTO.orgDesc" ng-minlength=5 ng-maxlength=50 required>
 				</div>
+
 				<button type="submit" class="btn btn-primary btn-sm"
 					translate="usermanage.form.saveBtn">Save</button>
+
 			</form>
 
 		</div>
 		</tab> <tab heading="User">
 		<div id="
-			inpDiv" style="margin-bottom: 10px; margin-top: 30px;">			
-			<div ng-show="!isUserCreate" style="background-color: #F8F8F8;">
+			inpDiv" style="margin-bottom: 10px; margin-top: 10px;">
+			<div ng-show="!isUserCreate" class="usrDivStyle">
 				<div style="margin-bottom: 10px;">
-					<a ng-click="createNewUser();" class="btn btn-xxl"
+					<input class="col-lg-4 pull-right search-box" placeholder="Search"
+						type="text" ng-model="search"> <a
+						ng-click="createNewUser();" class="btn btn-med"
 						data-toggle="modal"><span class="glyphicon glyphicon-flash">
-					</span>Create New</a> <input class="col-lg-4 pull-right search-box"
-						placeholder="Search" type="text" ng-model="search">
+					</span>Create New</a>
 				</div>
 
-				<table class="table table-hover"
+				<table class="table table-condensed table-striped table-bordered table-responsive"
 					style="width: 100%; margin-bottom: 10px;">
 					<thead>
 						<tr style="height: 40px">
@@ -75,10 +78,9 @@
 				</table>
 			</div>
 			<div id="usrCreateView" ng-show="isUserCreate"
-				style="background-color: #F8F8F8;">
+				class="usrDivStyle">
 				<button class="btn btn-primary btn-sm"
-					translate="usermanage.form.backBtn" ng-click="back();"
-					style="margin-top: 10px; margin-bottom: 10px;">Back</button>
+					translate="usermanage.form.backBtn" ng-click="back();">Back</button>
 				<form name="usrCreateForm" role="form" novalidate
 					ng-submit="createUser();">
 					<div class="form-group">
@@ -104,16 +106,17 @@
 			</div>
 		</div>
 		</tab> <tab heading="Team">
-		<div style="margin-bottom: 10px; margin-top: 30px;">
-			<div ng-show="!isTeamCreate" style="background-color: #F8F8F8;">
+		<div style="margin-bottom: 10px; margin-top: 10px;">
+			<div ng-show="!isTeamCreate" class="usrDivStyle">
 				<div style="margin-bottom: 10px;">
-					<a ng-click="createNewTeam();" class="btn btn-xxl"
+					<input class="col-lg-4 pull-right search-box" placeholder="Search"
+						type="text" ng-model="search"> <a
+						ng-click="createNewTeam();" class="btn btn-med"
 						data-toggle="modal"><span class="glyphicon glyphicon-flash">
-					</span>Create New</a> <input class="col-lg-4 pull-right search-box"
-						placeholder="Search" type="text" ng-model="search">
+					</span>Create New</a>
 				</div>
 				<div>
-					<table class="table table-hover"
+					<table class="table table-condensed table-striped table-bordered table-responsive"
 						style="width: 100%; margin-bottom: 10px;">
 						<thead>
 							<tr style="height: 40px">
@@ -133,10 +136,9 @@
 				</div>
 			</div>
 			<div id="teamCreateView" ng-show="isTeamCreate"
-				style="background-color: #F8F8F8;">
+				class="usrDivStyle">
 				<button class="btn btn-primary btn-sm"
-					translate="usermanage.form.backBtn" ng-click="back();"
-					style="margin-top: 10px; margin-bottom: 10px;">Back</button>
+					translate="usermanage.form.backBtn" ng-click="back();">Back</button>
 				<form name="tmCreateForm" role="form" novalidate
 					ng-submit="createTeam();">
 					<div class="form-group">

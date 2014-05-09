@@ -1,7 +1,9 @@
-<div>
-	<div class="col-lg-4" style="margin-top: 20px; margin-left: -50px;">
+<div class="row" style="font-size: 12px;">
+	<div class="col-lg-3" style="margin-top: 20px;">
+		<!-- <div class="row">
+	<div class="col-lg-4" style="margin-top: 20px;"> -->
 		<ul class="nav nav-pills nav-stacked"
-			style="max-width: 300px; background-color: #F8F8F8">
+			style="width: 100%; background-color: #F8F8F8">
 			<li ng-class="{'active' : selection == 'views/cloud.html'}"><a
 				href="javascript:;" ng-click="selection = 'views/cloud.html'"><span
 					class="glyphicon glyphicon-cloud"></span> &nbsp;<span
@@ -21,7 +23,7 @@
 		</ul>
 	</div>
 
-	<div class="col-lg-8" style="margin-top: 20px;">
+	<div class="col-lg-9" style="margin-top: 20px; background-color: #F8F8F8; font-size: 12px; min-height: 550px;">
 		<div ng-include src="selection"></div>
 	</div>
 </div>

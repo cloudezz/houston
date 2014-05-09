@@ -3,9 +3,13 @@ package com.cloudezz.houston.web.rest;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,15 +44,9 @@ public class CloudResource {
   /**
    * POST /rest/cloud -> post the cloud.
    */
-  @RequestMapping(value = "/rest/cloud", method = RequestMethod.POST, produces = "application/json")
+  @RequestMapping(value = "/rest/cloud", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
   @Timed
-  public Cloud getCloud(@RequestParam("name") String name,
-      @RequestParam("accountId") String accountId, @RequestParam("password") String password) {
-    Cloud cloud = new Cloud();
-    cloud.setName(name);
-    cloud.setId(name);
-    cloud.setPassword(password);
-    cloud.setAccountId(accountId);
+  public Cloud saveCloud(@RequestBody Cloud cloud) {
     cloud = cloudRepository.save(cloud);
     return cloud;
   }

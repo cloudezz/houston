@@ -69,10 +69,12 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
 houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
 		 function ($scope,Cloud,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
 	$scope.selection = "views/cloud.html";
-	$scope.cloud = {};
 	$scope.clouds = Cloud.query();
 	
+	$scope.names =[{name : "Amazon cloud", value : "amazon"},	{name : "Rackspace", value : "rackspace"}, {name : "Google cloud", value : "google"}];
+	$scope.cloud = new Object();
 	$scope.create = function () {
+		$('#saveCloudModal').modal('hide');
 		Cloud.save($scope.cloud,
 				function () {
 			Cloud.query(function (data) {
