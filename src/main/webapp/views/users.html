@@ -1,57 +1,76 @@
 <div class="container" style="width: 100%;">
 	<div id="orgViewDiv">
-		<tabset> <tab heading="Organisation">
-		<div style="margin-bottom: 10px; margin-top: 10px;"></div>
-		<div ng-show="!isOrgCreate" class="usrDivStyle">
-			<div style="margin-bottom: 10px;">
-				<input class="col-lg-4 pull-right search-box" placeholder="Search"
-					type="text" ng-model="search"> <a
-					ng-click="createNewOrg();" class="btn btn-med" data-toggle="modal"><span
-					class="glyphicon glyphicon-flash"> </span>Create New</a>
+		<tabset> <tab heading="Organisation"
+			select="onOrgTabSelect();">
+		<div id="bcDiv" style="margin-top: 10px">
+			<ol class="breadcrumb" id="orgBc">
+				<li ng-repeat="breadcrumb in breadcrumbs"><div
+						ng-if="breadcrumb.jsFn == ''">{{breadcrumb.text}}</div>
+					<div ng-if="breadcrumb.jsFn != ''">
+						<a href="javascript:;" ng-click="back();">{{breadcrumb.text}}</a>
+						<span class="divider">/</span>
+					</div></li>
+			</ol>
+		</div>
+		<div style="margin-bottom: 10px;">
+			<div ng-show="!isOrgCreate" class="usrDivStyle">
+				<div style="margin-bottom: 10px;">
+					<input class="col-lg-4 pull-right search-box" placeholder="Search"
+						type="text" ng-model="search"> <a
+						ng-click="createNewOrg();" class="btn btn-med" data-toggle="modal"><span
+						class="glyphicon glyphicon-flash"> </span>Create New</a>
+				</div>
+				<table
+					class="table table-condensed table-striped table-bordered table-responsive inner-table"
+					style="width: 100%; margin-bottom: 10px;">
+					<thead>
+						<tr style="height: 40px">
+							<th>Name</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="org in organisations | filter:search"
+							style="height: 35px;">
+							<td>{{org.orgName}}</td>
+							<td>{{org.orgDesc}}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<table
-				class="table table-condensed table-striped table-bordered table-responsive"
-				style="width: 100%; margin-bottom: 10px;">
-				<thead>
-					<tr style="height: 40px">
-						<th>Name</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="org in organisations | filter:search"
-						style="height: 35px;">
-						<td>{{org.orgName}}</td>
-						<td>{{org.orgDesc}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div id="orgCreateView" ng-show="isOrgCreate" class="usrDivStyle">
+				<form name="orgCreateForm" role="form" novalidate
+					ng-submit="createOrganisation();">
+					<div class="form-group">
+						<label translate="usermanage.organisation.name">Name</label> <input
+							type="text" class="form-control" id="orgName"
+							ng-model="orgDTO.orgName" ng-minlength=5 ng-maxlength=50 required>
+					</div>
+					<div class="form-group">
+						<label translate="usermanage.organisation.desc">Description</label>
+						<input type="text" class="form-control" id="orgDesc"
+							ng-model="orgDTO.orgDesc" ng-minlength=5 ng-maxlength=50 required>
+					</div>
+					<button type="submit" class="btn btn-primary btn-sm"
+						translate="usermanage.form.saveBtn">Save</button>
+
+				</form>
+
+			</div>
 		</div>
-		<div id="orgCreateView" ng-show="isOrgCreate" class="usrDivStyle">
-			<button class="btn btn-primary btn-sm"
-				translate="usermanage.form.backBtn" ng-click="back();">Back</button>
-			<form name="orgCreateForm" role="form" novalidate
-				ng-submit="createOrganisation();">
-				<div class="form-group">
-					<label translate="usermanage.organisation.name">Name</label> <input
-						type="text" class="form-control" id="orgName"
-						ng-model="orgDTO.orgName" ng-minlength=5 ng-maxlength=50 required>
-				</div>
-				<div class="form-group">
-					<label translate="usermanage.organisation.desc">Description</label>
-					<input type="text" class="form-control" id="orgDesc"
-						ng-model="orgDTO.orgDesc" ng-minlength=5 ng-maxlength=50 required>
-				</div>
-
-				<button type="submit" class="btn btn-primary btn-sm"
-					translate="usermanage.form.saveBtn">Save</button>
-
-			</form>
-
+		</tab> <tab heading="User" select="onUserTabSelect();">
+		<div id="bcDiv" style="margin-top: 10px">
+			<ol class="breadcrumb" id="userBc">
+				<li ng-repeat="breadcrumb in breadcrumbs"><div
+						ng-if="breadcrumb.jsFn == ''">{{breadcrumb.text}}</div>
+					<div ng-if="breadcrumb.jsFn != ''">
+						<a href="javascript:;" ng-click="back();">{{breadcrumb.text}}</a>
+						<span class="divider">/</span>
+					</div></li>
+			</ol>
 		</div>
-		</tab> <tab heading="User">
 		<div id="
-			inpDiv" style="margin-bottom: 10px; margin-top: 10px;">
+			inpDiv" style="margin-bottom: 10px;">
 			<div ng-show="!isUserCreate" class="usrDivStyle">
 				<div style="margin-bottom: 10px;">
 					<input class="col-lg-4 pull-right search-box" placeholder="Search"
@@ -61,7 +80,8 @@
 					</span>Create New</a>
 				</div>
 
-				<table class="table table-condensed table-striped table-bordered table-responsive"
+				<table
+					class="table table-condensed table-striped table-bordered table-responsive inner-table"
 					style="width: 100%; margin-bottom: 10px;">
 					<thead>
 						<tr style="height: 40px">
@@ -77,10 +97,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="usrCreateView" ng-show="isUserCreate"
-				class="usrDivStyle">
-				<button class="btn btn-primary btn-sm"
-					translate="usermanage.form.backBtn" ng-click="back();">Back</button>
+			<div id="usrCreateView" ng-show="isUserCreate" class="usrDivStyle">
 				<form name="usrCreateForm" role="form" novalidate
 					ng-submit="createUser();">
 					<div class="form-group">
@@ -105,8 +122,18 @@
 				</form>
 			</div>
 		</div>
-		</tab> <tab heading="Team">
-		<div style="margin-bottom: 10px; margin-top: 10px;">
+		</tab> <tab heading="Team" select="onTeamTabSelect();">
+		<div id="bcDiv" style="margin-top: 10px">
+			<ol class="breadcrumb" id="teamBc">
+				<li ng-repeat="breadcrumb in breadcrumbs"><div
+						ng-if="breadcrumb.jsFn == ''">{{breadcrumb.text}}</div>
+					<div ng-if="breadcrumb.jsFn != ''">
+						<a href="javascript:;" ng-click="back();">{{breadcrumb.text}}</a>
+						<span class="divider">/</span>
+					</div></li>
+			</ol>
+		</div>
+		<div style="margin-bottom: 10px;">
 			<div ng-show="!isTeamCreate" class="usrDivStyle">
 				<div style="margin-bottom: 10px;">
 					<input class="col-lg-4 pull-right search-box" placeholder="Search"
@@ -116,7 +143,8 @@
 					</span>Create New</a>
 				</div>
 				<div>
-					<table class="table table-condensed table-striped table-bordered table-responsive"
+					<table
+						class="table table-condensed table-striped table-bordered table-responsive inner-table"
 						style="width: 100%; margin-bottom: 10px;">
 						<thead>
 							<tr style="height: 40px">
@@ -135,10 +163,7 @@
 					</table>
 				</div>
 			</div>
-			<div id="teamCreateView" ng-show="isTeamCreate"
-				class="usrDivStyle">
-				<button class="btn btn-primary btn-sm"
-					translate="usermanage.form.backBtn" ng-click="back();">Back</button>
+			<div id="teamCreateView" ng-show="isTeamCreate" class="usrDivStyle">
 				<form name="tmCreateForm" role="form" novalidate
 					ng-submit="createTeam();">
 					<div class="form-group">

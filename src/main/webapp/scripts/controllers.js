@@ -71,6 +71,8 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 	$scope.selection = "views/cloud.html";
 	/* for users tab */
 	
+	$scope.breadcrumbs=[{text:"Organisation",jsFn:""}];
+	
 	$scope.isOrgCreate=false;
 	$scope.isUserCreate=false;
 	$scope.isTeamCreate=false;	
@@ -80,6 +82,7 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 	$scope.teams=resolvedTeams;
 	
 	$scope.createNewOrg =function(){
+		$scope.breadcrumbs=[{text:"Organisation",jsFn:"back();"},{text:"CreateOrganisation",jsFn:""}];
 		$scope.isOrgCreate=true;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=false;
@@ -96,6 +99,7 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 		});
 	}	
 	$scope.createNewUser =function(){
+		$scope.breadcrumbs=[{text:"User",jsFn:"back();"},{text:"CreateUser",jsFn:""}];
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=true;
 		$scope.isTeamCreate=false;
@@ -113,6 +117,7 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 		});
 	}
 	$scope.createNewTeam =function(){
+		$scope.breadcrumbs=[{text:"Team",jsFn:"back();"},{text:"CreateTeam",jsFn:""}];
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=true;
@@ -130,6 +135,27 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 		});
 	}		
 	$scope.back=function(){
+		 if($scope.isOrgCreate)
+			 $scope.breadcrumbs=[{text:"Organisation",jsFn:""}];
+		 if($scope.isUserCreate)
+			 $scope.breadcrumbs=[{text:"User",jsFn:""}];
+		 if($scope.isTeamCreate)
+			 $scope.breadcrumbs=[{text:"Team",jsFn:""}];
+		reset();
+	}
+	$scope.onOrgTabSelect=function(){
+		$scope.breadcrumbs=[{text:"Organisation",jsFn:""}];
+		reset();
+	}
+	$scope.onUserTabSelect=function(){
+		$scope.breadcrumbs=[{text:"User",jsFn:""}];
+		reset();
+	}
+	$scope.onTeamTabSelect=function(){
+		$scope.breadcrumbs=[{text:"Team",jsFn:""}];
+		reset();
+	}
+	function reset(){
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=false;
