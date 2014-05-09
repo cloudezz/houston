@@ -97,6 +97,9 @@ public class Application extends BaseEntity {
     this.serviceImageCfgs = serviceImageCfgs;
   }
 
+  public void addServiceImageCfgs(ServiceImageCfg serviceImageCfg) {
+    this.serviceImageCfgs.add(serviceImageCfg);
+  }
 
 
   /**
@@ -127,6 +130,10 @@ public class Application extends BaseEntity {
     this.appImageCfgs = appImageCfgs;
   }
 
+  
+  public void addAppImageCfgs(AppImageCfg appImageCfg) {
+    this.appImageCfgs.add(appImageCfg);
+  }
 
   /**
    * Set the designated no of copies

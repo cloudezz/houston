@@ -27,11 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudezz.firework.domain.AppScript;
-import com.cloudezz.firework.domain.Node;
-import com.cloudezz.firework.executor.ExecutionListener;
-import com.cloudezz.firework.service.ExecutionService;
-
 import com.cloudezz.houston.deployer.DeployerService;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
@@ -42,6 +37,10 @@ import com.cloudezz.houston.domain.DeploymentScript;
 import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ServiceImageCfg;
 import com.cloudezz.houston.domain.User;
+import com.cloudezz.houston.firework.domain.AppScript;
+import com.cloudezz.houston.firework.domain.Node;
+import com.cloudezz.houston.firework.executor.ExecutionListener;
+import com.cloudezz.houston.firework.service.ExecutionService;
 import com.cloudezz.houston.repository.AppImageCfgRepository;
 import com.cloudezz.houston.repository.ApplicationRepository;
 import com.cloudezz.houston.repository.DeploymentScriptRepository;
@@ -83,8 +82,8 @@ public class ApplicationResource {
   @Autowired
   private ImageService imageService;
 
-/*  @Autowired
-  private ExecutionService executionService;*/
+  @Autowired
+  private ExecutionService executionService;
 
   @Inject
   private DeploymentScriptRepository deploymentScriptRepository;
@@ -302,8 +301,11 @@ public class ApplicationResource {
         return false;
 
       application.setRunning(true);
-      // set the exposed service after start of the image
+
       try {
+        // update container values
+        imageService.updateContainer(application);
+        // set the exposed service after start of the image
         Set<ExposedService> exposedService = imageService.getExposedService(application);
         application.setExposedServices(exposedService);
       } catch (CloudezzException e) {
@@ -477,18 +479,24 @@ public class ApplicationResource {
       @RequestParam("scriptId") String scriptId, @RequestParam("command") String command) {
 
     try {
-      if(command != null && !command.equals("")){
+      if (command != null && !command.equals("")) {
         // TODO
       } else {
-        
+
         Application application = applicationRepository.findOne(id);
         DeploymentScript deploymentScript = deploymentScriptRepository.findOne(scriptId);
 
         List<AppImageCfg> appImageCfgs = new ArrayList<AppImageCfg>();
         List<ServiceImageCfg> serviceImageCfgs = new ArrayList<ServiceImageCfg>();
 
-        appImageCfgs = appImageCfgRepository.getByIds(appImageConfigs);
-        serviceImageCfgs = serviceImageConfigRepository.getByIds(serviceImageConfigs);
+        if (appImageConfigs != null && appImageConfigs.size() > 0) {
+          appImageCfgs = appImageCfgRepository.getByIds(appImageConfigs);
+        }
+
+        if (serviceImageConfigs != null && serviceImageConfigs.size() > 0) {
+          serviceImageCfgs = serviceImageConfigRepository.getByIds(serviceImageConfigs);
+        }
+
         if (application != null && deploymentScript != null && appImageCfgs != null
             && serviceImageCfgs != null) {
 
@@ -517,7 +525,8 @@ public class ApplicationResource {
           appScript.setAppScriptYMLDirectory(ymlFile.getParent());
           OutputStream outputStream = response.getOutputStream();
 
-/*          executionService.execute(appScript, nodes, new ExecutionListener() {
+
+          executionService.execute(appScript, nodes, new ExecutionListener() {
 
             @Override
             public void onStdOut(Node node, String output) {
@@ -533,11 +542,12 @@ public class ApplicationResource {
             public void onExecutionFailure(Throwable throwable) {
               throwable.printStackTrace();
             }
-          });*/
+          });
+
         } else {
           // TODO
         }
-        
+
       }
     } catch (Exception e) {
       log.error("Failed run script", e);

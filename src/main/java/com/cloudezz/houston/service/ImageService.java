@@ -17,7 +17,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.cloudezz.firework.domain.Node;
 import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
 import com.cloudezz.houston.deployer.docker.client.CloudezzException;
 import com.cloudezz.houston.deployer.docker.client.DockerClient;
@@ -35,6 +34,8 @@ import com.cloudezz.houston.domain.ExposedService;
 import com.cloudezz.houston.domain.ImageInfo;
 import com.cloudezz.houston.domain.ImgSettings.PortConfig.Port;
 import com.cloudezz.houston.domain.ServiceImageCfg;
+import com.cloudezz.houston.firework.domain.Node;
+import com.cloudezz.houston.repository.ApplicationRepository;
 import com.cloudezz.houston.repository.DockerHostMachineRepository;
 import com.cloudezz.houston.repository.ImageInfoRepository;
 import com.codahale.metrics.annotation.Timed;
@@ -50,6 +51,9 @@ public class ImageService {
 
   @Autowired
   private DockerHostMachineRepository dockHostMachineRepository;
+
+  @Autowired
+  private ApplicationRepository applicationRepository;
 
   @Autowired
   private Environment env;
@@ -84,6 +88,8 @@ public class ImageService {
         DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
         ContainerInspectResponse containerInspectResponse =
             dockerClient.inspectContainer(appImageCfg.getContainer().getId());
+
+
         Map<String, HostPortBinding[]> hostPortBindings =
             containerInspectResponse.networkSettings.ports;
         if (hostPortBindings != null) {
@@ -92,6 +98,7 @@ public class ImageService {
             if (hostPortBinds != null && hostPortBinds.length > 0) {
               checkDefaultPorts(dockerPort, hostPortBinds, dockerHostMachine, appImageCfg,
                   exposedService);
+              application.addAppImageCfgs(appImageCfg);
               for (Port port : ports) {
                 String portValue = port.getValue() + "/tcp";
                 if (dockerPort.equals(portValue)) {
@@ -108,6 +115,7 @@ public class ImageService {
           }
         }
         exposedServices.add(exposedService);
+
       } catch (CloudezzDeployException | JAXBException e) {
         throw new CloudezzException(e);
       }
@@ -115,6 +123,86 @@ public class ImageService {
 
     return exposedServices;
 
+  }
+
+  public void updateContainer(Application application) throws CloudezzException {
+    try {
+
+      for (AppImageCfg appImageCfg : application.getAppImageCfgs()) {
+
+        if (appImageCfg.getContainer() == null && !application.isRunning()) {
+          throw new CloudezzException("Cannot update container for a instance that is not running");
+        }
+
+
+        DockerHostMachine dockerHostMachine = appImageCfg.getDockerHostMachine();
+        DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
+        ContainerInspectResponse containerInspectResponse =
+            dockerClient.inspectContainer(appImageCfg.getContainer().getId());
+
+        Container container = appImageCfg.getContainer();
+        container.setHost(containerInspectResponse.networkSettings.ipAddress);
+        container.setName(containerInspectResponse.name);
+        container.setSSHUsername(DockerConstant.DEFAULT_USER);
+        container.setSSHPort(getSSHPort(containerInspectResponse.networkSettings.ports));
+        container.setSSHPassword(getSSHPassword(containerInspectResponse.getConfig().getEnv()));
+        appImageCfg.setContainer(container);
+        application.addAppImageCfgs(appImageCfg);
+      }
+
+      for (ServiceImageCfg serviceImageCfg : application.getServiceImageCfgs()) {
+
+        if (serviceImageCfg.getContainer() == null && !application.isRunning()) {
+          throw new CloudezzException("Cannot update container for a instance that is not running");
+        }
+
+        DockerHostMachine dockerHostMachine = serviceImageCfg.getDockerHostMachine();
+        DockerClient dockerClient = DockerUtil.getDockerClient(dockerHostMachine);
+        ContainerInspectResponse containerInspectResponse =
+            dockerClient.inspectContainer(serviceImageCfg.getContainer().getId());
+
+        Container container = serviceImageCfg.getContainer();
+        container.setHost(containerInspectResponse.networkSettings.ipAddress);
+        container.setName(containerInspectResponse.name);
+        container.setSSHPort(getSSHPort(containerInspectResponse.networkSettings.ports));
+        container.setSSHPassword(getSSHPassword(containerInspectResponse.getConfig().getEnv()));
+        serviceImageCfg.setContainer(container);
+        application.addServiceImageCfgs(serviceImageCfg);
+      }
+
+      applicationRepository.saveAndFlush(application);
+
+    } catch (CloudezzDeployException e) {
+      throw new CloudezzException(e);
+    }
+  }
+
+  private Integer getSSHPort(Map<String, HostPortBinding[]> ports) {
+    Map<String, HostPortBinding[]> hostPortBindings = ports;
+    if (hostPortBindings != null) {
+      for (String dockerPort : hostPortBindings.keySet()) {
+        HostPortBinding[] hostPortBinds = hostPortBindings.get(dockerPort);
+        if (hostPortBinds != null && hostPortBinds.length > 0) {
+          if (dockerPort.equals(DockerConstant.DEFAULT_SSH_PORT)) {
+            return Integer.parseInt(hostPortBinds[0].getHostPort());
+          }
+        }
+      }
+    }
+    return 0;
+  }
+
+  private String getSSHPassword(String[] envList) {
+    if (envList == null)
+      return "";
+
+    for (int i = 0; i < envList.length; i++) {
+      String env[] = envList[i].split("=");
+      if (env[0].equals(DockerConstant.ENV_SSH_ROOT_PASSWORD)) {
+        return env[1];
+      }
+    }
+    return "";
   }
 
   public void setExposedPorts(BaseImageCfg baseImageCfg, String imageName) {
@@ -195,8 +283,9 @@ public class ImageService {
   private void checkDefaultPorts(String dockerPort, HostPortBinding hostPortBinds[],
       DockerHostMachine dockerHostMachine, AppImageCfg appImageCfg, ExposedService exposedService) {
     if (dockerPort.equals(DockerConstant.DEFAULT_SSH_PORT)) {
-      exposedService.addServiceToURL(DockerConstant.SSH_SERVICE_NAME, "ssh://root@"
-          + dockerHostMachine.getHostName() + ":" + hostPortBinds[0].getHostPort());
+      exposedService.addServiceToURL(DockerConstant.SSH_SERVICE_NAME, "ssh://"
+          + DockerConstant.DEFAULT_USER + "@" + dockerHostMachine.getHostName() + ":"
+          + hostPortBinds[0].getHostPort());
     } else if (dockerPort.equals(DockerConstant.DEFAULT_WEB_SHELL_PORT)
         && appImageCfg.getEnvironmentMapping().containsKey(DockerConstant.ENV_WEB_SHELL)) {
       String url = "http://";
@@ -240,6 +329,7 @@ public class ImageService {
 
   /**
    * Get the node for the base image of the container is available
+   * 
    * @param baseImageCfg
    * @return
    */
@@ -256,9 +346,9 @@ public class ImageService {
     node.setSSHPort(container.getSSHPort());
     node.setSSHUsername(container.getSSHUsername());
     node.setSudo(false);
-    
+
     return node;
-    
+
   }
 
 }

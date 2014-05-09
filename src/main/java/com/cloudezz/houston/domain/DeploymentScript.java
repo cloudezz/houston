@@ -26,7 +26,7 @@ public class DeploymentScript extends BaseEntity {
   @Column(name = "scriptId")
   protected String scriptId;
   
-  @Column(name = "yml_FileName")
+  @Column(name = "yml_fileName")
   protected String ymlFileName;
   
   @JsonIgnore

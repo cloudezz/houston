@@ -38,7 +38,7 @@ public class DockerConstant {
   
   public static final String ENV_HOUSTON_PROTOCOL_VALUE = "http";
 
-  public static final String ENV_SSH_ROOT_PASSWORD = "SSH_ROOT_PASSWORD";
+  public static final String ENV_SSH_ROOT_PASSWORD = "ROOT_SSH_PASSWD";
 
   public static final String ENV_RUN_BUILD_PACK = "RUN_BUILD_PACK";
 
@@ -48,6 +48,8 @@ public class DockerConstant {
 
   public static final String DEFAULT_USER = "root";
 
+  public static final Integer SSH_PORT = 22;
+  
   public static final String DEFAULT_SSH_PORT = "22/tcp";
 
   public static final String SSH_SERVICE_NAME = "SSH";

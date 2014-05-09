@@ -56,7 +56,8 @@ public class DeployerHelperService {
     }
   }
 
-  public List<LXContainer> getAllContainers(DockerClient dockerClient) throws CloudezzDeployException {
+  public List<LXContainer> getAllContainers(DockerClient dockerClient)
+      throws CloudezzDeployException {
     List<LXContainer> containers = dockerClient.listContainers(true);
     return containers;
   }
@@ -177,7 +178,8 @@ public class DeployerHelperService {
 
     Container container = new Container();
     container.setId(containerInspectResponse.getId());
-    
+
+
     cloudezzImageConfig.setContainer(container);
     return true;
 
@@ -216,14 +218,14 @@ public class DeployerHelperService {
 
     Preconditions.checkNotNull(dockerClient, "DockerClient arg cannot be null");
     Preconditions.checkNotNull(cloudezzImageConfig, "BaseCloudezzImageConfig arg cannot be null");
-    
+
     String containerId = null;
     Container container = cloudezzImageConfig.getContainer();
     if (container == null) {
       createAndSetContainerOnImageConfig(dockerClient, cloudezzImageConfig);
-      containerId = cloudezzImageConfig.getContainer().getId();
     }
 
+    containerId = cloudezzImageConfig.getContainer().getId();
     return containerId;
   }
 
@@ -291,6 +293,7 @@ public class DeployerHelperService {
     }
   }
 
+
   /**
    * Destroy all the container. It stops and clears the container in that host machine. Be careful
    * while calling this method as it will stop and destroy the container and cannot retrieve data
@@ -346,10 +349,10 @@ public class DeployerHelperService {
   public boolean deleteContainer(DockerClient dockerClient, BaseImageCfg baseImageConfig)
       throws CloudezzDeployException {
     try {
-      
-      if(baseImageConfig.getContainer()==null)
+
+      if (baseImageConfig.getContainer() == null)
         return false;
-      
+
       return dockerClient.removeContainer(baseImageConfig.getContainer().getId(), true);
     } catch (DockerClientException e) {
       throw new CloudezzDeployException(e);
