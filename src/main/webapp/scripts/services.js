@@ -444,3 +444,19 @@ houstonApp.factory('Cloud', [ '$resource', function($resource) {
 		}
 	});
 } ]);
+
+houstonApp.factory('Role', [ '$resource', function($resource) {
+	return $resource('app/rest/role/:id', {}, {
+		'query' : {
+			method : 'GET',
+			isArray : true
+		},
+		'get' : {
+			method : 'GET'
+		},
+		'save' : {
+			method : 'POST',
+			headers: [{'Content-Type': 'application/json'}]
+		}
+	});
+} ]);

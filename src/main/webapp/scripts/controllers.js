@@ -69,21 +69,6 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
 houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
 		 function ($scope,Cloud,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
 	$scope.selection = "views/cloud.html";
-	$scope.clouds = Cloud.query();
-	
-	$scope.names =[{name : "Amazon cloud", value : "amazon"},	{name : "Rackspace", value : "rackspace"}, {name : "Google cloud", value : "google"}];
-	$scope.cloud = new Object();
-	$scope.create = function () {
-		$('#saveCloudModal').modal('hide');
-		Cloud.save($scope.cloud,
-				function () {
-			Cloud.query(function (data) {
-				$scope.clouds = data;
-			});
-		});
-	};
-	
-	
 	/* for users tab */
 	
 	$scope.isOrgCreate=false;
@@ -152,6 +137,40 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 	/* for users tab ends */
 	
 }]);
+
+houstonApp.controller('CloudController', ['$scope', 'Cloud',
+       		 function ($scope,Cloud) {
+       	$scope.clouds = Cloud.query();
+       	
+       	$scope.names =[{name : "Amazon cloud", value : "amazon"},	{name : "Rackspace", value : "rackspace"}, {name : "Google cloud", value : "google"}];
+       	$scope.cloud = new Object();
+       	$scope.create = function () {
+       		$('#saveCloudModal').modal('hide');
+       		Cloud.save($scope.cloud,
+       				function () {
+       			Cloud.query(function (data) {
+       				$scope.clouds = data;
+       			});
+       		});
+       	};
+       	
+       }]);
+
+houstonApp.controller('PermissionsController', ['$scope', 'Role',
+            		 function ($scope, Role) {
+            	$scope.roles = Role.query();
+            	
+            	$scope.role = new Object();
+            	$scope.create = function () {
+            		Role.save($scope.role,
+            				function () {
+            			Role.query(function (data) {
+            				$scope.roles = data;
+            			});
+            		});
+            	};
+            	
+            }]);
 
 houstonApp.controller('PasswordController', ['$scope', 'Password',
     function ($scope, Password) {

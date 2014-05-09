@@ -1,31 +1,45 @@
-<div class="row">
-	<div class="navbar-collapse collapse" id="navbar-main">
-		<ul class="nav navbar-nav navbar-left">
-
-			<li><a href="/#/appimagecfg"> <span
-					class="glyphicon glyphicon-align-justify"></span> <span>Create
-						role</span>
-			</a></li>
-			<li><a href="/#/appimagecfg"> <span
-					class="glyphicon glyphicon-align-justify"></span> <span>Role
-						permissions</span>
-			</a></li>
-			<li><a href="/#/appimagecfg"> <span
-					class="glyphicon glyphicon-align-justify"></span> <span>Assign
-						permissions</span>
-			</a></li>
-		</ul>
+<div ng-controller="PermissionsController">
+	<tabset> <tab heading="Create role">
+	<div class="row"
+		style="border: 1px solid #D8D8D8; margin: 20px; min-height: 450px; padding: 10px;">
+		<div class="row" style="padding: 20px;">
+			<div class="col-lg-2" style="margin-top: 8px; margin-right: -30px;">Role
+				name :</div>
+			<input class="col-lg-4" type="text" ng-model="role.name">
+			<div class="col-lg-1" style="margin-top: 2px;">
+				<a class="btn btn-sm btn-primary" ng-click="create()">Add</a>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px; padding: 20px;">
+			<div class="col-lg-8">
+				<table class="table-hover table-bordered inner-table"
+					style="width: 100%; margin-bottom: 10px;">
+					<thead>
+						<tr style="height: 40px">
+							<th>Role Name</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="role in roles | filter:search">
+							<td>{{role.name}}</td>
+							<td>
+								<button type="submit" ng-click="update(role.id)"
+									class="btn btn-sm" style="width: 100px; margin: 5px;">
+									<span class="glyphicon glyphicon-pencil"></span> Edit
+								</button>
+								<button type="submit" ng-click="delete(role.id)"
+									style="width: 100px; margin: 5px;"
+									class="btn btn-sm btn-delete">
+									<span class="glyphicon glyphicon-remove-circle"></span> Delete
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-
-
-</div>
-<div class="row"
-	style="border: 1px solid #D8D8D8; margin: 20px; height: 450px; padding: 10px;">
-	<div class="col-lg-2" style="margin-top: 8px; margin-right: -30px;">Role
-		name :</div>
-	<input class="col-lg-4" type="text">
-	<div class="col-lg-1" style="margin-top:2px;">
-		<a class="btn btn-sm btn-primary">Add</a>
-	</div>
+	</tab> </tabset>
 </div>
 
