@@ -99,7 +99,8 @@
 									translate="global.menu.account.dockerHostMachine">Host
 										Machine Config</span></a></li>
 						</ul></li>
-					<li ng-switch-when="true" ng-show="hasRole(&apos;ROLE_ADMIN&apos;)"><a href="/#/accountSettings"> <span
+					<li ng-switch-when="true" ng-show="hasRole(&apos;ROLE_ADMIN&apos;)"><a
+						href="/#/accountSettings"> <span
 							class="glyphicon glyphicon-cog"></span> <span
 							translate="global.menu.accountsettings.main">Account
 								Settings</span>
@@ -107,8 +108,8 @@
 					<li ng-show="authenticated == true"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#"> <span> <span
 								class="glyphicon glyphicon-user"></span> <span
-								class="hidden-tablet">
-									{{account.email}} </span> <b class="caret"></b>
+								class="hidden-tablet"> {{account.email}} </span> <b
+								class="caret"></b>
 						</span>
 					</a>
 						<ul class="dropdown-menu" ng-controller="MenuController">
@@ -201,11 +202,14 @@
 	<script src="bower_components/jquery/jquery.ui.widget.js"></script>
 	<script src="bower_components/jquery/jquery.fileupload.js"></script>
 	<script src="bower_components/jquery/jquery.iframe-transport.js"></script>
-	<script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
+	<script
+		src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
 	<script src="scripts/angular-bootstrap-select.js"></script>
-	
+
 	<script src="scripts/datasourceTree.js"></script>
 	<script src="scripts/tree.js"></script>
+	<script type="text/javascript" src="scripts/jquery-picklist.js"></script>
+	
 	<!-- endbuild -->
 </body>
 </html>

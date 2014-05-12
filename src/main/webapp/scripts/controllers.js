@@ -121,12 +121,24 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=true;
+		
+		$scope.itemIds = [];
+
+		/* To create picklist */
+			$("#teamUsers").pickList({"afterAdd": function(event, obj){
+				obj.items.each(function()
+				{
+					$scope.itemIds.push($(this).attr("data-value"));
+				});
+				alert("added" +$scope.itemIds);
+			}});
 	}
 	$scope.createTeam=function(){	
 		$scope.teamDTO={};
 		$scope.teamDTO.teamName=$("#teamName").val();
 		$scope.teamDTO.teamDesc=$("#teamDesc").val();
 		$scope.teamDTO.teamOrg=$("#teamOrg").val();
+		$scope.teamDTO.selectedUsers=$scope.itemIds;
 		TeamInfo.save($scope.teamDTO,
 				function () {
 			TeamInfo.query(function (data) {

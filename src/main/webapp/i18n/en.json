@@ -276,7 +276,8 @@
     	"team":{ 
     		"name":"Name",
     		"desc":"Description",
-    		"org":"Organisation"
+    		"org":"Organisation",
+    		"selectUsers":"Select Team Members"
     	},
     	"user":{ 
     		"firstname":"First Name",

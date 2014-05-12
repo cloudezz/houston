@@ -1,5 +1,9 @@
 package com.cloudezz.houston.web.rest.dto;
 
+import java.util.List;
+
+import com.cloudezz.houston.domain.User;
+
 
 public class TeamDTO {
   
@@ -10,6 +14,8 @@ public class TeamDTO {
   private String teamOrg;
 
   private String teamDesc;
+  
+  private List<String>selectedUsers;
 
   public String getTeamId() {
     return teamId;
@@ -41,6 +47,14 @@ public class TeamDTO {
 
   public void setTeamDesc(String teamDesc) {
     this.teamDesc = teamDesc;
+  }
+
+  public List<String> getSelectedUsers() {
+    return selectedUsers;
+  }
+
+  public void setSelectedUsers(List<String> selectedUsers) {
+    this.selectedUsers = selectedUsers;
   }
 
 }

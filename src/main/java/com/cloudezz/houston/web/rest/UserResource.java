@@ -95,7 +95,7 @@ public class UserResource {
     List<UserDTO> userDtos = new ArrayList<>();
     for (User user : users) {
       UserDTO userDto = new UserDTO();
-      userDto.setEmail(userDto.getEmail());
+      userDto.setEmail(user.getEmail());
       userDto.setFirstName(user.getFirstName());
       userDto.setLastName(user.getLastName());
       userDto.setLogin(user.getLogin());

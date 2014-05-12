@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudezz.houston.domain.Team;
+import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.OrganisationRepository;
 import com.cloudezz.houston.repository.TeamRepository;
+import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.util.RepositoryUtils;
 import com.cloudezz.houston.web.rest.dto.TeamDTO;
 import com.codahale.metrics.annotation.Timed;
@@ -35,6 +37,9 @@ public class TeamResource {
 
   @Inject
   private OrganisationRepository organisationRepository;
+
+  @Inject
+  private UserRepository userRepository;
 
   /**
    * GET /rest/team/:id -> get the team with id
@@ -60,8 +65,20 @@ public class TeamResource {
     team.setName(teamDto.getTeamName());
     team.setDesc(teamDto.getTeamDesc());
     team.setOrganisation(organisationRepository.findOne(teamDto.getTeamOrg()));
+    team.setUsers(getUsersWithIds(teamDto.getSelectedUsers()));
     team = teamRepository.saveAndFlush(team);
     return team;
+  }
+
+  private List<User> getUsersWithIds(List<String> selectedUsers) {
+    List<User> assignedUsers = new ArrayList<User>();
+    for (String id : selectedUsers) {
+      User user = userRepository.findOne(id);
+      if (user != null) {
+        assignedUsers.add(user);
+      }
+    }
+    return assignedUsers;
   }
 
   /**
