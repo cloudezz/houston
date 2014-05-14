@@ -338,7 +338,7 @@ public class ImageService {
     Preconditions.checkNotNull(baseImageCfg.getContainer(), "Container not available");
     Container container = baseImageCfg.getContainer();
     Node node = new Node();
-    node.setHost(container.getHost());
+    node.setHost(baseImageCfg.getDockerHostMachine().getIpAddress());
     node.setName(container.getName());
     node.setSSHPassword(container.getSSHPassword());
     node.setSSHPemPrivateKey(container.getSSHPemPrivateKey());
