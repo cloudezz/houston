@@ -1040,6 +1040,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         					$scope.serviceFormElementHolder[item.name]=$rootScope.servicefileSelected;
         				}
         			}
+	       	$scope.appImageCfgDTO.appName=$scope.appDTO.appName;
 			$scope.serviceDTO.memory=$("#service_memory").slider('getValue');
 			$scope.serviceDTO.cpuShares=$("#service_cpuShares").slider('getValue');	       			
 			$scope.serviceDTO.environmentMapping=$scope.serviceFormElementHolder;
