@@ -72,9 +72,6 @@ public class User extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
   private List<Application> applications;
 
-  @ManyToMany
-  private List<Team> teams;
-
   public String getLogin() {
     return login;
   }
@@ -193,13 +190,4 @@ public class User extends BaseEntity {
   public void setApplications(List<Application> applications) {
     this.applications = applications;
   }
-
-  public List<Team> getTeams() {
-    return teams;
-  }
-
-  public void setTeams(List<Team> teams) {
-    this.teams = teams;
-  }
-
 }
