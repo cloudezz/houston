@@ -344,6 +344,11 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 		});
 		return selected;
 	}
+	
+	$scope.isOrgSelected=function(){
+		return ($("#teamOrg").val()!=null);
+	}
+	
 	$scope.deleteTeam=function(id){
 		TeamInfo.delete({id: id},
                 function () {
