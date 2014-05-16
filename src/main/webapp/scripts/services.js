@@ -348,7 +348,7 @@ houstonApp.factory('ServiceImageCfg', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('OrgInfo', [ '$resource', function($resource) {
-	return $resource('app/rest/organisation', {}, {
+	return $resource('app/rest/organisation/:id', {}, {
 		'query' : {
 			method : 'GET',
 			isArray : true
@@ -360,7 +360,7 @@ houstonApp.factory('OrgInfo', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('UserInfo', [ '$resource', function($resource) {
-	return $resource('app/rest/users', {}, {
+	return $resource('app/rest/user/:id', {}, {
 		'query' : {
 			method : 'GET',
 			isArray : true
@@ -372,7 +372,7 @@ houstonApp.factory('UserInfo', [ '$resource', function($resource) {
 } ]);
 
 houstonApp.factory('TeamInfo', [ '$resource', function($resource) {
-	return $resource('app/rest/team', {}, {
+	return $resource('app/rest/team/:id', {}, {
 		'query' : {
 			method : 'GET',
 			isArray : true

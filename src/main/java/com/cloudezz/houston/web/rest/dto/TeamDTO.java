@@ -2,20 +2,18 @@ package com.cloudezz.houston.web.rest.dto;
 
 import java.util.List;
 
-import com.cloudezz.houston.domain.User;
-
 
 public class TeamDTO {
-  
+
   private String teamId;
-  
+
   private String teamName;
 
-  private String teamOrg;
+  private OrganisationDTO teamOrg;
 
   private String teamDesc;
-  
-  private List<String>selectedUsers;
+
+  private List<UserDTO> selectedUsers;
 
   public String getTeamId() {
     return teamId;
@@ -33,11 +31,11 @@ public class TeamDTO {
     this.teamName = teamName;
   }
 
-  public String getTeamOrg() {
+  public OrganisationDTO getTeamOrg() {
     return teamOrg;
   }
 
-  public void setTeamOrg(String teamOrg) {
+  public void setTeamOrg(OrganisationDTO teamOrg) {
     this.teamOrg = teamOrg;
   }
 
@@ -49,11 +47,11 @@ public class TeamDTO {
     this.teamDesc = teamDesc;
   }
 
-  public List<String> getSelectedUsers() {
+  public List<UserDTO> getSelectedUsers() {
     return selectedUsers;
   }
 
-  public void setSelectedUsers(List<String> selectedUsers) {
+  public void setSelectedUsers(List<UserDTO> selectedUsers) {
     this.selectedUsers = selectedUsers;
   }
 

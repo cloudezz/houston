@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloudezz.houston.deployer.docker.client.CloudezzDeployException;
+import com.cloudezz.houston.domain.Application;
 import com.cloudezz.houston.domain.Organisation;
 import com.cloudezz.houston.repository.OrganisationRepository;
 import com.cloudezz.houston.util.RepositoryUtils;
@@ -52,8 +54,11 @@ public class OrganisationResource {
   @Timed
   public Organisation createOrganisation(@RequestBody OrganisationDTO orgDTO,
       HttpServletResponse response) {
-    Organisation org = new Organisation();
-    org.setId(RepositoryUtils.generateSmallId());
+    Organisation org = organisationRepository.findByOrgId(orgDTO.getOrgId());
+    if (org == null) {
+      org = new Organisation();
+      org.setId(RepositoryUtils.generateSmallId());
+    }
     org.setName(orgDTO.getOrgName());
     org.setDesc(orgDTO.getOrgDesc());
 
@@ -61,6 +66,23 @@ public class OrganisationResource {
     org = organisationRepository.saveAndFlush(org);
     return org;
   }
+  
+  /**
+   * DELETE /rest/organisation/:id -> delete the "id" organisation.
+   */
+  @RequestMapping(value = "/rest/organisation/{id}", method = RequestMethod.DELETE,
+      produces = "application/json")
+  @Timed
+  public void delete(@PathVariable String id, HttpServletResponse response) {
+    log.debug("REST request to delete organisation : {}", id);
+    Organisation organisation = organisationRepository.findOne(id);
+    if (organisation == null) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } else {
+      organisationRepository.delete(id);
+    }
+  }
+
 
   /**
    * GET /rest/organisations -> get all the organisations.
