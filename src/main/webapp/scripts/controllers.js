@@ -82,6 +82,7 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 	$scope.teams=resolvedTeams;
 	
 	$scope.itemIds = [];
+	$scope.teamOrg=null;
 	
 	$scope.editContext=false;
 	
@@ -101,6 +102,18 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 			});
 			if($scope.editContext){
 				$scope.back();
+				$rootScope.msg.update({
+                	message:'Organisation updated!',
+                	type: 'success',
+                	showCloseButton: true
+			});
+			}
+			else{
+				$rootScope.msg.update({
+                	message:'Organisation created!',
+                	type: 'success',
+                	showCloseButton: true
+			});
 			}
 		});
 	}
@@ -147,7 +160,19 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 				$scope.users=data;
 				$scope.userDTO={};
 				if($scope.editContext){
+					$rootScope.msg.update({
+	                	message:'User updated!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
 					$scope.back();
+				}
+				else{
+					$rootScope.msg.update({
+	                	message:'User created!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
 				}
 			});
 		});
@@ -238,6 +263,7 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 	}
 	
 	$scope.createTeam=function(){	
+		$scope.teamDTO.teamOrg=$scope.getOrgDtoWithId($("#teamOrg").val());
 		$scope.teamDTO.selectedUsers=$scope.getSelectedUsersForIds($scope.itemIds);
 		TeamInfo.save($scope.teamDTO,
 				function () {
@@ -246,8 +272,21 @@ houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud
 				$scope.teamDTO={};
 				$scope.itemIds = [];
 				$("#teamOrg").value=null;
+				$("#teamOrg").val("");
 				if($scope.editContext){
+					$rootScope.msg.update({
+	                	message:'Team updated!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
 					$scope.back();
+				}
+				else{
+					$rootScope.msg.update({
+	                	message:'Team created!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
 				}
 			});
 		});
