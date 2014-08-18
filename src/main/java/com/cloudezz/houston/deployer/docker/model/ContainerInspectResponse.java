@@ -1,8 +1,9 @@
 package com.cloudezz.houston.deployer.docker.model;
 
 
-import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerInspectResponse {
 
-  @JsonProperty("ID")
+  @JsonProperty("Id")
   public String id;
 
   public String getId() {
@@ -20,6 +21,7 @@ public class ContainerInspectResponse {
   public void setId(String id) {
     this.id = id;
   }
+
 
   @JsonProperty("Name")
   public String name;
@@ -35,15 +37,8 @@ public class ContainerInspectResponse {
   public String hostsPath;
   @JsonProperty("Args")
   public String[] args;
-  @JsonProperty("Config")
-  public ContainerConfig config;
-
-  @JsonProperty("State")
-  public ContainerState state;
   @JsonProperty("Image")
   public String image;
-  @JsonProperty("NetworkSettings")
-  public NetworkSettings networkSettings;
   @JsonProperty("SysInitPath")
   public String sysInitPath;
   @JsonProperty("ResolvConfPath")
@@ -54,16 +49,31 @@ public class ContainerInspectResponse {
   public Map<String, String> volumesRW;
   @JsonProperty("Driver")
   public String driver;
+  
+  @JsonProperty("Config")
+  public ContainerConfig config;
+
+  @JsonProperty("State")
+  public ContainerState state;
+
+
+  @JsonProperty("NetworkSettings")
+  public NetworkSettings networkSettings;
+  
+
+
+
+  @JsonProperty("ExecDriver")
+  private String execDriver;
+  @JsonProperty("MountLabel")
+  private String mountLabel;
+  @JsonProperty("ProcessLabel")
+  private String processLabel;
+
 
   @Override
   public String toString() {
-    return "ContainerInspectResponse{" + "volumes=" + volumes + ", volumesRW=" + volumesRW + '\''
-        + ", resolvConfPath='" + resolvConfPath + '\'' + ", sysInitPath='" + sysInitPath + '\''
-        + ", id='" + id + '\'' + ", name='" + name + '\'' + ", created='" + created + '\''
-        + ", path='" + path + '\'' + ", hostnamePath='" + hostnamePath + '\'' + ", hostsPath='"
-        + hostsPath + '\'' + ", args=" + Arrays.toString(args) + ", config=" + config
-        + ", hostConfig=" + hostConfig + ", state=" + state + ", image='" + image + '\''
-        + ", networkSettings=" + networkSettings + ", driver='" + driver + '\'' + '}';
+    return ToStringBuilder.reflectionToString(this);
   }
 
   public ContainerConfig getConfig() {
@@ -108,6 +118,9 @@ public class ContainerInspectResponse {
     public String finishedAt;
     @JsonProperty("Ghost")
     public boolean ghost;
+    @JsonProperty("Paused")
+    public boolean paused;
+
 
     @Override
     public String toString() {
