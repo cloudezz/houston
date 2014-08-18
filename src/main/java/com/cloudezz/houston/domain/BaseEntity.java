@@ -1,14 +1,13 @@
 package com.cloudezz.houston.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,13 +25,19 @@ public abstract class BaseEntity implements Serializable {
   protected String name;
 
   @Column(name = "creation_time")
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-  protected LocalDateTime creationTime;
+  protected Timestamp creationTime;
 
-  @JsonIgnore
   @Column(name = "modification_time")
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-  protected LocalDateTime modificationTime;
+  protected Timestamp modificationTime;
+
+  /**
+   * Child entities can override this to send back their own id's
+   * 
+   * @return
+   */
+  public abstract String getId();
+
+  public abstract void setId(String id);
 
   /**
    * @return the name
@@ -48,42 +53,33 @@ public abstract class BaseEntity implements Serializable {
     this.name = name;
   }
 
-  /**
-   * Child entities can override this to send back their own id's
-   * 
-   * @return
-   */
-  public abstract String getId();
-
-  public abstract void setId(String id);
-
   @JsonIgnore
-  public LocalDateTime getCreationTime() {
+  public Timestamp getCreationTime() {
     return creationTime;
   }
 
-  public void setCreationTime(LocalDateTime creationTime) {
+  public void setCreationTime(Timestamp creationTime) {
     this.creationTime = creationTime;
   }
 
   @JsonIgnore
-  public LocalDateTime getModificationTime() {
+  public Timestamp getModificationTime() {
     return modificationTime;
   }
 
-  public void setModificationTime(LocalDateTime modificationTime) {
+  public void setModificationTime(Timestamp modificationTime) {
     this.modificationTime = modificationTime;
   }
 
 
   @PrePersist
   protected void autoSetCreationTime() {
-    this.creationTime = this.modificationTime = LocalDateTime.now();
+    this.creationTime = this.modificationTime = new Timestamp(new Date().getTime());
   }
 
   @PreUpdate
   void autoSetModificationTime() {
-    this.modificationTime = LocalDateTime.now();
+    this.modificationTime = new Timestamp(new Date().getTime());
   }
 
   /*
