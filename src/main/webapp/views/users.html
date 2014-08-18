@@ -25,8 +25,9 @@
 					style="width: 100%; margin-bottom: 10px;">
 					<thead>
 						<tr style="height: 40px">
-							<th>Name</th>
-							<th>Description</th>
+							<th style="width: 33%">Name</th>
+							<th style="width: 33%">Description</th>
+							<th style="width: 33%">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -34,6 +35,16 @@
 							style="height: 35px;">
 							<td>{{org.orgName}}</td>
 							<td>{{org.orgDesc}}</td>
+							<td>
+								<button type="submit" ng-click="updateOrg(org.orgId)"
+									class="btn btn-sm" style="width: 100px;">
+									<span class="glyphicon glyphicon-pencil"></span> Edit
+								</button>
+								<button type="submit" ng-click="deleteOrg(org.orgId)"
+									class="btn btn-sm btn-delete" style="width: 100px;">
+									<span class="glyphicon glyphicon-remove-circle"></span> Delete
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -43,16 +54,27 @@
 					ng-submit="createOrganisation();">
 					<div class="form-group">
 						<label translate="usermanage.organisation.name">Name</label> <input
-							type="text" class="form-control" id="orgName"
-							ng-model="orgDTO.orgName" ng-minlength=5 ng-maxlength=50 required>
+							type="text" class="form-control" id="orgName" name="orgName"
+							ng-model="orgDTO.orgName" ng-minlength=2 ng-maxlength=50 required>
+						<div class="error"
+							ng-show="orgCreateForm.orgName.$dirty && orgCreateForm.orgName.$invalid">
+							<small class="error"
+								ng-show="orgCreateForm.orgName.$error.required">
+								Organisation name is required. </small> <small class="error"
+								ng-show="orgCreateForm.orgName.$error.minlength">
+								Organisation name is required to be at least 2 characters </small> <small
+								class="error" ng-show="orgCreateForm.orgName.$error.maxlength">
+								Organisation name cannot be longer than 50 characters </small>
+						</div>
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.organisation.desc">Description</label>
 						<input type="text" class="form-control" id="orgDesc"
-							ng-model="orgDTO.orgDesc" ng-minlength=5 ng-maxlength=50 required>
+							ng-model="orgDTO.orgDesc">
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm"
-						translate="usermanage.form.saveBtn">Save</button>
+						translate="usermanage.form.saveBtn"
+						ng-disabled="orgCreateForm.$invalid">Save</button>
 
 				</form>
 
@@ -93,6 +115,16 @@
 						<tr ng-repeat="user in users | filter:search">
 							<td>{{user.firstName}}</td>
 							<td>{{user.lastName}}</td>
+							<td>
+								<button type="submit" ng-click="updateUser(user.email)"
+									class="btn btn-sm" style="width: 100px;">
+									<span class="glyphicon glyphicon-pencil"></span> Edit
+								</button>
+								<button type="submit" ng-click="deleteUser(user.email)"
+									class="btn btn-sm btn-delete" style="width: 100px;">
+									<span class="glyphicon glyphicon-remove-circle"></span> Delete
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -102,23 +134,46 @@
 					ng-submit="createUser();">
 					<div class="form-group">
 						<label translate="usermanage.user.firstname">First Name</label> <input
-							type="text" class="form-control" id="userFName"
-							ng-model="userDTO.firstName" ng-minlength=5 ng-maxlength=50
+							type="text" class="form-control" id="userFName" name="userFName"
+							ng-model="userDTO.firstName" ng-minlength=2 ng-maxlength=50
 							required>
+						<div class="error"
+							ng-show="usrCreateForm.userFName.$dirty && usrCreateForm.userFName.$invalid">
+							<small class="error"
+								ng-show="usrCreateForm.userFName.$error.required"> User
+								name is required. </small> <small class="error"
+								ng-show="usrCreateForm.userFName.$error.minlength"> User
+								name is required to be at least 2 characters </small> <small
+								class="error" ng-show="usrCreateForm.userFName.$error.maxlength">
+								User name cannot be longer than 50 characters </small>
+						</div>
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.user.lastname">Last Name</label> <input
-							type="text" class="form-control" id="userLName"
-							ng-model="userDTO.lastName" ng-minlength=5 ng-maxlength=50
-							required>
+							type="text" class="form-control" id="userLName" name="userLName"
+							ng-model="userDTO.lastName">
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.user.email">Email</label> <input
-							type="text" class="form-control" id="userEmail"
-							ng-model="userDTO.email" ng-minlength=5 ng-maxlength=50 required>
+							type="email" class="form-control" id="userEmail" name="userEmail"
+							ng-model="userDTO.email" ng-minlength=1 ng-maxlength=50 required
+							ng-disabled="editContext">
+						<div class="error"
+							ng-show="usrCreateForm.userEmail.$dirty && usrCreateForm.userEmail.$invalid">
+							<small class="error"
+								ng-show="usrCreateForm.userEmail.$error.required"> Mail
+								id is required. </small> <small class="error"
+								ng-show="usrCreateForm.userEmail.$error.minlength"> Mail
+								id is required to be at least 2 characters </small> <small class="error"
+								ng-show="usrCreateForm.userEmail.$error.maxlength"> Mail
+								id cannot be longer than 50 characters </small> <small class="error"
+								ng-show="usrCreateForm.userEmail.$error.email"> Mail id
+								is not correct </small>
+						</div>
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm"
-						translate="usermanage.form.saveBtn">Save</button>
+						translate="usermanage.form.saveBtn"
+						ng-disabled="usrCreateForm.$invalid">Save</button>
 				</form>
 			</div>
 		</div>
@@ -157,7 +212,17 @@
 							<tr ng-repeat="team in teams | filter:search">
 								<td>{{team.teamName}}</td>
 								<td>{{team.teamDesc}}</td>
-								<td>{{team.teamOrg}}</td>
+								<td>{{team.teamOrg.orgName}}</td>
+								<td>
+									<button type="submit" ng-click="updateTeam(team.teamId)"
+										class="btn btn-sm" style="width: 100px;">
+										<span class="glyphicon glyphicon-pencil"></span> Edit
+									</button>
+									<button type="submit" ng-click="deleteTeam(team.teamId)"
+										class="btn btn-sm btn-delete" style="width: 100px;">
+										<span class="glyphicon glyphicon-remove-circle"></span> Delete
+									</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -168,31 +233,49 @@
 					ng-submit="createTeam();">
 					<div class="form-group">
 						<label translate="usermanage.team.name">Name</label> <input
-							type="text" class="form-control" id="teamName"
-							ng-model="teamDTO.name" ng-minlength=5 ng-maxlength=50 required>
+							type="text" class="form-control" id="teamName" name="teamName"
+							ng-model="teamDTO.teamName" ng-minlength=2 ng-maxlength=50
+							required>
+						<div class="error"
+							ng-show="tmCreateForm.teamName.$dirty && tmCreateForm.teamName.$invalid">
+							<small class="error"
+								ng-show="tmCreateForm.teamName.$error.required"> Team
+								name is required. </small> <small class="error"
+								ng-show="tmCreateForm.teamName.$error.minlength"> Team
+								name is required to be at least 2 characters </small> <small
+								class="error" ng-show="tmCreateForm.teamName.$error.maxlength">
+								Team name cannot be longer than 50 characters </small>
+						</div>
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.team.desc">Description</label> <input
 							type="text" class="form-control" id="teamDesc"
-							ng-model="teamDTO.lastName" ng-minlength=5 ng-maxlength=50
-							required />
+							ng-model="teamDTO.teamDesc" />
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.team.org">Organisation</label> <select
-							ng-model="teamDTO.org" class="form-control" id="teamOrg">
-							<option ng-repeat="org in organisations" value="{{org.orgId}}">{{org.orgName}}</option>
+							ng-model="teamOrg" class="form-control" id="teamOrg"
+							ng-required="isOrgSelected();">
+							<option ng-repeat="org in organisations" value="{{org.orgId}}"
+								ng-selected="isSelected(org.orgId);">{{org.orgName}}</option>
 						</select>
+						<div class="error"
+							ng-show="tmCreateForm.teamOrg.$dirty && tmCreateForm.teamOrg.$invalid">
+							<small class="error"
+								ng-show="tmCreateForm.teamOrg.$error.required"> Please
+								select an organisation </small>
+						</div>
 					</div>
 					<div class="form-group">
 						<label translate="usermanage.team.selectUsers">Select
 							Users for Team</label> <select class="form-control" id="teamUsers"
 							multiple="multiple">
-							<option ng-repeat="user in users" value="{{user.email}}">{{user.firstName+" "+user.lastName}}</option>
 						</select>
 					</div>
 
 					<button type="submit" class="btn btn-primary btn-sm"
-						translate="usermanage.form.saveBtn">Save</button>
+						translate="usermanage.form.saveBtn"
+						ng-disabled="tmCreateForm.$invalid">Save</button>
 				</form>
 			</div>
 		</div>

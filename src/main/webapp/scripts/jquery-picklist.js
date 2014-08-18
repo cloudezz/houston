@@ -602,7 +602,18 @@
 
 			self._refresh();
 		},
+		removeAllItems: function()
+		{
+			var self = this;
 
+			//self.element.empty();
+			self.sourceList.empty();
+			self.targetList.empty();
+
+			self._trigger("onChange");
+
+			self._refresh();
+		},
 		_createSelectItem: function(item)
 		{
 			var selected = item.selected ? " selected='selected'" : "";

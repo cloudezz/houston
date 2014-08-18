@@ -61,15 +61,15 @@ houstonApp.controller('SettingsController', ['$scope', 'Account',
                 },
                 function (httpResponse) {
                     $scope.success = null;
-                    $scope.error = "ERROR";
+                    $scope.error = "ERROR"; 
                 });
         };
     }]);
 
-houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
-		 function ($scope,Cloud,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
+houstonApp.controller('AccountSettingsController', ['$scope','$rootScope','Cloud','resolvedOrganisations','resolvedUsers','resolvedTeams','OrgInfo','TeamInfo','UserInfo',
+		 function ($scope,$rootScope,Cloud,resolvedOrganisations,resolvedUsers,resolvedTeams,OrgInfo,TeamInfo,UserInfo) {
 	$scope.selection = "views/cloud.html";
-	/* for users tab */
+	/* for users tab */	
 	
 	$scope.breadcrumbs=[{text:"Organisation",jsFn:""}];
 	
@@ -81,71 +81,294 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 	$scope.users=resolvedUsers;
 	$scope.teams=resolvedTeams;
 	
+	$scope.itemIds = [];
+	$scope.teamOrg=null;
+	
+	$scope.editContext=false;
+	
 	$scope.createNewOrg =function(){
-		$scope.breadcrumbs=[{text:"Organisation",jsFn:"back();"},{text:"CreateOrganisation",jsFn:""}];
+		$scope.breadcrumbs=[{text:"Organisation",jsFn:"back();"},{text:"Create Organisation",jsFn:""}];
 		$scope.isOrgCreate=true;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=false;
+		$scope.orgDTO={};
 	}
 	$scope.createOrganisation=function(){	
-		$scope.orgDTO={};
-		$scope.orgDTO.orgName=$("#orgName").val();
-		$scope.orgDTO.orgDesc=$("#orgDesc").val();
 		OrgInfo.save($scope.orgDTO,
-				function () {
+			function () {
 			OrgInfo.query(function (data) {
 				$scope.organisations=data;
+				$scope.orgDTO={};
 			});
+			if($scope.editContext){
+				$scope.back();
+				$rootScope.msg.update({
+                	message:'Organisation updated!',
+                	type: 'success',
+                	showCloseButton: true
+			});
+			}
+			else{
+				$rootScope.msg.update({
+                	message:'Organisation created!',
+                	type: 'success',
+                	showCloseButton: true
+			});
+			}
 		});
+	}
+	$scope.updateOrg=function(id){	
+		$scope.breadcrumbs=[{text:"Organisation",jsFn:"back();"},{text:"Edit Organisation",jsFn:""}];
+		$scope.isOrgCreate=true;
+		$scope.isUserCreate=false;
+		$scope.isTeamCreate=false;
+		$scope.orgDTO=$scope.getOrgDtoWithId(id);
+		$scope.editContext=true;
+	}
+	$scope.deleteOrg=function(id){
+		OrgInfo.delete({id: id},
+                function () {
+                    $scope.organisations = OrgInfo.query();
+                    $rootScope.msg.update({
+                    	message:'Organisation deleted!',
+                    	type: 'success',
+                    	showCloseButton: true
+				});
+			});
 	}	
+	$scope.getOrgDtoWithId = function (id){
+		var itemWithId;
+		angular.forEach($scope.organisations, function(item) {
+			if(item.orgId==id){
+				itemWithId = item;
+			}
+		});
+		return itemWithId;
+	}
 	$scope.createNewUser =function(){
 		$scope.breadcrumbs=[{text:"User",jsFn:"back();"},{text:"CreateUser",jsFn:""}];
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=true;
 		$scope.isTeamCreate=false;
+
+		$scope.userDTO={};
 	}
 	$scope.createUser=function(){	
-		$scope.userDTO={};
-		$scope.userDTO.firstName=$("#userFName").val();
-		$scope.userDTO.lastName=$("#userLName").val();
-		$scope.userDTO.email=$("#userEmail").val();
 		UserInfo.save($scope.userDTO,
 				function () {
 			UserInfo.query(function (data) {
 				$scope.users=data;
+				$scope.userDTO={};
+				if($scope.editContext){
+					$rootScope.msg.update({
+	                	message:'User updated!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
+					$scope.back();
+				}
+				else{
+					$rootScope.msg.update({
+	                	message:'User created!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
+				}
 			});
 		});
 	}
+	
+	$scope.updateUser=function(id){	
+		$scope.breadcrumbs=[{text:"User",jsFn:"back();"},{text:"Edit User",jsFn:""}];
+		$scope.isOrgCreate=false;
+		$scope.isUserCreate=true;
+		$scope.isTeamCreate=false;
+		$scope.userDTO=$scope.getUserDtoWithId(id);
+		$scope.editContext=true;
+	}
+	$scope.deleteUser=function(id){
+		var mailid=replaceAll(id,".","-");
+		UserInfo.delete({id: mailid},
+                function () {
+                    $scope.users = UserInfo.query();
+                    $rootScope.msg.update({
+                    	message:'User deleted!',
+                    	type: 'success',
+                    	showCloseButton: true
+				});
+			});
+	}
+	function replaceAll(str, char1, char2) {
+		if (str != null) {
+			while (str.indexOf(char1) != -1) {
+				str = str.replace(char1, char2);
+			}
+		}
+		return str;
+	}
+	$scope.getUserDtoWithId = function (id){
+		var itemWithId;
+		angular.forEach($scope.users, function(item) {
+			if(item.email==id){
+				itemWithId = item;
+			}
+		});
+		return itemWithId;
+	}
+	
+	$scope.createPickList=function(){
+		/* To create picklist */
+		$scope.pickList=$("#teamUsers").pickList({"afterAdd": function(event, obj){
+			obj.items.each(function()
+			{
+				$scope.itemIds.push($(this).attr("data-value"));
+			});
+		}},
+		{"afterAddAll": function(event, obj){
+			angular.forEach($scope.users, function(item) {
+				$scope.itemIds.push(item.email);
+			});
+		}},
+		{"afterRemove": function(event, obj){
+			obj.items.each(function()
+			{
+				if($scope.itemIds!=null)
+					$scope.itemIds.splice($.inArray($(this).attr("data-value"),$scope.itemIds),1);
+			});
+		}},
+		{"afterRemoveAll": function(event, obj){
+			$scope.itemIds=[];
+		}});
+		}
+	
 	$scope.createNewTeam =function(){
 		$scope.breadcrumbs=[{text:"Team",jsFn:"back();"},{text:"CreateTeam",jsFn:""}];
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=true;
-		
-		$scope.itemIds = [];
-
-		/* To create picklist */
-			$("#teamUsers").pickList({"afterAdd": function(event, obj){
-				obj.items.each(function()
-				{
-					$scope.itemIds.push($(this).attr("data-value"));
-				});
-				alert("added" +$scope.itemIds);
-			}});
-	}
-	$scope.createTeam=function(){	
 		$scope.teamDTO={};
-		$scope.teamDTO.teamName=$("#teamName").val();
-		$scope.teamDTO.teamDesc=$("#teamDesc").val();
-		$scope.teamDTO.teamOrg=$("#teamOrg").val();
-		$scope.teamDTO.selectedUsers=$scope.itemIds;
+		$scope.itemIds = [];
+		if($("#teamUsers").pickList()){
+			$("#teamUsers").pickList("removeAllItems");
+		}		
+		$scope.createPickList();
+		angular.forEach($scope.users, function(item) {
+		$("#teamUsers").pickList("insert",
+				{
+					value: item.email,
+					label: item.firstName+" "+item.lastName,
+					selected: false
+				});	
+		});
+	}
+	
+	$scope.createTeam=function(){	
+		$scope.teamDTO.teamOrg=$scope.getOrgDtoWithId($("#teamOrg").val());
+		$scope.teamDTO.selectedUsers=$scope.getSelectedUsersForIds($scope.itemIds);
 		TeamInfo.save($scope.teamDTO,
 				function () {
 			TeamInfo.query(function (data) {
 				$scope.teams=data;
+				$scope.teamDTO={};
+				$scope.itemIds = [];
+				$("#teamOrg").value=null;
+				$("#teamOrg").val("");
+				if($scope.editContext){
+					$rootScope.msg.update({
+	                	message:'Team updated!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
+					$scope.back();
+				}
+				else{
+					$rootScope.msg.update({
+	                	message:'Team created!',
+	                	type: 'success',
+	                	showCloseButton: true
+				});
+				}
 			});
 		});
-	}		
+	}
+	$scope.isSelected=function (orgId){
+		if ($scope.teamDTO!=null && $scope.teamDTO.teamOrg!=null && $scope.teamDTO.teamOrg.orgId==orgId){
+			return "selected";
+		}
+	}
+	$scope.getSelectedUsersForIds=function(userIds){
+		var selectedUsersForIds = [];
+		angular.forEach(userIds,function(userId){
+			var selectedUserDTO=$scope.getUserDtoWithId(userId);
+			if(selectedUserDTO!=null){
+				if(selectedUsersForIds.indexOf(selectedUserDTO)==-1)
+					selectedUsersForIds.push(selectedUserDTO);
+			}
+		});
+		return selectedUsersForIds;
+	}
+	
+	$scope.updateTeam=function(id){	
+		$scope.breadcrumbs=[{text:"Team",jsFn:"back();"},{text:"Edit Team",jsFn:""}];
+		$scope.isOrgCreate=false;
+		$scope.isUserCreate=false;
+		$scope.isTeamCreate=true;
+		$scope.teamDTO=$scope.getTeamDtoWithId(id);
+		$scope.editContext=true;	 
+		if($("#teamUsers").pickList()){
+			$("#teamUsers").pickList("removeAllItems");
+		}		
+		$scope.createPickList();
+		angular.forEach($scope.users, function(item) {
+			var isSelected=false;
+			if($scope.isSelectedUser(item)){
+				isSelected=true;
+			}		
+			$("#teamUsers").pickList("insert",
+					{
+						value: item.email,
+						label: item.firstName+" "+item.lastName,
+						selected: isSelected
+					});	
+			if(isSelected){
+				$scope.itemIds.push(item.email);
+			}
+		});
+	}
+	$scope.isSelectedUser=function(userItem){
+		var selected=false;
+		angular.forEach($scope.teamDTO.selectedUsers, function(item) {
+			if(item.email==userItem.email){
+				selected= true;
+			}
+		});
+		return selected;
+	}
+	
+	$scope.isOrgSelected=function(){
+		return ($("#teamOrg").val()!=null);
+	}
+	
+	$scope.deleteTeam=function(id){
+		TeamInfo.delete({id: id},
+                function () {
+                    $scope.teams = TeamInfo.query();
+                    $rootScope.msg.update({
+                    	message:'Team deleted!',
+                    	type: 'success',
+                    	showCloseButton: true
+				});
+			});
+	}
+	$scope.getTeamDtoWithId = function (id){
+		var itemWithId;
+		angular.forEach($scope.teams, function(item) {
+			if(item.teamId==id){
+				itemWithId = item;
+			}
+		});
+		return itemWithId;
+	}
 	$scope.back=function(){
 		 if($scope.isOrgCreate)
 			 $scope.breadcrumbs=[{text:"Organisation",jsFn:""}];
@@ -171,6 +394,9 @@ houstonApp.controller('AccountSettingsController', ['$scope','Cloud','resolvedOr
 		$scope.isOrgCreate=false;
 		$scope.isUserCreate=false;
 		$scope.isTeamCreate=false;
+		$scope.editContext=false;
+		$("#teamOrg").value=null;
+		$scope.itemIds = [];
 	}
 	/* for users tab ends */
 	
@@ -1040,7 +1266,6 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
         					$scope.serviceFormElementHolder[item.name]=$rootScope.servicefileSelected;
         				}
         			}
-	       	$scope.appImageCfgDTO.appName=$scope.appDTO.appName;
 			$scope.serviceDTO.memory=$("#service_memory").slider('getValue');
 			$scope.serviceDTO.cpuShares=$("#service_cpuShares").slider('getValue');	       			
 			$scope.serviceDTO.environmentMapping=$scope.serviceFormElementHolder;
@@ -1180,6 +1405,7 @@ houstonApp.controller('AppImgConfigWizardController',['$rootScope','$scope','$co
 					$scope.formElementHolder[item.name]=$rootScope.fileSelected;
 				}
 			}
+			$scope.appImageCfgDTO.appName=$scope.appDTO.appName;
 			$scope.appImageCfgDTO.memory=$("#memory").slider('getValue');
 			$scope.appImageCfgDTO.cpuShares=$("#cpuShares").slider('getValue');	
 			$scope.appImageCfgDTO.noOfInstance=$("#noOfInstance").slider('getValue');	

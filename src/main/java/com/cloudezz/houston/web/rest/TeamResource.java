@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloudezz.houston.domain.Organisation;
 import com.cloudezz.houston.domain.Team;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.OrganisationRepository;
 import com.cloudezz.houston.repository.TeamRepository;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.util.RepositoryUtils;
+import com.cloudezz.houston.web.rest.dto.OrganisationDTO;
 import com.cloudezz.houston.web.rest.dto.TeamDTO;
+import com.cloudezz.houston.web.rest.dto.UserDTO;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -60,20 +63,23 @@ public class TeamResource {
   @Timed
   public Team createTeam(@RequestBody TeamDTO teamDto, HttpServletResponse response) {
     log.debug("REST request to get Team : {}", teamDto.getTeamName());
-    Team team = new Team();
-    team.setId(RepositoryUtils.generateSmallId());
+    Team team = teamRepository.findByTeamId(teamDto.getTeamId());
+    if (team == null) {
+      team = new Team();
+      team.setId(RepositoryUtils.generateSmallId());
+    }
     team.setName(teamDto.getTeamName());
     team.setDesc(teamDto.getTeamDesc());
-    team.setOrganisation(organisationRepository.findOne(teamDto.getTeamOrg()));
+    team.setOrganisation(organisationRepository.findOne(teamDto.getTeamOrg().getOrgId()));
     team.setUsers(getUsersWithIds(teamDto.getSelectedUsers()));
     team = teamRepository.saveAndFlush(team);
     return team;
   }
 
-  private List<User> getUsersWithIds(List<String> selectedUsers) {
+  private List<User> getUsersWithIds(List<UserDTO> userDtos) {
     List<User> assignedUsers = new ArrayList<User>();
-    for (String id : selectedUsers) {
-      User user = userRepository.findOne(id);
+    for (UserDTO userDto : userDtos) {
+      User user = userRepository.findOne(userDto.getEmail());
       if (user != null) {
         assignedUsers.add(user);
       }
@@ -105,11 +111,48 @@ public class TeamResource {
       tDto.setTeamId(team.getId());
       tDto.setTeamName(team.getName());
       tDto.setTeamDesc(team.getDesc());
-      tDto.setTeamOrg(team.getOrganisation().getName());
+      tDto.setTeamOrg(getDtoFor(team.getOrganisation()));
+      tDto.setSelectedUsers(getSelectedUserNames(team.getUsers()));
       teamDtos.add(tDto);
     }
     return teamDtos;
   }
 
+  private OrganisationDTO getDtoFor(Organisation org) {
+    OrganisationDTO orgDto = new OrganisationDTO();
+    orgDto.setOrgId(org.getId());
+    orgDto.setOrgName(org.getName());
+    orgDto.setOrgDesc(org.getDesc());
+    return orgDto;   
+  }
+
+  private List<UserDTO> getSelectedUserNames(List<User> users) {
+    List<UserDTO> selectedUserDtos = new ArrayList<>();
+    for (User user : users) {
+      UserDTO userDto = new UserDTO();
+      userDto.setFirstName(user.getFirstName());
+      userDto.setLastName(user.getLastName());
+      userDto.setEmail(user.getEmail());
+      userDto.setLogin(user.getLogin());
+      selectedUserDtos.add(userDto);
+    }
+    return selectedUserDtos;
+  }
+
+  /**
+   * DELETE /rest/team/:id -> delete the "id" team.
+   */
+  @RequestMapping(value = "/rest/team/{id}", method = RequestMethod.DELETE,
+      produces = "application/json")
+  @Timed
+  public void delete(@PathVariable String id, HttpServletResponse response) {
+    log.debug("REST request to delete team : {}", id);
+    Team team = teamRepository.findOne(id);
+    if (team == null) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } else {
+      teamRepository.delete(id);
+    }
+  }
 
 }

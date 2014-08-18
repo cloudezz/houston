@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloudezz.houston.domain.Team;
 import com.cloudezz.houston.domain.User;
 import com.cloudezz.houston.repository.UserRepository;
 import com.cloudezz.houston.web.rest.dto.UserDTO;
@@ -34,7 +35,7 @@ public class UserResource {
   /**
    * GET /rest/users/:login -> get the "login" user.
    */
-  @RequestMapping(value = "/rest/users/{login}", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/user/{login}", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
   public User getUser(@PathVariable String login, HttpServletResponse response) {
@@ -47,9 +48,9 @@ public class UserResource {
   }
 
   /**
-   * GET /rest/users/:login -> get the "login" user.
+   * GET /rest/user/:login -> get the "login" user.
    */
-  @RequestMapping(value = "/rest/users/{accountId}", method = RequestMethod.GET,
+  @RequestMapping(value = "/rest/user/{accountId}", method = RequestMethod.GET,
       produces = "application/json")
   @Timed
   public User getUserByAccountId(@PathVariable String accountId, HttpServletResponse response) {
@@ -61,10 +62,13 @@ public class UserResource {
     return user;
   }
 
-  @RequestMapping(value = "/rest/users", method = RequestMethod.POST, produces = "application/json")
+  @RequestMapping(value = "/rest/user", method = RequestMethod.POST, produces = "application/json")
   @Timed
   public User createUser(@RequestBody UserDTO userDto, HttpServletResponse response) {
-    User user = new User();
+    User user = userRepository.findByAccountId(userDto.getEmail());
+    if (user == null) {
+      user = new User();
+    }
     user.setFirstName(userDto.getFirstName());
     user.setLastName(userDto.getLastName());
     user.setEmail(userDto.getEmail());
@@ -74,9 +78,9 @@ public class UserResource {
   }
 
   /**
-   * GET /rest/users -> get all the users.
+   * GET /rest/user -> get all the users.
    */
-  @RequestMapping(value = "/rest/users", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/rest/user", method = RequestMethod.GET, produces = "application/json")
   @Timed
   public List<UserDTO> getAllUsers() {
     log.debug("REST request to get all Users");
@@ -105,6 +109,21 @@ public class UserResource {
 
   }
 
-
-
+  /**
+   * DELETE /rest/user/:id -> delete the "id" user.
+   */
+  @RequestMapping(value = "/rest/user/{id}", method = RequestMethod.DELETE,
+      produces = "application/json")
+  @Timed
+  public void delete(@PathVariable String id, HttpServletResponse response) {
+   String mailid = id.replaceAll("\\-", "\\.");
+    log.debug("REST request to delete user : {}", id);
+    User user = userRepository.findOne(mailid);
+    System.out.println();
+    if (user == null) {
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } else {
+      userRepository.delete(mailid);
+    }
+  }
 }
