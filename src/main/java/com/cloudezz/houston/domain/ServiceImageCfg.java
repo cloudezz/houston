@@ -119,6 +119,7 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
    */
   public void setServiceName(String serviceName) {
     this.serviceName = serviceName;
+    this.hostName = serviceName;
   }
 
   public List<String> getDns() {
@@ -201,7 +202,7 @@ public class ServiceImageCfg extends BaseImageCfg implements Cloneable {
   public ServiceImageCfg clone() {
     ServiceImageCfg serviceImgCfg = new ServiceImageCfg();
     serviceImgCfg.setApplication(this.app);
-    serviceImgCfg.setServiceName(this.serviceName);  
+    serviceImgCfg.setServiceName(this.serviceName);
     serviceImgCfg.setGroupName(this.groupName);
     serviceImgCfg.setHostName(this.hostName);
     serviceImgCfg.setCpuShares(this.cpuShares);
