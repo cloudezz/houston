@@ -89,6 +89,7 @@ public class AppImageCfg extends BaseImageCfg implements Cloneable {
    */
   public void setAppName(String appName) {
     this.appName = appName;
+    this.hostName = appName;
   }
 
   public List<String> getDns() {

@@ -98,6 +98,8 @@ public class Application extends BaseEntity {
   }
 
   public void addServiceImageCfgs(ServiceImageCfg serviceImageCfg) {
+    serviceImageCfg.setHostName(this.getAppName());
+    serviceImageCfg.setApplication(this);
     this.serviceImageCfgs.add(serviceImageCfg);
   }
 
@@ -132,6 +134,8 @@ public class Application extends BaseEntity {
 
   
   public void addAppImageCfgs(AppImageCfg appImageCfg) {
+    appImageCfg.setHostName(this.getAppName());
+    appImageCfg.setApplication(this);
     this.appImageCfgs.add(appImageCfg);
   }
 

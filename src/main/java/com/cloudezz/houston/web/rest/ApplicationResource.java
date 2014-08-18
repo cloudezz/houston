@@ -152,7 +152,7 @@ public class ApplicationResource {
         if (configs != null && !configs.isEmpty()) {
           for (AppImageCfg appCfg : configs) {
             setValuesFromDTO(appCfgDto, appCfg);
-            application.getAppImageCfgs().add(appCfg);
+            application.addAppImageCfgs(appCfg);
             gpConfigCount++;
             if (gpConfigCount >= appCfgDto.getNoOfInstance()) {
               break;
@@ -190,7 +190,7 @@ public class ApplicationResource {
             for (ServiceImageCfg serviceImageCfg : serviceConfigs) {
               setServiceConfigValuesFromDTO(serviceImageCfg, serviceCfgDto);
               imageService.setExposedPorts(serviceImageCfg, serviceCfgDto.getImageName());
-              application.getServiceImageCfgs().add(serviceImageCfg);
+              application.addServiceImageCfgs(serviceImageCfg);
               gpConfigCount++;
               if (gpConfigCount >= serviceCfgDto.getNoOfInstance()) {
                 break;
@@ -278,7 +278,7 @@ public class ApplicationResource {
     appCfg.setImageName(appimagecfgDto.getImageName());
     appCfg.setDomainName(appimagecfgDto.getDomainName());
     appCfg.setEnvironmentMapping(appimagecfgDto.getEnvironmentMapping());
-    appCfg.setHostName(appimagecfgDto.getHostName());
+    appCfg.setHostName(appimagecfgDto.getAppName());
     appCfg.setMemory(appimagecfgDto.getMemory());
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
     appCfg.setInitScript(appimagecfgDto.getInitScript());
