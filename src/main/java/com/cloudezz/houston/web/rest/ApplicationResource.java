@@ -269,7 +269,7 @@ public class ApplicationResource {
     serviceImageCfg.setMemorySwap(serviceImageCfgDTO.getMemorySwap());
     serviceImageCfg.setPorts(serviceImageCfg.getPorts());
     serviceImageCfg.setGroupName(serviceImageCfgDTO.getGroupName());
-    serviceImageCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
+    serviceImageCfg.setDockerHostMachine(dockerHostMachineRepository.findAll().get(0));
   }
 
   private void setValuesFromDTO(AppImageCfgDTO appimagecfgDto, AppImageCfg appCfg) {
@@ -283,7 +283,7 @@ public class ApplicationResource {
     appCfg.setMemorySwap(appimagecfgDto.getMemorySwap());
     appCfg.setInitScript(appimagecfgDto.getInitScript());
     appCfg.setGroupName(appimagecfgDto.getGroupName());
-    appCfg.setDockerHostMachine(dockerHostMachineRepository.getOne("127.0.0.1"));
+    appCfg.setDockerHostMachine(dockerHostMachineRepository.findAll().get(0));
     imageService.setExposedPorts(appCfg, appimagecfgDto.getImageName());
   }
 

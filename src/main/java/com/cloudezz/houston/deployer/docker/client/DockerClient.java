@@ -306,14 +306,15 @@ public class DockerClient {
     if (containerName != null) {
       containerParameter = "?name=" + containerName;
     }
-    try{
-    String response =
-        restTemplate.postForObject(dockerDeamonUrl + "/containers/create" + containerParameter,
-            requestEntity, String.class);
-    return new ObjectMapper().readValue(response, ContainerCreateResponse.class);
-    }catch (HttpClientErrorException e) {
+    try {
+      String response =
+          restTemplate.postForObject(dockerDeamonUrl + "/containers/create" + containerParameter,
+              requestEntity, String.class);
+      return new ObjectMapper().readValue(response, ContainerCreateResponse.class);
+    } catch (HttpClientErrorException e) {
       if (e.getStatusCode().value() == DockerConstant.STATUS_CONFLICT) {
-        throw new DockerClientException("Container with same name "+containerName +" already available ");
+        throw new DockerClientException("Container with same name " + containerName
+            + " already available ");
       }
     } catch (JsonParseException e) {
       throw new IllegalStateException(e);
@@ -335,18 +336,18 @@ public class DockerClient {
     // "/containers/{containerId}/start", hostConfig, containerId);
 
     // to be tested
-    try{
-    ResponseEntity<String> response =
-        restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/start", hostConfig,
-            String.class, containerId);
-    HttpStatus status = response.getStatusCode();
-    if (status.value() == DockerConstant.STATUS_NO_ERROR) {
-      return true;
-    } else {
-      return false;
-    }
-    }catch (HttpServerErrorException e) {
-      LOGGER.error(e.getResponseBodyAsString(),e);
+    try {
+      ResponseEntity<String> response =
+          restTemplate.postForEntity(dockerDeamonUrl + "/containers/{containerId}/start",
+              hostConfig, String.class, containerId);
+      HttpStatus status = response.getStatusCode();
+      if (status.value() == DockerConstant.STATUS_NO_ERROR) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (HttpServerErrorException e) {
+      LOGGER.error(e.getResponseBodyAsString(), e);
       return false;
     }
 
@@ -490,7 +491,8 @@ public class DockerClient {
               containerId, timeout);
       HttpStatus status = response.getStatusCode();
       if (status.value() == DockerConstant.STATUS_NO_ERROR
-          || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY) {
+          || status.value() == DockerConstant.STATUS_NO_SUCH_ENTITY
+          || status.value() == DockerConstant.STATUS_NOT_MODIFIED) {
         return true;
       } else {
         return false;

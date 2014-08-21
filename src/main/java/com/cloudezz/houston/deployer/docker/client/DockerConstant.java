@@ -3,6 +3,8 @@ package com.cloudezz.houston.deployer.docker.client;
 public class DockerConstant {
 
   public static final int STATUS_NO_ERROR = 204;
+  
+  public static final int STATUS_NOT_MODIFIED = 304;
 
   public static final int STATUS_OK = 200;
 
