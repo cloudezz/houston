@@ -5,17 +5,18 @@ server:
 spring:
     profiles: dev
     datasource:
-        driverClass: org.h2.Driver
-        url: jdbc:h2:mem:houston
+        dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+        url: jdbc:mysql://127.0.0.1:3306/houston
+        databaseName: 
         serverName: 
-        username: 
-        password:
+        username: root
+        password: password
 
     jpa:
         database-platform: org.hibernate.dialect.H2Dialect
         database: H2
         openInView: true
-        show_sql: true
+        show_sql: false
         generate-ddl: false
         hibernate:
             ddl-auto: create
