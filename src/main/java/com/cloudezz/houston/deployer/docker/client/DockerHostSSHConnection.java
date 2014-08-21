@@ -131,25 +131,34 @@ public class DockerHostSSHConnection {
       session.requestDumbPTY();
       session.execCommand(cmd);
 
+      
       InputStream stdout = new StreamGobbler(session.getStdout());
       InputStream stderr = new StreamGobbler(session.getStderr());
+      
+      InputStreamReader insrout=new InputStreamReader(stdout);
+      InputStreamReader insrerr=new InputStreamReader(stderr);
+      
+      BufferedReader stdoutReader = new BufferedReader(insrout);
+      BufferedReader stderrReader = new BufferedReader(insrerr);
 
-      BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
-      while (true) {
-        String line = br.readLine();
-        if (line == null)
-          break;
-        output.add(line);
-        System.out.println("o>" + line);
+      while (true)
+      {
+          String line = stdoutReader.readLine();
+          if (line == null)
+          {    
+              break;
+          }    
+          System.out.println("o>" + line);
       }
-      br = new BufferedReader(new InputStreamReader(stderr));
-      while (true) {
-        String line = br.readLine();
-        if (line == null)
-          break;
-        output.add(line);
-        System.out.println("e>" + line);
+      
+      while (true)
+      {
+          String line = stderrReader.readLine();
+          if (line == null)
+          {    break;}
+          System.out.println("o>" + line);
       }
+      
     } finally {
       session.close();
     }

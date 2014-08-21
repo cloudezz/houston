@@ -24,11 +24,11 @@ public class HarmonyProxyConfiguration {
       harmonyConfigurator = new HarmonyConfigurator(urlConfigFile);
 
 
-      // check reverse proxy server conn settings
-      if (!harmonyConfigurator.proxyConnectionStatus()) {
-        log.warn("Warning! Not able to reach harmony reverse proxy server");
-        log.debug("Did you configure your harmony HAproxy server settings in your harmony/HAProxyConfigurator.properties file");
-      }
+//      // check reverse proxy server conn settings
+//      if (!harmonyConfigurator.proxyConnectionStatus()) {
+//        log.warn("Warning! Not able to reach harmony reverse proxy server");
+//        log.debug("Did you configure your harmony HAproxy server settings in your harmony/HAProxyConfigurator.properties file");
+//      }
     } catch (Exception e) {
       log.error(e.getMessage());
     }
